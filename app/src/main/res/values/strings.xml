@@ -1,3 +1,4 @@
 <resources>
-
+    <string name="general">Главная</string>
+    <string name="about">О приложении</string>
 </resources>
