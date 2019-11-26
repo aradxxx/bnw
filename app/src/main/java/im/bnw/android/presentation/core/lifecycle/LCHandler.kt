@@ -15,7 +15,7 @@ import androidx.lifecycle.OnLifecycleEvent
 class LCHandler : Handler, LifecycleObserver {
     private var started = false
 
-    constructor(lifecycleOwner: LifecycleOwner) : this(false) {
+    constructor(lifecycleOwner: LifecycleOwner) : this(started = false) {
         lifecycleOwner.lifecycle.addObserver(this)
     }
 
@@ -38,7 +38,10 @@ class LCHandler : Handler, LifecycleObserver {
         this.started = started
     }
 
-    constructor(looper: Looper, lifecycleOwner: LifecycleOwner, started: Boolean) : this(looper, started) {
+    constructor(looper: Looper, lifecycleOwner: LifecycleOwner, started: Boolean) : this(
+        looper,
+        started
+    ) {
         lifecycleOwner.lifecycle.addObserver(this)
     }
 

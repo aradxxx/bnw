@@ -9,7 +9,5 @@ import im.bnw.android.presentation.core.State
 @Module
 abstract class ActivityModule<A : BaseActivity<VM, S>, VM : BaseViewModel<S>, S : State> {
     @Provides
-    fun provideRestoredState(activity: A): S? {
-        return activity.restoredState
-    }
+    fun provideRestoredState(activity: A) = activity.restoredState
 }

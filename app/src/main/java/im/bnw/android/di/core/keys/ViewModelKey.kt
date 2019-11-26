@@ -1,4 +1,4 @@
-package im.bnw.android.di.core
+package im.bnw.android.di.core.keys
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

@@ -17,6 +17,6 @@ class NavigationModule {
 
     @Provides
     @Singleton
-    fun provideCiceroneTab(tabRouterFactory: TabRouterFactory<AppRouter>): TabCicerone<AppRouter> =
+    fun provideCiceroneTab(tabRouterFactory: TabRouterFactory<AppRouter>) =
         TabCicerone(tabRouterFactory)
 }

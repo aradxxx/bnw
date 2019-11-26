@@ -4,14 +4,15 @@ import android.os.Bundle
 import im.bnw.android.R
 import im.bnw.android.presentation.core.BaseActivity
 import im.bnw.android.presentation.core.navigation.AppRouter
+import ru.aradxxx.ciceronetabs.NavigationContainer
 import ru.aradxxx.ciceronetabs.TabCicerone
 import ru.aradxxx.ciceronetabs.TabNavigator
 import javax.inject.Inject
 
-class MainActivity : BaseActivity<MainViewModel, MainState>() {
-    override fun layoutRes() = R.layout.activity_main
-    override fun viewModelClass() = MainViewModel::class.java
-
+class MainActivity : BaseActivity<MainViewModel, MainState>(
+    R.layout.activity_main,
+    MainViewModel::class.java
+), NavigationContainer<AppRouter> {
     @Inject
     lateinit var tabCicerone: TabCicerone<AppRouter>
     lateinit var navigator: TabNavigator<AppRouter>
@@ -29,5 +30,9 @@ class MainActivity : BaseActivity<MainViewModel, MainState>() {
     override fun onPause() {
         tabCicerone.activityCicerone().navigatorHolder.removeNavigator()
         super.onPause()
+    }
+
+    override fun router(): AppRouter {
+        return tabCicerone.activityRouter()
     }
 }

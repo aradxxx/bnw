@@ -2,14 +2,13 @@ package im.bnw.android.presentation.core
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.os.Parcelable
 import android.view.View
-import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.CallSuper
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -18,25 +17,26 @@ import im.bnw.android.di.core.ViewModelFactory
 import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseFragment<VM : BaseViewModel<S>, S : State>
-    : Fragment(), HasAndroidInjector {
-    companion object {
-        const val BUNDLE_INITIAL_ARGS = "INITIAL_ARGS"
-        private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
-    }
+private const val BUNDLE_INITIAL_ARGS = "INITIAL_ARGS"
+private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
 
+abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
+    layoutRes: Int,
+    private val vmClass: Class<VM>
+) : Fragment(layoutRes), HasAndroidInjector {
+    @Inject
+    lateinit var androidInjector: DispatchingAndroidInjector<Any>
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+    private val backPressedDispatcher: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                action(Action.BackPressed)
+            }
+        }
     private lateinit var viewModel: VM
     var restoredState: S? = null
 
-    @Inject
-    lateinit var androidInjector: DispatchingAndroidInjector<Any>
-
-    @LayoutRes
-    protected abstract fun layoutResource(): Int
-
-    protected abstract fun viewModelClass(): Class<VM>
     protected open fun updateState(state: S) {
         // for implementing
     }
@@ -51,30 +51,30 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        savedInstanceState?.let {
-            restoredState = it.getParcelable(BUNDLE_VIEW_STATE)
-        }
+        restoredState = savedInstanceState?.getParcelable(BUNDLE_VIEW_STATE)
         super.onCreate(savedInstanceState)
     }
 
-    @CallSuper
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(layoutResource(), container, false)
+    override fun onResume() {
+        requireActivity().onBackPressedDispatcher.addCallback(backPressedDispatcher)
+        super.onResume()
+    }
+
+    override fun onPause() {
+        backPressedDispatcher.remove()
+        super.onPause()
     }
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(viewModelClass())
-        viewModel.stateLiveData().observe(viewLifecycleOwner, Observer {
-            Timber.d("new state: %s", it.toString())
-            updateState(it)
-        })
-        viewModel.eventLiveData().observe(viewLifecycleOwner, Observer { onEvent(it) })
+        viewModel = ViewModelProvider(this, viewModelFactory).get(vmClass).apply {
+            stateLiveData().observe(viewLifecycleOwner, Observer {
+                Timber.d("new state: %s", it.toString())
+                updateState(it)
+            })
+            eventLiveData().observe(viewLifecycleOwner, Observer { onEvent(it) })
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -84,6 +84,11 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>
 
     override fun androidInjector(): AndroidInjector<Any> {
         return androidInjector
+    }
+
+    fun <A : Parcelable> initialArguments(): A {
+        arguments?.getParcelable<A>(BUNDLE_INITIAL_ARGS)
+        throw IllegalArgumentException("Fragment doesn't contain initial args")
     }
 
     protected fun action(action: Any?) {

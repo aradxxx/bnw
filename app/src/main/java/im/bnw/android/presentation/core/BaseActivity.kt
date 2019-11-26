@@ -1,7 +1,6 @@
 package im.bnw.android.presentation.core
 
 import android.os.Bundle
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -13,12 +12,12 @@ import im.bnw.android.di.core.ViewModelFactory
 import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseActivity<VM : BaseViewModel<S>, S : State>
-    : AppCompatActivity(), HasAndroidInjector {
-    companion object {
-        private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
-    }
+private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
 
+abstract class BaseActivity<VM : BaseViewModel<S>, S : State>(
+    layoutRes: Int,
+    private val vmClass: Class<VM>
+) : AppCompatActivity(layoutRes), HasAndroidInjector {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var viewModel: VM
@@ -27,10 +26,6 @@ abstract class BaseActivity<VM : BaseViewModel<S>, S : State>
     @Inject
     lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
-    @LayoutRes
-    protected abstract fun layoutRes(): Int
-
-    protected abstract fun viewModelClass(): Class<VM>
     protected open fun updateState(state: S) {
         // for implementing
     }
@@ -40,18 +35,16 @@ abstract class BaseActivity<VM : BaseViewModel<S>, S : State>
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        savedInstanceState?.let {
-            restoredState = it.getParcelable(BUNDLE_VIEW_STATE)
-        }
+        restoredState = savedInstanceState?.getParcelable(BUNDLE_VIEW_STATE)
         AndroidXInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(layoutRes())
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(viewModelClass())
-        viewModel.stateLiveData().observe(this, Observer {
-            Timber.d("new activity state: %s", it.toString())
-            updateState(it)
-        })
-        viewModel.eventLiveData().observe(this, Observer { onEvent(it) })
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(vmClass).apply {
+            stateLiveData().observe(this@BaseActivity, Observer {
+                Timber.d("new activity state: %s", it.toString())
+                updateState(it)
+            })
+            eventLiveData().observe(this@BaseActivity, Observer { onEvent(it) })
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

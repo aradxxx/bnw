@@ -17,6 +17,7 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         ActivityBindingModule::class,
         ViewModelFactoryModule::class,
+        NetworkModule::class,
         NavigationModule::class
     ]
 )

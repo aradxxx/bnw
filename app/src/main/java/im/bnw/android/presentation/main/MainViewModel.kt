@@ -2,19 +2,21 @@ package im.bnw.android.presentation.main
 
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.AppRouter
-import im.bnw.android.presentation.core.tab.Tab
-import im.bnw.android.presentation.core.tab.TabScreen
-import im.bnw.android.presentation.core.tab.TabsContainerScreen
+import im.bnw.android.presentation.core.navigation.Screens
+import im.bnw.android.presentation.core.navigation.tab.Tab
+import ru.aradxxx.ciceronetabs.TabCicerone
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val restoredState: MainState?,
-    private val router: AppRouter
+    cicerone: TabCicerone<AppRouter>,
+    restoredState: MainState?
 ) : BaseViewModel<MainState>(
-    restoredState ?: MainState()
+    restoredState ?: MainState(),
+    cicerone.activityRouter()
 ) {
     init {
-        router.newRootScreen(TabsContainerScreen())
-        router.switchTab(TabScreen(Tab.General.tag()))
+        router.newRootScreen(Screens.TabsContainer)
+        router.switchTab(Tab.General)
+        router.newRootScreen(Tab.General.screenKey(), Screens.Splash)
     }
 }

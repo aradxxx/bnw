@@ -13,10 +13,5 @@ abstract class FragmentWithArgsModule<F : BaseFragment<VM, S>,
     : FragmentModule<F, VM, S>() {
 
     @Provides
-    fun provideInitialArgs(fragment: F): A {
-        fragment.arguments?.getParcelable<A>(BaseFragment.BUNDLE_INITIAL_ARGS)?.let {
-            return it
-        }
-        throw IllegalArgumentException("Fragment doesn't contain initial args")
-    }
+    fun provideInitialArgs(fragment: F): A = fragment.initialArguments()
 }

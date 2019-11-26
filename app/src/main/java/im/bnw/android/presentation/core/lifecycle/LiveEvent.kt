@@ -10,20 +10,14 @@ class LiveEvent<T> : MediatorLiveData<T>() {
     private val observers = ArraySet<ObserverWrapper<in T>>()
     @MainThread
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
-        val wrapper =
-            ObserverWrapper(
-                observer
-            )
+        val wrapper = ObserverWrapper(observer)
         observers.add(wrapper)
         super.observe(owner, wrapper)
     }
 
     @MainThread
     override fun observeForever(observer: Observer<in T>) {
-        val wrapper =
-            ObserverWrapper(
-                observer
-            )
+        val wrapper = ObserverWrapper(observer)
         observers.add(wrapper)
         super.observeForever(wrapper)
     }
