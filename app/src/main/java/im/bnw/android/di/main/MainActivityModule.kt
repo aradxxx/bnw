@@ -11,7 +11,7 @@ import im.bnw.android.presentation.main.MainState
 import im.bnw.android.presentation.main.MainViewModel
 
 @Module(includes = [MainActivityModule.ViewModelModule::class])
-class MainActivityModule : ActivityModule<MainActivity, MainViewModel, MainState>() {
+class MainActivityModule : ActivityModule<MainActivity, MainState>() {
     @Module
     interface ViewModelModule {
         @Binds

@@ -1,20 +1,24 @@
 package im.bnw.android.domain.message
 
+import android.os.Parcelable
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
+import kotlinx.android.parcel.Parcelize
 import java.lang.reflect.Type
 
+@Parcelize
 data class Content(
     val text: String,
     val media: List<Media>
-)
+) : Parcelable
 
+@Parcelize
 data class Media(
     val previewUrl: String,
     val fullUrl: String
-)
+) : Parcelable
 
 class ContentDeserializer : JsonDeserializer<Content> {
     @Throws(JsonParseException::class)

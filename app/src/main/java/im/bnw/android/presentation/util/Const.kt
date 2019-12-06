@@ -2,8 +2,10 @@ package im.bnw.android.presentation.util
 
 object Const {
     const val NO_ID = -1
+    const val BUNDLE_INITIAL_ARGS = "INITIAL_ARGS"
+}
 
-    // Symbols
+object Symbols {
     const val EMPTY = ""
     const val SEMICOLON = ";"
     const val COLON = ":"
@@ -16,7 +18,9 @@ object Const {
     const val QUOTES = "\""
     const val POINT = "."
 
-    // Numbers
+}
+
+object Numbers {
     const val ONE = "1"
     const val TWO = "2"
     const val THREE = "3"
@@ -27,8 +31,9 @@ object Const {
     const val EIGHT = "8"
     const val NINE = "9"
     const val ZERO = "0"
+}
 
-    //Characters
+object Chars {
     const val CIRCUMFLEX = '\u005E'
     const val SPACE_CHAR = ' '
     const val DOLLAR = '\u0024'

@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/tab_general"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/ic_list"
         android:title="@string/general" />
 
     <item
         android:id="@+id/tab_about"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/ic_settings"
         android:title="@string/about" />
 </menu>

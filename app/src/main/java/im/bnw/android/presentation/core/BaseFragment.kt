@@ -14,10 +14,11 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import im.bnw.android.di.core.AndroidXInjection
 import im.bnw.android.di.core.ViewModelFactory
+import im.bnw.android.presentation.core.lifecycle.LCHandler
+import im.bnw.android.presentation.util.Const
 import timber.log.Timber
 import javax.inject.Inject
 
-private const val BUNDLE_INITIAL_ARGS = "INITIAL_ARGS"
 private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
 
 abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
@@ -31,11 +32,16 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     private val backPressedDispatcher: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                action(Action.BackPressed)
+                viewModel.backPressed()
             }
         }
-    private lateinit var viewModel: VM
+    protected val viewModel: VM by lazy {
+        ViewModelProvider(this, viewModelFactory).get(vmClass)
+    }
     var restoredState: S? = null
+    protected val handler by lazy {
+        LCHandler(viewLifecycleOwner)
+    }
 
     protected open fun updateState(state: S) {
         // for implementing
@@ -68,7 +74,7 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(vmClass).apply {
+        viewModel.apply {
             stateLiveData().observe(viewLifecycleOwner, Observer {
                 Timber.d("new state: %s", it.toString())
                 updateState(it)
@@ -87,11 +93,7 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     }
 
     fun <A : Parcelable> initialArguments(): A {
-        arguments?.getParcelable<A>(BUNDLE_INITIAL_ARGS)
+        arguments?.getParcelable<A>(Const.BUNDLE_INITIAL_ARGS)?.also { return it }
         throw IllegalArgumentException("Fragment doesn't contain initial args")
-    }
-
-    protected fun action(action: Any?) {
-        viewModel.action(action)
     }
 }

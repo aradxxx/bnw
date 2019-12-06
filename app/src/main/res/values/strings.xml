@@ -2,5 +2,35 @@
     <string name="general">Главная</string>
     <string name="about">О приложении</string>
 
+    <string name="minutes_before">%s минут назад</string>
+    <string name="hours_ago">%s часов назад</string>
+
     <string name="test">Test</string>
+
+    <plurals name="minutes">
+        <item quantity="zero">%1$d минут назад</item>
+        <item quantity="one">%1$d минуту назад</item>
+        <item quantity="two">%1$d минуты назад</item>
+        <item quantity="few">%1$d минуты назад</item>
+        <item quantity="many">%1$d минут назад</item>
+        <item quantity="other">%1$d минут назад</item>
+    </plurals>
+
+    <plurals name="hours">
+        <item quantity="zero">%1$d часов назад</item>
+        <item quantity="one">%1$d час назад</item>
+        <item quantity="two">%1$d часа назад</item>
+        <item quantity="few">%1$d часа назад</item>
+        <item quantity="many">%1$d часов назад</item>
+        <item quantity="other">%1$d часов назад</item>
+    </plurals>
+
+    <plurals name="days">
+        <item quantity="zero">%1$d дней назад</item>
+        <item quantity="one">%1$d день назад</item>
+        <item quantity="two">%1$d дня назад</item>
+        <item quantity="few">%1$d дня назад</item>
+        <item quantity="many">%1$d дней назад</item>
+        <item quantity="other">%1$d дней назад</item>
+    </plurals>
 </resources>

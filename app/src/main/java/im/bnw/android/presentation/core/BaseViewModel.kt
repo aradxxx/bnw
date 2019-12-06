@@ -19,14 +19,6 @@ abstract class BaseViewModel<S : State>(
     open fun stateLiveData(): LiveData<S> = stateLiveData
     open fun eventLiveData(): LiveData<Any?> = eventLiveData
 
-    open fun action(action: Any?) {
-        when (action) {
-            Action.BackPressed -> {
-                backPressed()
-            }
-        }
-    }
-
     protected fun updateState(function: (S) -> S) {
         var currentState: S
         var updatedState: S
@@ -37,7 +29,11 @@ abstract class BaseViewModel<S : State>(
         stateLiveData.postValue(updatedState)
     }
 
-    private fun backPressed() {
+    protected fun postEvent(event: Any?) {
+        eventLiveData.postValue(event)
+    }
+
+    open fun backPressed() {
         router.exit()
     }
 }

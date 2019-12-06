@@ -1,7 +1,10 @@
 package im.bnw.android.domain.message
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Message(
     @SerializedName("tags")
     val tags: List<String>,
@@ -16,7 +19,7 @@ data class Message(
     val content: Content,
 
     @SerializedName("date")
-    val date: Float,
+    val date: Double,
 
     @SerializedName("id")
     val id: String,
@@ -25,5 +28,13 @@ data class Message(
     val anonymous: Boolean,
 
     @SerializedName("anoncomments")
-    val anoncomments: Boolean
-)
+    val anoncomments: Boolean,
+
+    @SerializedName("replycount")
+    val replyCount: Int,
+
+    @SerializedName("recommendations")
+    val recommendations: List<String>
+) : Parcelable {
+    fun timestamp(): Long = (date * 1000).toLong()
+}

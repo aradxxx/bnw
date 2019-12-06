@@ -7,14 +7,8 @@ import im.bnw.android.presentation.main.MainActivity
 import ru.aradxxx.ciceronetabs.TabCicerone
 import ru.aradxxx.ciceronetabs.TabNavigator
 
-fun View.setVisibility(visibility: Boolean) {
+fun View.visibility(visibility: Boolean) {
     this.visibility = if (visibility) View.VISIBLE else View.GONE
-}
-
-inline fun createString(block: StringBuilder.() -> Unit): String {
-    val sb = StringBuilder()
-    sb.block()
-    return sb.toString()
 }
 
 fun Fragment.tabNavigator(tabCicerone: TabCicerone<AppRouter>, container: Int)

@@ -8,7 +8,8 @@ interface Api {
     /*Посты списком постранично*/
     @GET("show")
     suspend fun getMessages(
-        @Query("page") page: Int,
+        @Query("after") after: String,
+        @Query("before") before: String,
         @Query("user") user: String?
     ): MessagesResponse
 }

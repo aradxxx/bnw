@@ -1,7 +1,6 @@
 package im.bnw.android.presentation.core.lifecycle
 
 import android.os.Handler
-import android.os.Looper
 import android.os.Message
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -12,36 +11,11 @@ import androidx.lifecycle.OnLifecycleEvent
  * Process messages only when started
  * Note that is stopped by default after creation
  */
-class LCHandler : Handler, LifecycleObserver {
-    private var started = false
-
-    constructor(lifecycleOwner: LifecycleOwner) : this(started = false) {
-        lifecycleOwner.lifecycle.addObserver(this)
-    }
-
-    @JvmOverloads
-    constructor(started: Boolean = false) {
-        this.started = started
-    }
-
-    constructor(lifecycleOwner: LifecycleOwner, started: Boolean) : this(started) {
-        lifecycleOwner.lifecycle.addObserver(this)
-    }
-
-    constructor(looper: Looper) : super(looper)
-
-    constructor(looper: Looper, lifecycleOwner: LifecycleOwner) : this(looper) {
-        lifecycleOwner.lifecycle.addObserver(this)
-    }
-
-    constructor(looper: Looper, started: Boolean) : this(looper) {
-        this.started = started
-    }
-
-    constructor(looper: Looper, lifecycleOwner: LifecycleOwner, started: Boolean) : this(
-        looper,
-        started
-    ) {
+class LCHandler(
+    private val lifecycleOwner: LifecycleOwner,
+    private var started: Boolean = false
+) : Handler(), LifecycleObserver {
+    init {
         lifecycleOwner.lifecycle.addObserver(this)
     }
 

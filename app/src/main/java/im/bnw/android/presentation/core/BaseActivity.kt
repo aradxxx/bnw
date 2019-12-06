@@ -20,7 +20,9 @@ abstract class BaseActivity<VM : BaseViewModel<S>, S : State>(
 ) : AppCompatActivity(layoutRes), HasAndroidInjector {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var viewModel: VM
+    private val viewModel: VM by lazy {
+        ViewModelProviders.of(this, viewModelFactory).get(vmClass)
+    }
     var restoredState: S? = null
 
     @Inject
@@ -38,7 +40,7 @@ abstract class BaseActivity<VM : BaseViewModel<S>, S : State>(
         restoredState = savedInstanceState?.getParcelable(BUNDLE_VIEW_STATE)
         AndroidXInjection.inject(this)
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(vmClass).apply {
+        viewModel.apply {
             stateLiveData().observe(this@BaseActivity, Observer {
                 Timber.d("new activity state: %s", it.toString())
                 updateState(it)
@@ -54,9 +56,5 @@ abstract class BaseActivity<VM : BaseViewModel<S>, S : State>(
 
     override fun androidInjector(): AndroidInjector<Any> {
         return androidInjector
-    }
-
-    protected fun action(action: Any?) {
-        viewModel.action(action)
     }
 }

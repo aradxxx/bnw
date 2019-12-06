@@ -11,7 +11,7 @@ import im.bnw.android.presentation.splash.SplashState
 import im.bnw.android.presentation.splash.SplashViewModel
 
 @Module(includes = [SplashFragmentModule.ViewModelModule::class])
-class SplashFragmentModule : FragmentModule<SplashFragment, SplashViewModel, SplashState>() {
+class SplashFragmentModule : FragmentModule<SplashFragment, SplashState>() {
     @Module
     interface ViewModelModule {
         @Binds

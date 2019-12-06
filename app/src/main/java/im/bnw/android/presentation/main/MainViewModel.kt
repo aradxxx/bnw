@@ -4,6 +4,7 @@ import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
+import im.bnw.android.presentation.util.Symbols
 import ru.aradxxx.ciceronetabs.TabCicerone
 import javax.inject.Inject
 
@@ -17,6 +18,6 @@ class MainViewModel @Inject constructor(
     init {
         router.newRootScreen(Screens.TabsContainer)
         router.switchTab(Tab.General)
-        router.newRootScreen(Tab.General.screenKey(), Screens.Splash)
+        router.newRootScreen(Tab.General.screenKey(), Screens.Messages(Symbols.EMPTY))
     }
 }
