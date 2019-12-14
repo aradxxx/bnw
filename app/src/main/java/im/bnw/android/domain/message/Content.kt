@@ -1,5 +1,6 @@
 package im.bnw.android.domain.message
 
+import android.net.Uri
 import android.os.Parcelable
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -7,6 +8,11 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import kotlinx.android.parcel.Parcelize
 import java.lang.reflect.Type
+
+private const val YOUTUBE = "youtube"
+private const val YOUTU = "youtu.be"
+private const val YOUTUBE_THUMB =
+    "https://img.youtube.com/vi/%s/default.jpg"
 
 @Parcelize
 data class Content(
@@ -18,7 +24,20 @@ data class Content(
 data class Media(
     val previewUrl: String,
     val fullUrl: String
-) : Parcelable
+) : Parcelable {
+    fun isYoutube() = fullUrl.contains(YOUTUBE) || fullUrl.contains(YOUTU)
+
+    fun youtubePreviewLink(): String {
+        val uri = Uri.parse(fullUrl)
+        val id = if (fullUrl.contains(YOUTU)) {
+            uri.lastPathSegment
+        } else {
+            uri.getQueryParameter("v") ?: ""
+        }
+
+        return String.format(YOUTUBE_THUMB, id)
+    }
+}
 
 class ContentDeserializer : JsonDeserializer<Content> {
     @Throws(JsonParseException::class)

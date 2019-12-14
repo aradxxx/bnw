@@ -1,20 +1,34 @@
 package im.bnw.android.presentation.messages.adapter
 
-import android.os.Build
-import android.text.Html
+import android.graphics.Rect
 import android.text.method.LinkMovementMethod
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import im.bnw.android.BuildConfig
 import im.bnw.android.R
+import im.bnw.android.presentation.media_list.MediaAdapter
+import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.formatDateTime
 import im.bnw.android.presentation.util.timeAgoString
-import kotlinx.android.synthetic.main.item_message_card.*
+import io.noties.markwon.Markwon
+import io.noties.markwon.linkify.LinkifyPlugin
+import kotlinx.android.synthetic.main.item_message_card.ava
+import kotlinx.android.synthetic.main.item_message_card.comments
+import kotlinx.android.synthetic.main.item_message_card.comments_icon
+import kotlinx.android.synthetic.main.item_message_card.date
+import kotlinx.android.synthetic.main.item_message_card.id
+import kotlinx.android.synthetic.main.item_message_card.recommends
+import kotlinx.android.synthetic.main.item_message_card.recommends_icon
+import kotlinx.android.synthetic.main.item_message_card.text
+import kotlinx.android.synthetic.main.item_message_card.user
+import kotlinx.android.synthetic.main.item_message_card_with_media.*
 
 val messageDelegate = adapterDelegateLayoutContainer<MessageItem, MessageListItem>(
     R.layout.item_message_card,
@@ -23,11 +37,14 @@ val messageDelegate = adapterDelegateLayoutContainer<MessageItem, MessageListIte
     text.movementMethod = LinkMovementMethod.getInstance()
     val colorAccent = ContextCompat.getColor(context, R.color.colorAccent)
     val colorSecondaryLight = ContextCompat.getColor(context, R.color.text_secondary_dark)
+    val markwon = Markwon.builder(context)
+        .usePlugin(LinkifyPlugin.create())
+        .build()
 
     date.setOnLongClickListener {
         Toast.makeText(
             context,
-            formatDateTime(item.message.timestamp()),
+            timeAgoString(context, item.message.timestamp()),
             Toast.LENGTH_SHORT
         ).show()
         true
@@ -35,17 +52,9 @@ val messageDelegate = adapterDelegateLayoutContainer<MessageItem, MessageListIte
 
     bind {
         val message = item.message
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            text.text = Html.fromHtml(message.content.text, Html.FROM_HTML_MODE_COMPACT)
-        } else {
-            text.text = Html.fromHtml(message.content.text)
-        }
-
+        markwon.setMarkdown(text, message.text)
         user.text = message.user
-
-        date.text = timeAgoString(context, message.timestamp())
-
+        date.text = formatDateTime(item.message.timestamp())
         id.text = message.id
 
         comments.text = message.replyCount.toString()
@@ -81,30 +90,60 @@ val messageDelegate = adapterDelegateLayoutContainer<MessageItem, MessageListIte
 
 val messageWithMediaDelegate =
     adapterDelegateLayoutContainer<MessageWithMediaItem, MessageListItem>(
-        R.layout.item_message_card
+        R.layout.item_message_card_with_media
     ) {
         text.movementMethod = LinkMovementMethod.getInstance()
         val colorAccent = ContextCompat.getColor(context, R.color.colorAccent)
-        val colorSecondaryLight = ContextCompat.getColor(context, R.color.text_secondary_light)
+        val colorSecondaryLight = ContextCompat.getColor(context, R.color.text_secondary_dark)
+        val markwon = Markwon.builder(context)
+            .usePlugin(LinkifyPlugin.create())
+            .build()
+
         date.setOnLongClickListener {
             Toast.makeText(
                 context,
-                formatDateTime(item.message.timestamp()),
+                timeAgoString(context, item.message.timestamp()),
                 Toast.LENGTH_SHORT
             ).show()
             true
         }
+
+        val mediaAdapter = MediaAdapter()
+        val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        with(media_list) {
+            layoutManager = linearLayoutManager
+            adapter = mediaAdapter
+            addItemDecoration(object : RecyclerView.ItemDecoration() {
+                val normal = 16.dpToPx
+                val half = 8.dpToPx
+                override fun getItemOffsets(
+                    outRect: Rect,
+                    itemPosition: Int,
+                    parent: RecyclerView
+                ) {
+                    if (itemPosition == 0) {
+                        outRect.left = normal
+                    } else {
+                        outRect.left = half
+                    }
+                    outRect.bottom = half
+                    outRect.top = half
+                    if (itemPosition + 1 == parent.adapter?.itemCount) {
+                        outRect.right = normal
+                    } else {
+                        outRect.right = 0
+                    }
+                }
+            })
+        }
+
         bind {
             val message = item.message
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                text.text = Html.fromHtml(message.content.text, Html.FROM_HTML_MODE_COMPACT)
-            } else {
-                text.text = Html.fromHtml(message.content.text)
-            }
+            markwon.setMarkdown(text, message.text)
             user.text = message.user
 
-            date.text = timeAgoString(context, message.timestamp())
+            date.text = formatDateTime(item.message.timestamp())
             id.text = message.id
 
             comments.text = message.replyCount.toString()
@@ -135,6 +174,8 @@ val messageWithMediaDelegate =
                 .load(String.format(BuildConfig.USER_AVA_URL, message.user))
                 .transform(CircleCrop())
                 .into(ava)
+
+            mediaAdapter.items = message.content.media
         }
     }
 

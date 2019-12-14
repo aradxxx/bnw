@@ -6,7 +6,10 @@ import android.os.Parcelable
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.CallSuper
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.isExecutionActions
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.AndroidInjector
@@ -14,10 +17,12 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import im.bnw.android.di.core.AndroidXInjection
 import im.bnw.android.di.core.ViewModelFactory
+import im.bnw.android.presentation.core.dialog.NotificationDialog
 import im.bnw.android.presentation.core.lifecycle.LCHandler
 import im.bnw.android.presentation.util.Const
 import timber.log.Timber
 import javax.inject.Inject
+
 
 private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
 
@@ -49,6 +54,11 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
 
     protected open fun onEvent(event: Any?) {
         // for implementing
+        when (event) {
+            is DialogEvent -> showDialog {
+                NotificationDialog.newInstance(getString(event.message))
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -96,4 +106,44 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
         arguments?.getParcelable<A>(Const.BUNDLE_INITIAL_ARGS)?.also { return it }
         throw IllegalArgumentException("Fragment doesn't contain initial args")
     }
+
+    private fun getDialogFragment(tag: String): DialogFragment? {
+        val fragmentManager: FragmentManager = requireFragmentManager()
+        val fragment: Fragment? = fragmentManager.findFragmentByTag(tag)
+        if (fragment is DialogFragment) {
+            val dialogFragment: DialogFragment = fragment
+            return if (dialogFragment.dialog != null && dialogFragment.dialog?.isShowing == true) {
+                dialogFragment
+            } else {
+                null
+            }
+        }
+        return null
+    }
+
+    protected fun dismissDialog(tag: String) {
+        val dialogFragment: DialogFragment? = getDialogFragment(tag)
+        dialogFragment?.dismiss()
+    }
+
+    protected fun showDialog(dialogFragment: () -> DialogFragment) {
+        showDialog(NotificationDialog.NOTIFICATION_DIALOG_TAG, dialogFragment)
+    }
+
+    protected fun showDialog(tag: String, dialogFragment: () -> DialogFragment) {
+        if (getDialogFragment(tag) != null) {
+            return
+        }
+        handler.post {
+            dismissDialog(tag)
+            val fragmentManager: FragmentManager = requireFragmentManager()
+            val df = dialogFragment()
+            if (!isExecutionActions(fragmentManager)) {
+                df.show(fragmentManager, tag)
+            } else {
+                handler.post { showDialog(tag, dialogFragment) }
+            }
+        }
+    }
+
 }

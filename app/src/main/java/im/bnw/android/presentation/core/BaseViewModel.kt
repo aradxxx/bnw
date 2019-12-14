@@ -3,8 +3,13 @@ package im.bnw.android.presentation.core
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import im.bnw.android.presentation.core.lifecycle.LiveEvent
 import im.bnw.android.presentation.core.navigation.AppRouter
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.plus
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicReference
 
 abstract class BaseViewModel<S : State>(
@@ -15,6 +20,17 @@ abstract class BaseViewModel<S : State>(
     private val eventLiveData = LiveEvent<Any?>()
     private val atomicState = AtomicReference<S>(initialState)
     protected val state: S get() = atomicState.get()
+    private val eHandler = CoroutineExceptionHandler { _, e ->
+        handleException(e)
+    }
+    protected val vmScope = viewModelScope + eHandler
+
+    protected open fun handleException(e: Throwable) {
+        if (e is CancellationException) {
+            return
+        }
+        Timber.e(e)
+    }
 
     open fun stateLiveData(): LiveData<S> = stateLiveData
     open fun eventLiveData(): LiveData<Any?> = eventLiveData

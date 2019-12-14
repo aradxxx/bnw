@@ -1,0 +1,36 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="general">General</string>
+    <string name="about">About</string>
+
+    <string name="test">Test</string>
+    <string name="connection_error">Check internet connection</string>
+    <string name="connection_error_blocking">Check internet connection. Perhaps https://bnw.im blocked by provider</string>
+    <string name="ok">OK</string>
+
+    <plurals name="minutes" tools:ignore="UnusedQuantity">
+        <item quantity="zero">%1$d minutes ago</item>
+        <item quantity="one">%1$d minute ago</item>
+        <item quantity="two">%1$d minutes ago</item>
+        <item quantity="few">%1$d minutes ago</item>
+        <item quantity="many">%1$d minutes ago</item>
+        <item quantity="other">%1$d minutes ago</item>
+    </plurals>
+
+    <plurals name="hours" tools:ignore="UnusedQuantity">
+        <item quantity="zero">%1$d hours ago</item>
+        <item quantity="one">%1$d hour ago</item>
+        <item quantity="two">%1$d hours ago</item>
+        <item quantity="few">%1$d hours ago</item>
+        <item quantity="many">%1$d hours ago</item>
+        <item quantity="other">%1$d hours ago</item>
+    </plurals>
+
+    <plurals name="days" tools:ignore="UnusedQuantity">
+        <item quantity="zero">%1$d days ago</item>
+        <item quantity="one">%1$d day ago</item>
+        <item quantity="two">%1$d days ago</item>
+        <item quantity="few">%1$d days ago</item>
+        <item quantity="many">%1$d days ago</item>
+        <item quantity="other">%1$d days ago</item>
+    </plurals>
+</resources>

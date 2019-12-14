@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.util
 
+import android.content.res.Resources
 import android.view.View
 import androidx.fragment.app.Fragment
 import im.bnw.android.presentation.core.navigation.AppRouter
@@ -16,3 +17,6 @@ fun Fragment.tabNavigator(tabCicerone: TabCicerone<AppRouter>, container: Int)
     val activity: MainActivity = requireActivity() as MainActivity
     return TabNavigator(activity, tabCicerone, childFragmentManager, container)
 }
+
+val Int.dpToPx: Int
+    get() = (this * Resources.getSystem().displayMetrics.density).toInt()

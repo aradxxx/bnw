@@ -1,9 +1,10 @@
 package im.bnw.android.presentation.messages
 
-import androidx.lifecycle.viewModelScope
+import im.bnw.android.R
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.presentation.core.BaseViewModel
+import im.bnw.android.presentation.core.DialogEvent
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.messages.adapter.MessageItem
 import im.bnw.android.presentation.messages.adapter.MessageListItem
@@ -11,11 +12,12 @@ import im.bnw.android.presentation.messages.adapter.MessageWithMediaItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
+import javax.net.ssl.SSLException
 
 private const val PAGE_SIZE = 20
 
@@ -36,8 +38,8 @@ class MessagesViewModel @Inject constructor(
         if (state.beforeLoading || state.fullLoaded) {
             return
         }
-        updateState { state -> state.copy(beforeLoading = true) }
-        viewModelScope.launch(Dispatchers.Default) {
+        vmScope.launch(Dispatchers.Default) {
+            updateState { state -> state.copy(beforeLoading = true) }
             val last = if (state.messages.isNotEmpty()) {
                 state.messages.last().message().id
             } else {
@@ -45,17 +47,14 @@ class MessagesViewModel @Inject constructor(
             }
             messageInteractor.messages("", last, state.user)
                 .catch { e ->
-                    run {
-                        Timber.e(e)
-                        updateState { state ->
-                            state.copy(
-                                beforeLoading = false
-                            )
-                        }
+                    handleException(e)
+                    updateState { state ->
+                        state.copy(
+                            beforeLoading = false
+                        )
                     }
                 }
                 .map { messagesToListItems(it) }
-                .flowOn(Dispatchers.Default)
                 .collect { newPage ->
                     updateState { state ->
                         state.copy(
@@ -70,11 +69,11 @@ class MessagesViewModel @Inject constructor(
     }
 
     private fun loadAfter() {
-        if (state.messages.isEmpty()) {
+        if (state.beforeLoading && state.messages.isEmpty()) {
             return
         }
-        updateState { state -> state.copy(afterLoading = true) }
-        viewModelScope.launch(Dispatchers.Default) {
+        vmScope.launch(Dispatchers.Default) {
+            updateState { state -> state.copy(afterLoading = true) }
             val first = if (state.messages.isNotEmpty()) {
                 state.messages.first().message().id
             } else {
@@ -82,13 +81,11 @@ class MessagesViewModel @Inject constructor(
             }
             messageInteractor.messages(first, "", state.user)
                 .catch { e ->
-                    run {
-                        Timber.e(e)
-                        updateState { state ->
-                            state.copy(
-                                afterLoading = false
-                            )
-                        }
+                    handleException(e)
+                    updateState { state ->
+                        state.copy(
+                            afterLoading = false
+                        )
                     }
                 }
                 .map { messagesToListItems(it) }
@@ -128,5 +125,13 @@ class MessagesViewModel @Inject constructor(
 
     fun bottomNear() {
         loadBefore()
+    }
+
+    override fun handleException(e: Throwable) {
+        super.handleException(e)
+        when (e) {
+            is SSLException -> postEvent(DialogEvent(R.string.connection_error_blocking))
+            is IOException -> postEvent(DialogEvent(R.string.connection_error))
+        }
     }
 }

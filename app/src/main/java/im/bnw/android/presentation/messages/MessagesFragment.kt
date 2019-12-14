@@ -36,7 +36,7 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
             this.adapter = messageAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (linearLayoutManager.findLastCompletelyVisibleItemPosition() + 10
+                    if (linearLayoutManager.findLastVisibleItemPosition() + 10
                         == adapter?.itemCount
                     ) {
                         viewModel.bottomNear()
@@ -54,6 +54,7 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     }
 
     override fun onEvent(event: Any?) {
+        super.onEvent(event)
         when (event) {
             is Event.ScrollToTop -> handler.postDelayed({
                 linearLayoutManager.smoothScrollToPosition(messages_list, null, 0)
