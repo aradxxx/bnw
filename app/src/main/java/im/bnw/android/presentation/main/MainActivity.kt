@@ -1,6 +1,7 @@
 package im.bnw.android.presentation.main
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import im.bnw.android.R
 import im.bnw.android.presentation.core.BaseActivity
 import im.bnw.android.presentation.core.navigation.AppRouter
@@ -18,6 +19,7 @@ class MainActivity : BaseActivity<MainViewModel, MainState>(
     lateinit var navigator: TabNavigator<AppRouter>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         navigator = TabNavigator(this, tabCicerone, R.id.container)
     }
