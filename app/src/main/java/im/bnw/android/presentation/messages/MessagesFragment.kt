@@ -3,6 +3,7 @@ package im.bnw.android.presentation.messages
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.os.postDelayed
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import im.bnw.android.R
@@ -29,9 +30,9 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        messageAdapter = MessageAdapter()
+        messageAdapter = MessageAdapter { position -> viewModel.userClicked(position) }
         linearLayoutManager = LinearLayoutManager(requireContext())
-        messages_list.apply {
+        with(messages_list) {
             layoutManager = linearLayoutManager
             this.adapter = messageAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -56,9 +57,9 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     override fun onEvent(event: Any?) {
         super.onEvent(event)
         when (event) {
-            is Event.ScrollToTop -> handler.postDelayed({
+            is Event.ScrollToTop -> handler.postDelayed(200) {
                 linearLayoutManager.smoothScrollToPosition(messages_list, null, 0)
-            }, 200)
+            }
         }
     }
 

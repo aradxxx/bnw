@@ -10,25 +10,25 @@ private const val APP_DATE_FORMAT = "dd MMM yyyy HH:mm"
 private const val DATE = "dd.MM.yyyy"
 private const val TIME = "HH:mm"
 
-fun dateToAppFormat(time: Long): String {
-    if (isSameDays(System.currentTimeMillis(), time)) {
-        return format(time, TIME)
+fun Long.dateToAppFormat(): String {
+    if (isSameDays(System.currentTimeMillis(), this)) {
+        return format(TIME)
     }
-    return format(time, APP_DATE_FORMAT)
+    return format(APP_DATE_FORMAT)
 }
 
-fun formatDateTime(time: Long): String {
-    return format(time, APP_DATE_FORMAT)
+fun Long.formatDateTime(): String {
+    return format(APP_DATE_FORMAT)
 }
 
-fun format(time: Long, pattern: String): String {
+fun Long.format(pattern: String): String {
     val formatter = SimpleDateFormat(pattern, Locale.getDefault())
-    return formatter.format(Date(time))
+    return formatter.format(Date(this))
 }
 
 fun isSameDays(time: Long, prev: Long): Boolean {
-    val firstDateString = format(time, DATE)
-    val secondDateString = format(prev, DATE)
+    val firstDateString = time.format(DATE)
+    val secondDateString = prev.format(DATE)
     return firstDateString == secondDateString
 }
 

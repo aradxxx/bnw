@@ -96,10 +96,9 @@
                 android:id="@+id/id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="-8dp"
                 android:drawableStart="@drawable/ic_sharp"
                 android:gravity="center_vertical"
-                android:minWidth="96dp"
+                android:minWidth="82dp"
                 android:singleLine="true"
                 android:textColor="@color/text_secondary_dark"
                 android:textSize="@dimen/text_size_body"
@@ -110,7 +109,7 @@
                 android:id="@+id/comments_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="16dp"
                 android:src="@drawable/ic_chat"
                 app:tint="@color/text_secondary_dark" />
 

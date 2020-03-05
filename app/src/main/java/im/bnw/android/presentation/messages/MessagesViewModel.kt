@@ -6,6 +6,8 @@ import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.DialogEvent
 import im.bnw.android.presentation.core.navigation.AppRouter
+import im.bnw.android.presentation.core.navigation.Screens
+import im.bnw.android.presentation.core.navigation.tab.Tab
 import im.bnw.android.presentation.messages.adapter.MessageItem
 import im.bnw.android.presentation.messages.adapter.MessageListItem
 import im.bnw.android.presentation.messages.adapter.MessageWithMediaItem
@@ -133,5 +135,13 @@ class MessagesViewModel @Inject constructor(
             is SSLException -> postEvent(DialogEvent(R.string.connection_error_blocking))
             is IOException -> postEvent(DialogEvent(R.string.connection_error))
         }
+    }
+
+    fun userClicked(position: Int) {
+        val userId = state.messages[position].message().user
+        if (state.user == userId) {
+            return
+        }
+        router.navigateTo(Tab.GLOBAL, Screens.Messages(userId))
     }
 }

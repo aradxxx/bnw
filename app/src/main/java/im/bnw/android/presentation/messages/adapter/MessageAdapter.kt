@@ -3,7 +3,6 @@ package im.bnw.android.presentation.messages.adapter
 import android.graphics.Rect
 import android.text.method.LinkMovementMethod
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,80 +20,61 @@ import io.noties.markwon.Markwon
 import io.noties.markwon.linkify.LinkifyPlugin
 import kotlinx.android.synthetic.main.item_message_card.ava
 import kotlinx.android.synthetic.main.item_message_card.comments
-import kotlinx.android.synthetic.main.item_message_card.comments_icon
 import kotlinx.android.synthetic.main.item_message_card.date
 import kotlinx.android.synthetic.main.item_message_card.id
 import kotlinx.android.synthetic.main.item_message_card.recommends
-import kotlinx.android.synthetic.main.item_message_card.recommends_icon
 import kotlinx.android.synthetic.main.item_message_card.text
 import kotlinx.android.synthetic.main.item_message_card.user
 import kotlinx.android.synthetic.main.item_message_card_with_media.*
 
-val messageDelegate = adapterDelegateLayoutContainer<MessageItem, MessageListItem>(
-    R.layout.item_message_card,
-    on = { item, items, position -> item is MessageItem }
-) {
-    text.movementMethod = LinkMovementMethod.getInstance()
-    val colorAccent = ContextCompat.getColor(context, R.color.colorAccent)
-    val colorSecondaryLight = ContextCompat.getColor(context, R.color.text_secondary_dark)
-    val markwon = Markwon.builder(context)
-        .usePlugin(LinkifyPlugin.create())
-        .build()
+fun messageDelegate(listener: (Int) -> Unit) =
+    adapterDelegateLayoutContainer<MessageItem, MessageListItem>(
+        R.layout.item_message_card,
+        on = { item, _, _ -> item is MessageItem }
+    ) {
+        text.movementMethod = LinkMovementMethod.getInstance()
+        val markwon = Markwon.builder(context)
+            .usePlugin(LinkifyPlugin.create())
+            .build()
 
-    date.setOnLongClickListener {
-        Toast.makeText(
-            context,
-            timeAgoString(context, item.message.timestamp()),
-            Toast.LENGTH_SHORT
-        ).show()
-        true
-    }
-
-    bind {
-        val message = item.message
-        markwon.setMarkdown(text, message.text)
-        user.text = message.user
-        date.text = formatDateTime(item.message.timestamp())
-        id.text = message.id
-
-        comments.text = message.replyCount.toString()
-        if (message.replyCount == 0) {
-            comments.setTextColor(colorSecondaryLight)
-            comments_icon.setColorFilter(
-                colorSecondaryLight,
-                android.graphics.PorterDuff.Mode.SRC_IN
-            )
-        } else {
-            comments.setTextColor(colorAccent)
-            comments_icon.setColorFilter(colorAccent, android.graphics.PorterDuff.Mode.SRC_IN)
+        date.setOnLongClickListener {
+            Toast.makeText(
+                context,
+                timeAgoString(context, item.message.timestamp()),
+                Toast.LENGTH_SHORT
+            ).show()
+            true
         }
 
-        recommends.text = message.recommendations.size.toString()
-        if (message.recommendations.isEmpty()) {
-            recommends.setTextColor(colorSecondaryLight)
-            recommends_icon.setColorFilter(
-                colorSecondaryLight,
-                android.graphics.PorterDuff.Mode.SRC_IN
-            )
-        } else {
-            recommends.setTextColor(colorAccent)
-            recommends_icon.setColorFilter(colorAccent, android.graphics.PorterDuff.Mode.SRC_IN)
+        user.setOnClickListener {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                listener(position)
+            }
         }
 
-        Glide.with(context)
-            .load(String.format(BuildConfig.USER_AVA_URL, message.user))
-            .transform(CircleCrop())
-            .into(ava)
-    }
-}
+        bind {
+            val message = item.message
+            markwon.setMarkdown(text, message.text)
+            user.text = message.user
+            date.text = item.message.timestamp().formatDateTime()
+            id.text = message.id
 
-val messageWithMediaDelegate =
+            comments.text = message.replyCount.toString()
+            recommends.text = message.recommendations.size.toString()
+
+            Glide.with(context)
+                .load(String.format(BuildConfig.USER_AVA_URL, message.user))
+                .transform(CircleCrop())
+                .into(ava)
+        }
+    }
+
+fun messageWithMediaDelegate(listener: (Int) -> Unit) =
     adapterDelegateLayoutContainer<MessageWithMediaItem, MessageListItem>(
         R.layout.item_message_card_with_media
     ) {
         text.movementMethod = LinkMovementMethod.getInstance()
-        val colorAccent = ContextCompat.getColor(context, R.color.colorAccent)
-        val colorSecondaryLight = ContextCompat.getColor(context, R.color.text_secondary_dark)
         val markwon = Markwon.builder(context)
             .usePlugin(LinkifyPlugin.create())
             .build()
@@ -136,45 +116,25 @@ val messageWithMediaDelegate =
                 }
             })
         }
+        user.setOnClickListener {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                listener(position)
+            }
+        }
 
         bind {
             val message = item.message
-
             markwon.setMarkdown(text, message.text)
             user.text = message.user
-
-            date.text = formatDateTime(item.message.timestamp())
+            date.text = item.message.timestamp().formatDateTime()
             id.text = message.id
-
             comments.text = message.replyCount.toString()
-            if (message.replyCount == 0) {
-                comments.setTextColor(colorSecondaryLight)
-                comments_icon.setColorFilter(
-                    colorSecondaryLight,
-                    android.graphics.PorterDuff.Mode.SRC_IN
-                )
-            } else {
-                comments.setTextColor(colorAccent)
-                comments_icon.setColorFilter(colorAccent, android.graphics.PorterDuff.Mode.SRC_IN)
-            }
-
             recommends.text = message.recommendations.size.toString()
-            if (message.recommendations.isEmpty()) {
-                recommends.setTextColor(colorSecondaryLight)
-                recommends_icon.setColorFilter(
-                    colorSecondaryLight,
-                    android.graphics.PorterDuff.Mode.SRC_IN
-                )
-            } else {
-                recommends.setTextColor(colorAccent)
-                recommends_icon.setColorFilter(colorAccent, android.graphics.PorterDuff.Mode.SRC_IN)
-            }
-
             Glide.with(context)
                 .load(String.format(BuildConfig.USER_AVA_URL, message.user))
                 .transform(CircleCrop())
                 .into(ava)
-
             mediaAdapter.items = message.content.media
         }
     }
@@ -205,11 +165,12 @@ val itemCallback: DiffUtil.ItemCallback<MessageListItem> =
         }
     }
 
-class MessageAdapter : AsyncListDifferDelegationAdapter<MessageListItem>(itemCallback) {
+class MessageAdapter(listener: (Int) -> Unit) :
+    AsyncListDifferDelegationAdapter<MessageListItem>(itemCallback) {
     init {
         delegatesManager.apply {
-            addDelegate(messageDelegate)
-            addDelegate(messageWithMediaDelegate)
+            addDelegate(messageDelegate(listener))
+            addDelegate(messageWithMediaDelegate(listener))
         }
     }
 }
