@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.os.postDelayed
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import im.bnw.android.R
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.messages.adapter.MessageAdapter
 import im.bnw.android.presentation.util.Const
-import im.bnw.android.presentation.util.visibility
 import kotlinx.android.synthetic.main.fragment_messages_list.*
 
 class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
@@ -65,7 +65,7 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
 
     override fun updateState(state: MessagesState) {
         messageAdapter.items = state.messages
-        progress_bar_line.visibility(state.beforeLoading && state.messages.isNotEmpty())
+        progress_bar_line.isVisible = state.beforeLoading && state.messages.isNotEmpty()
         swipe_to_refresh.isRefreshing = state.afterLoading ||
                 (state.beforeLoading && state.messages.isEmpty())
     }
