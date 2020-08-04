@@ -12,11 +12,7 @@ import im.bnw.android.presentation.messages.adapter.MessageItem
 import im.bnw.android.presentation.messages.adapter.MessageListItem
 import im.bnw.android.presentation.messages.adapter.MessageWithMediaItem
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 import javax.net.ssl.SSLException
@@ -47,7 +43,25 @@ class MessagesViewModel @Inject constructor(
             } else {
                 ""
             }
-            messageInteractor.messages("", last, state.user)
+            try {
+                val messages = messageInteractor.messages("", last, state.user)
+                val newPage = messagesToListItems(messages)
+                updateState { state ->
+                    state.copy(
+                        beforeLoading = false,
+                        messages = state.messages.plus(newPage)
+                    )
+                }
+            } catch (t: Throwable) {
+                handleException(t)
+                updateState { state ->
+                    state.copy(
+                        beforeLoading = false
+                    )
+                }
+            }
+
+            /*messageInteractor.messages("", last, state.user)
                 .catch { e ->
                     handleException(e)
                     updateState { state ->
@@ -66,7 +80,7 @@ class MessagesViewModel @Inject constructor(
                     }
                     Timber.d(Thread.currentThread().name)
                     Timber.d(newPage.toString())
-                }
+                }*/
         }
     }
 
@@ -81,7 +95,32 @@ class MessagesViewModel @Inject constructor(
             } else {
                 ""
             }
-            messageInteractor.messages(first, "", state.user)
+
+            try {
+                val messages = messageInteractor.messages(first, "", state.user)
+                val newPage = messagesToListItems(messages)
+                val needLoadMore = newPage.size == PAGE_SIZE
+                updateState { state ->
+                    state.copy(
+                        afterLoading = needLoadMore,
+                        messages = newPage.plus(state.messages)
+                    )
+                }
+                if (needLoadMore) {
+                    loadAfter()
+                } else if (newPage.isNotEmpty()) {
+                    postEvent(Event.ScrollToTop)
+                }
+            } catch (t: Throwable) {
+                handleException(t)
+                updateState { state ->
+                    state.copy(
+                        afterLoading = false
+                    )
+                }
+            }
+
+            /*messageInteractor.messages(first, "", state.user)
                 .catch { e ->
                     handleException(e)
                     updateState { state ->
@@ -106,7 +145,7 @@ class MessagesViewModel @Inject constructor(
                     }
                     Timber.d(Thread.currentThread().name)
                     Timber.d(newPage.toString())
-                }
+                }*/
         }
     }
 

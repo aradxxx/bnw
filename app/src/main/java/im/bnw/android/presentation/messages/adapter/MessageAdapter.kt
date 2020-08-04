@@ -91,7 +91,7 @@ fun messageWithMediaDelegate(listener: (Int) -> Unit) =
         val mediaAdapter = MediaAdapter()
         val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         with(media_list) {
-            layoutManager = linearLayoutManager
+            layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
             adapter = mediaAdapter
             addItemDecoration(object : RecyclerView.ItemDecoration() {
                 val normal = 16.dpToPx
@@ -125,6 +125,7 @@ fun messageWithMediaDelegate(listener: (Int) -> Unit) =
 
         bind {
             val message = item.message
+            mediaAdapter.items = message.content.media
             markwon.setMarkdown(text, message.text)
             user.text = message.user
             date.text = item.message.timestamp().formatDateTime()
@@ -135,7 +136,6 @@ fun messageWithMediaDelegate(listener: (Int) -> Unit) =
                 .load(String.format(BuildConfig.USER_AVA_URL, message.user))
                 .transform(CircleCrop())
                 .into(ava)
-            mediaAdapter.items = message.content.media
         }
     }
 

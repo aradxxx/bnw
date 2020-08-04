@@ -8,7 +8,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import im.bnw.android.R
-import im.bnw.android.presentation.util.Symbols
 
 private const val ARGUMENT_MESSAGE = "ARGUMENT_MESSAGE"
 private const val ARGUMENT_POSITIVE_TITLE = "ARGUMENT_POSITIVE_TITLE"
@@ -50,10 +49,10 @@ class NotificationDialog : DialogFragment() {
         ) {
             return
         }
-        message = args.getString(ARGUMENT_MESSAGE, Symbols.EMPTY)
+        message = args.getString(ARGUMENT_MESSAGE, "")
         positiveTitle = args.getString(ARGUMENT_POSITIVE_TITLE, getString(R.string.ok))
-        negativeTitle = args.getString(ARGUMENT_NEGATIVE_TITLE, Symbols.EMPTY)
-        neutralTitle = args.getString(ARGUMENT_NEUTRAL_TITLE, Symbols.EMPTY)
+        negativeTitle = args.getString(ARGUMENT_NEGATIVE_TITLE, "")
+        neutralTitle = args.getString(ARGUMENT_NEUTRAL_TITLE, "")
         val fragment: Fragment? = targetFragment
         if (fragment is DialogResult) {
             dialogResult = fragment

@@ -2,7 +2,6 @@ package im.bnw.android.presentation.messages
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.os.postDelayed
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import im.bnw.android.R
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.messages.adapter.MessageAdapter
-import im.bnw.android.presentation.util.Const
+import im.bnw.android.presentation.util.withInitialArguments
 import kotlinx.android.synthetic.main.fragment_messages_list.*
 
 class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
@@ -22,9 +21,8 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     private lateinit var linearLayoutManager: LinearLayoutManager
 
     companion object {
-        fun newInstance(params: MessagesScreenParams) = MessagesFragment().apply {
-            arguments = bundleOf(Const.BUNDLE_INITIAL_ARGS to params)
-        }
+        fun newInstance(params: MessagesScreenParams) =
+            MessagesFragment().withInitialArguments(params)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,7 +31,7 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
         messageAdapter = MessageAdapter { position -> viewModel.userClicked(position) }
         linearLayoutManager = LinearLayoutManager(requireContext())
         with(messages_list) {
-            layoutManager = linearLayoutManager
+            layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
             this.adapter = messageAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -45,7 +43,7 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
                 }
             })
         }
-
+        swipe_to_refresh.setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.white))
         swipe_to_refresh.setColorSchemeResources(
             R.color.colorPrimary,
             R.color.colorAccent,

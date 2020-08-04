@@ -25,4 +25,8 @@ object Screens {
             return MessagesFragment.newInstance(MessagesScreenParams(user))
         }
     }
+
+    object Login : SupportAppScreen() {
+
+    }
 }

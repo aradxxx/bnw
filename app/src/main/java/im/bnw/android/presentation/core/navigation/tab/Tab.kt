@@ -2,7 +2,6 @@ package im.bnw.android.presentation.core.navigation.tab
 
 import androidx.fragment.app.Fragment
 import im.bnw.android.R
-import im.bnw.android.presentation.util.Symbols
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
 sealed class Tab(val tag: Int) {
@@ -24,7 +23,7 @@ sealed class Tab(val tag: Int) {
     }
 
     companion object {
-        const val GLOBAL = Symbols.EMPTY
+        const val GLOBAL = ""
 
         fun from(tag: Int): Tab {
             return when (tag) {
