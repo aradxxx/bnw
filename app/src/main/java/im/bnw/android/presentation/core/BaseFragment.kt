@@ -27,11 +27,11 @@ import javax.inject.Inject
 private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
 
 abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
-    layoutRes: Int,
-    private val vmClass: Class<VM>
+    layoutRes: Int
 ) : Fragment(layoutRes), HasAndroidInjector {
     @Inject
     lateinit var androidInjector: DispatchingAndroidInjector<Any>
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val backPressedDispatcher: OnBackPressedCallback =
@@ -40,6 +40,7 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
                 viewModel.backPressed()
             }
         }
+    protected abstract val vmClass: Class<VM>
     protected val viewModel: VM by lazy {
         ViewModelProvider(this, viewModelFactory).get(vmClass)
     }

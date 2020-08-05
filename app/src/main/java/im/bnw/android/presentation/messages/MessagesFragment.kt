@@ -13,8 +13,7 @@ import im.bnw.android.presentation.util.withInitialArguments
 import kotlinx.android.synthetic.main.fragment_messages_list.*
 
 class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
-    R.layout.fragment_messages_list,
-    MessagesViewModel::class.java
+    R.layout.fragment_messages_list
 ) {
     private lateinit var messageAdapter
             : MessageAdapter
@@ -24,6 +23,8 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
         fun newInstance(params: MessagesScreenParams) =
             MessagesFragment().withInitialArguments(params)
     }
+
+    override val vmClass = MessagesViewModel::class.java
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
