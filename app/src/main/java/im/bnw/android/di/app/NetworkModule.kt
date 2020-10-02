@@ -5,6 +5,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import im.bnw.android.BuildConfig
 import im.bnw.android.data.core.network.Api
 import im.bnw.android.data.core.network.ConnectionInterceptor
@@ -19,6 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+@InstallIn(ApplicationComponent::class)
 @Module
 class NetworkModule {
     @Provides
