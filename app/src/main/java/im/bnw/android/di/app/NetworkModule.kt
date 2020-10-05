@@ -7,6 +7,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import im.bnw.android.BuildConfig
 import im.bnw.android.data.core.network.Api
 import im.bnw.android.data.core.network.ConnectionInterceptor
@@ -21,9 +22,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-@InstallIn(ApplicationComponent::class)
 @Module
-class NetworkModule {
+@InstallIn(ApplicationComponent::class)
+object NetworkModule {
     @Provides
     @Singleton
     fun provideGson(): Gson = GsonBuilder()
@@ -32,7 +33,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun connectionProvider(context: Context): ConnectionProvider =
+    fun connectionProvider(@ApplicationContext context: Context): ConnectionProvider =
         AndroidConnectionProvider(context)
 
     @Provides

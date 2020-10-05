@@ -2,6 +2,7 @@ package im.bnw.android.presentation.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
+import dagger.hilt.android.AndroidEntryPoint
 import im.bnw.android.R
 import im.bnw.android.presentation.core.BaseActivity
 import im.bnw.android.presentation.core.navigation.AppRouter
@@ -10,6 +11,7 @@ import ru.aradxxx.ciceronetabs.TabCicerone
 import ru.aradxxx.ciceronetabs.TabNavigator
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<MainViewModel, MainState>(
     R.layout.activity_main,
     MainViewModel::class.java

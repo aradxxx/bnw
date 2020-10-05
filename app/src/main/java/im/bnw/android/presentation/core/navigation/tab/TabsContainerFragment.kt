@@ -37,7 +37,7 @@ class TabsContainerFragment : Fragment(R.layout.fragment_tabs_container),
     }
 
     override fun onAttach(context: Context) {
-        AndroidXInjection.inject(this)
+        //AndroidXInjection.inject(this)
         super.onAttach(context)
     }
 

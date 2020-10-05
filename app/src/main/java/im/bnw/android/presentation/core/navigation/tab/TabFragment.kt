@@ -26,7 +26,7 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigationContainer<TabRout
     private var tabListener: TabListener? = null
 
     override fun onAttach(context: Context) {
-        AndroidXInjection.inject(this)
+        //AndroidXInjection.inject(this)
         super.onAttach(context)
         if (parentFragment is TabListener) {
             tabListener = parentFragment as TabListener

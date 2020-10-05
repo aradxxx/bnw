@@ -1,32 +1,24 @@
 package im.bnw.android.presentation.core
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import im.bnw.android.di.core.AndroidXInjection
-import im.bnw.android.di.core.ViewModelFactory
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.AndroidEntryPoint
+import im.bnw.android.presentation.main.MainViewModel
 import timber.log.Timber
-import javax.inject.Inject
 
 private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
 
+@AndroidEntryPoint
 abstract class BaseActivity<VM : BaseViewModel<S>, S : State>(
     layoutRes: Int,
     private val vmClass: Class<VM>
-) : AppCompatActivity(layoutRes), HasAndroidInjector {
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: VM by lazy {
-        ViewModelProviders.of(this, viewModelFactory).get(vmClass)
-    }
+) : AppCompatActivity(layoutRes) {
+    private val viewModel: VM by lazy { ViewModelProvider(this).get(vmClass) }
     var restoredState: S? = null
-
-    @Inject
-    lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
     protected open fun updateState(state: S) {
         // for implementing
@@ -38,7 +30,7 @@ abstract class BaseActivity<VM : BaseViewModel<S>, S : State>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         restoredState = savedInstanceState?.getParcelable(BUNDLE_VIEW_STATE)
-        AndroidXInjection.inject(this)
+        //AndroidXInjection.inject(this)
         super.onCreate(savedInstanceState)
         viewModel.apply {
             stateLiveData().observe(this@BaseActivity, Observer {
@@ -52,9 +44,5 @@ abstract class BaseActivity<VM : BaseViewModel<S>, S : State>(
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(BUNDLE_VIEW_STATE, viewModel.stateLiveData().value)
         super.onSaveInstanceState(outState)
-    }
-
-    override fun androidInjector(): AndroidInjector<Any> {
-        return androidInjector
     }
 }

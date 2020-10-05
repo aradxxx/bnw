@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.core
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +13,7 @@ import kotlinx.coroutines.plus
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicReference
 
-abstract class BaseViewModel<S : State>(
+abstract class BaseViewModel<S : State> @ViewModelInject constructor(
     initialState: S,
     protected val router: AppRouter
 ) : ViewModel() {

@@ -6,34 +6,21 @@ import android.os.Parcelable
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.CallSuper
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.isExecutionActions
+import androidx.fragment.app.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import im.bnw.android.di.core.AndroidXInjection
-import im.bnw.android.di.core.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import im.bnw.android.presentation.core.dialog.NotificationDialog
 import im.bnw.android.presentation.core.lifecycle.LCHandler
 import im.bnw.android.presentation.util.Const
 import timber.log.Timber
-import javax.inject.Inject
-
 
 private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
 
+@AndroidEntryPoint
 abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     layoutRes: Int
-) : Fragment(layoutRes), HasAndroidInjector {
-    @Inject
-    lateinit var androidInjector: DispatchingAndroidInjector<Any>
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+) : Fragment(layoutRes) {
     private val backPressedDispatcher: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -41,9 +28,7 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
             }
         }
     protected abstract val vmClass: Class<VM>
-    protected val viewModel: VM by lazy {
-        ViewModelProvider(this, viewModelFactory).get(vmClass)
-    }
+    protected val viewModel: VM by lazy { ViewModelProvider(this).get(vmClass) }
     var restoredState: S? = null
     protected val handler by lazy {
         LCHandler(viewLifecycleOwner)
@@ -63,7 +48,7 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     }
 
     override fun onAttach(context: Context) {
-        AndroidXInjection.inject(this)
+        //AndroidXInjection.inject(this)
         super.onAttach(context)
     }
 
@@ -97,10 +82,6 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(BUNDLE_VIEW_STATE, viewModel.stateLiveData().value)
         super.onSaveInstanceState(outState)
-    }
-
-    override fun androidInjector(): AndroidInjector<Any> {
-        return androidInjector
     }
 
     fun <A : Parcelable> initialArguments(): A {

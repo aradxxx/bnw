@@ -1,13 +1,18 @@
 package im.bnw.android.di.core
 
+import androidx.fragment.app.Fragment
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.components.FragmentComponent
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.State
 import im.bnw.android.presentation.core.navigation.AppRouter
 import ru.aradxxx.ciceronetabs.NavigationContainer
 
 @Module
+@InstallIn(FragmentComponent::class)
 abstract class FragmentModule<F : BaseFragment<*, S>, S : State> {
     @Provides
     fun provideRestoredState(fragment: F): S? {

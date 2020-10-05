@@ -9,9 +9,9 @@ import ru.aradxxx.ciceronetabs.TabCicerone
 import ru.aradxxx.ciceronetabs.TabRouterFactory
 import javax.inject.Singleton
 
-@InstallIn(ApplicationComponent::class)
 @Module
-class NavigationModule {
+@InstallIn(ApplicationComponent::class)
+object NavigationModule {
     @Provides
     @Singleton
     fun provideRouterFactory(): TabRouterFactory<AppRouter> = TabRouterFactory {
