@@ -32,6 +32,7 @@ const val NO_INJECTOR = "No injector was found for %s"
 /**
  * Injects core Android types.
  */
+@SuppressWarnings("TooGenericExceptionThrown")
 object AndroidXInjection {
     /**
      * Injects `activity` if an associated [AndroidInjector] implementation can be found,
@@ -83,6 +84,7 @@ object AndroidXInjection {
         inject(fragment, hasAndroidInjector)
     }
 
+    @SuppressWarnings("ReturnCount")
     private fun findHasAndroidInjectorForFragment(fragment: Fragment): HasAndroidInjector {
         var tempFragment: Fragment? = fragment.parentFragment
         while (tempFragment != null) {

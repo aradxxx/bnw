@@ -41,10 +41,13 @@ abstract class BaseActivity<VM : BaseViewModel<S>, S : State>(
         AndroidXInjection.inject(this)
         super.onCreate(savedInstanceState)
         viewModel.apply {
-            stateLiveData().observe(this@BaseActivity, Observer {
-                Timber.d("new activity state: %s", it.toString())
-                updateState(it)
-            })
+            stateLiveData().observe(
+                this@BaseActivity,
+                Observer {
+                    Timber.d("new activity state: %s", it.toString())
+                    updateState(it)
+                }
+            )
             eventLiveData().observe(this@BaseActivity, Observer { onEvent(it) })
         }
     }

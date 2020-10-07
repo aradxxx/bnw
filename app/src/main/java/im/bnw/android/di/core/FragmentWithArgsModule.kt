@@ -7,8 +7,8 @@ import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.State
 
 @Module
-abstract class FragmentWithArgsModule<F : BaseFragment<*, S>, S : State, A : Parcelable>
-    : FragmentModule<F, S>() {
+abstract class FragmentWithArgsModule<F : BaseFragment<*, S>, S : State, A : Parcelable> :
+    FragmentModule<F, S>() {
 
     @Provides
     fun provideInitialArgs(fragment: F): A = fragment.initialArguments()

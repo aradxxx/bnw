@@ -36,5 +36,6 @@ data class Message(
     @SerializedName("recommendations")
     val recommendations: List<String>
 ) : Parcelable {
+    @SuppressWarnings("MagicNumber")
     fun timestamp(): Long = (date * 1000).toLong()
 }

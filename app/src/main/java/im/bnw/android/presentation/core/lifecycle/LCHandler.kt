@@ -1,6 +1,7 @@
 package im.bnw.android.presentation.core.lifecycle
 
 import android.os.Handler
+import android.os.Looper
 import android.os.Message
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -14,7 +15,7 @@ import androidx.lifecycle.OnLifecycleEvent
 class LCHandler(
     private val lifecycleOwner: LifecycleOwner,
     private var started: Boolean = false
-) : Handler(), LifecycleObserver {
+) : Handler(Looper.getMainLooper()), LifecycleObserver {
     init {
         lifecycleOwner.lifecycle.addObserver(this)
     }

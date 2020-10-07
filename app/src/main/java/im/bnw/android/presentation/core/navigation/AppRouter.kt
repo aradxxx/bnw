@@ -25,10 +25,12 @@ class AppRouter : TabRouter() {
         super.navigateTo(tab.screenKey(), screen)
     }
 
+    @SuppressWarnings("SpreadOperator")
     fun newChain(tab: Tab, vararg screens: Screen?) {
         super.newChain(tab.screenKey(), *screens)
     }
 
+    @SuppressWarnings("SpreadOperator")
     fun newRootChain(tab: Tab, vararg screens: Screen?) {
         super.newRootChain(tab.screenKey(), *screens)
     }

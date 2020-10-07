@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package im.bnw.android.presentation.messages
 
 import android.os.Bundle
@@ -15,8 +17,7 @@ import kotlinx.android.synthetic.main.fragment_messages_list.*
 class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     R.layout.fragment_messages_list
 ) {
-    private lateinit var messageAdapter
-            : MessageAdapter
+    private lateinit var messageAdapter: MessageAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
 
     companion object {
@@ -34,15 +35,15 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
         with(messages_list) {
             layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
             this.adapter = messageAdapter
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (linearLayoutManager.findLastVisibleItemPosition() + 10
-                        == adapter?.itemCount
-                    ) {
-                        viewModel.bottomNear()
+            addOnScrollListener(
+                object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        if (linearLayoutManager.findLastVisibleItemPosition() + 10 == adapter?.itemCount) {
+                            viewModel.bottomNear()
+                        }
                     }
                 }
-            })
+            )
         }
         swipe_to_refresh.setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.white))
         swipe_to_refresh.setColorSchemeResources(
@@ -65,7 +66,7 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     override fun updateState(state: MessagesState) {
         messageAdapter.items = state.messages
         progress_bar_line.isVisible = state.beforeLoading && state.messages.isNotEmpty()
-        swipe_to_refresh.isRefreshing = state.afterLoading ||
-                (state.beforeLoading && state.messages.isEmpty())
+        swipe_to_refresh.isRefreshing =
+            state.afterLoading || (state.beforeLoading && state.messages.isEmpty())
     }
 }

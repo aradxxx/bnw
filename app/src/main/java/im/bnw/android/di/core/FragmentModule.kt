@@ -27,6 +27,6 @@ abstract class FragmentModule<F : BaseFragment<*, S>, S : State> {
             val router = activity.router()
             if (router is AppRouter) return router
         }
-        throw RuntimeException("Can't provide router for " + fragment::class.simpleName)
+        throw IllegalStateException("Can't provide router for " + fragment::class.simpleName)
     }
 }

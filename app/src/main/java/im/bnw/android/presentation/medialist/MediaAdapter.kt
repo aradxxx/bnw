@@ -1,4 +1,4 @@
-package im.bnw.android.presentation.media_list
+package im.bnw.android.presentation.medialist
 
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
@@ -24,9 +24,11 @@ val mediaDelegate = adapterDelegateLayoutContainer<Media, Media>(
     }
 }
 
-val mediaCallback = itemCallback<Media>(areItemsTheSame = { oldItem, newItem ->
-    oldItem == newItem
-})
+val mediaCallback = itemCallback<Media>(
+    areItemsTheSame = { oldItem, newItem ->
+        oldItem == newItem
+    }
+)
 
 class MediaAdapter : AsyncListDifferDelegationAdapter<Media>(mediaCallback) {
     init {

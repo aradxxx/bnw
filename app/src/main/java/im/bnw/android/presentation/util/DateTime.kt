@@ -3,7 +3,8 @@ package im.bnw.android.presentation.util
 import android.content.Context
 import im.bnw.android.R
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 private const val APP_DATE_FORMAT = "dd MMM yyyy HH:mm"
