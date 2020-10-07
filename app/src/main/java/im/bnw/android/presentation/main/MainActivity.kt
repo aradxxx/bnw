@@ -10,10 +10,9 @@ import ru.aradxxx.ciceronetabs.TabCicerone
 import ru.aradxxx.ciceronetabs.TabNavigator
 import javax.inject.Inject
 
-class MainActivity : BaseActivity<MainViewModel, MainState>(
-    R.layout.activity_main,
-    MainViewModel::class.java
-), NavigationContainer<AppRouter> {
+class MainActivity :
+    BaseActivity<MainViewModel, MainState>(R.layout.activity_main, MainViewModel::class.java),
+    NavigationContainer<AppRouter> {
     @Inject
     lateinit var tabCicerone: TabCicerone<AppRouter>
     lateinit var navigator: TabNavigator<AppRouter>

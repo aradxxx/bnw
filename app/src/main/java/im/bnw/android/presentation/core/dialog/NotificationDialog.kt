@@ -44,8 +44,8 @@ class NotificationDialog : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val args = arguments
-        if (args == null || !args.containsKey(ARGUMENT_MESSAGE)
-            || !args.containsKey(ARGUMENT_POSITIVE_TITLE)
+        if (args == null || !args.containsKey(ARGUMENT_MESSAGE) ||
+            !args.containsKey(ARGUMENT_POSITIVE_TITLE)
         ) {
             return
         }
@@ -62,33 +62,54 @@ class NotificationDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
             .setMessage(message)
-            .setPositiveButton(positiveTitle, object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, which: Int) {
-                    if (dialog == null) {
-                        return
+            .setPositiveButton(
+                positiveTitle,
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        if (dialog == null) {
+                            return
+                        }
+                        dialogResult?.onAcceptClick(
+                            dialog,
+                            which,
+                            targetRequestCode
+                        )
                     }
-                    dialogResult?.onAcceptClick(dialog, which, targetRequestCode)
                 }
-            })
+            )
         if (!TextUtils.isEmpty(negativeTitle)) {
-            builder.setNegativeButton(negativeTitle, object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, which: Int) {
-                    if (dialog == null) {
-                        return
+            builder.setNegativeButton(
+                negativeTitle,
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        if (dialog == null) {
+                            return
+                        }
+                        dialogResult?.onNegativeClick(
+                            dialog,
+                            which,
+                            targetRequestCode
+                        )
                     }
-                    dialogResult?.onNegativeClick(dialog, which, targetRequestCode)
                 }
-            })
+            )
         }
         if (!TextUtils.isEmpty(neutralTitle)) {
-            builder.setNeutralButton(neutralTitle, object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, which: Int) {
-                    if (dialog == null) {
-                        return
+            builder.setNeutralButton(
+                neutralTitle,
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        if (dialog == null) {
+                            return
+                        }
+                        dialogResult?.onNeutralClick(
+                            dialog,
+                            which,
+                            targetRequestCode
+                        )
                     }
-                    dialogResult?.onNeutralClick(dialog, which, targetRequestCode)
                 }
-            })
+            )
         }
         return builder.create()
     }

@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package im.bnw.android.di.app
 
 import android.content.Context
@@ -8,8 +10,8 @@ import dagger.Provides
 import im.bnw.android.BuildConfig
 import im.bnw.android.data.core.network.Api
 import im.bnw.android.data.core.network.ConnectionInterceptor
-import im.bnw.android.data.core.network.connection_provider.AndroidConnectionProvider
-import im.bnw.android.data.core.network.connection_provider.ConnectionProvider
+import im.bnw.android.data.core.network.connectionprovider.AndroidConnectionProvider
+import im.bnw.android.data.core.network.connectionprovider.ConnectionProvider
 import im.bnw.android.domain.message.Content
 import im.bnw.android.domain.message.ContentDeserializer
 import okhttp3.OkHttpClient

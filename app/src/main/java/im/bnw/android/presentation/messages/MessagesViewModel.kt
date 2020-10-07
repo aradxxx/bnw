@@ -52,7 +52,7 @@ class MessagesViewModel @Inject constructor(
                         messages = state.messages.plus(newPage)
                     )
                 }
-            } catch (t: Throwable) {
+            } catch (t: IOException) {
                 handleException(t)
                 updateState { state ->
                     state.copy(
@@ -60,27 +60,6 @@ class MessagesViewModel @Inject constructor(
                     )
                 }
             }
-
-            /*messageInteractor.messages("", last, state.user)
-                .catch { e ->
-                    handleException(e)
-                    updateState { state ->
-                        state.copy(
-                            beforeLoading = false
-                        )
-                    }
-                }
-                .map { messagesToListItems(it) }
-                .collect { newPage ->
-                    updateState { state ->
-                        state.copy(
-                            beforeLoading = false,
-                            messages = state.messages.plus(newPage)
-                        )
-                    }
-                    Timber.d(Thread.currentThread().name)
-                    Timber.d(newPage.toString())
-                }*/
         }
     }
 
@@ -111,7 +90,7 @@ class MessagesViewModel @Inject constructor(
                 } else if (newPage.isNotEmpty()) {
                     postEvent(Event.ScrollToTop)
                 }
-            } catch (t: Throwable) {
+            } catch (t: IOException) {
                 handleException(t)
                 updateState { state ->
                     state.copy(
@@ -119,33 +98,6 @@ class MessagesViewModel @Inject constructor(
                     )
                 }
             }
-
-            /*messageInteractor.messages(first, "", state.user)
-                .catch { e ->
-                    handleException(e)
-                    updateState { state ->
-                        state.copy(
-                            afterLoading = false
-                        )
-                    }
-                }
-                .map { messagesToListItems(it) }
-                .collect { newPage ->
-                    val needLoadMore = newPage.size == PAGE_SIZE
-                    updateState { state ->
-                        state.copy(
-                            afterLoading = needLoadMore,
-                            messages = newPage.plus(state.messages)
-                        )
-                    }
-                    if (needLoadMore) {
-                        loadAfter()
-                    } else if (newPage.isNotEmpty()) {
-                        postEvent(Event.ScrollToTop)
-                    }
-                    Timber.d(Thread.currentThread().name)
-                    Timber.d(newPage.toString())
-                }*/
         }
     }
 

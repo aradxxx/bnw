@@ -23,9 +23,9 @@ import im.bnw.android.presentation.util.Const
 import timber.log.Timber
 import javax.inject.Inject
 
-
 private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
 
+@SuppressWarnings("TooManyFunctions")
 abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     layoutRes: Int
 ) : Fragment(layoutRes), HasAndroidInjector {
@@ -86,10 +86,13 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.apply {
-            stateLiveData().observe(viewLifecycleOwner, Observer {
-                Timber.d("new state: %s", it.toString())
-                updateState(it)
-            })
+            stateLiveData().observe(
+                viewLifecycleOwner,
+                {
+                    Timber.d("new state: %s", it.toString())
+                    updateState(it)
+                }
+            )
             eventLiveData().observe(viewLifecycleOwner, Observer { onEvent(it) })
         }
     }
@@ -146,5 +149,4 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
             }
         }
     }
-
 }

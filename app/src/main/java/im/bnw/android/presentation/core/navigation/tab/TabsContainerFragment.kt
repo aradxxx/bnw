@@ -13,7 +13,8 @@ import ru.aradxxx.ciceronetabs.TabCicerone
 import ru.aradxxx.ciceronetabs.TabNavigator
 import javax.inject.Inject
 
-class TabsContainerFragment : Fragment(R.layout.fragment_tabs_container),
+class TabsContainerFragment :
+    Fragment(R.layout.fragment_tabs_container),
     BottomNavigationView.OnNavigationItemSelectedListener,
     BottomNavigationView.OnNavigationItemReselectedListener,
     TabListener {

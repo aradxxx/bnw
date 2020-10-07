@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package im.bnw.android.presentation.messages.adapter
 
 import android.graphics.Rect
@@ -12,7 +14,7 @@ import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
 import im.bnw.android.BuildConfig
 import im.bnw.android.R
-import im.bnw.android.presentation.media_list.MediaAdapter
+import im.bnw.android.presentation.medialist.MediaAdapter
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.formatDateTime
 import im.bnw.android.presentation.util.timeAgoString
@@ -93,28 +95,30 @@ fun messageWithMediaDelegate(listener: (Int) -> Unit) =
         with(media_list) {
             layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
             adapter = mediaAdapter
-            addItemDecoration(object : RecyclerView.ItemDecoration() {
-                val normal = 16.dpToPx
-                val half = 8.dpToPx
-                override fun getItemOffsets(
-                    outRect: Rect,
-                    itemPosition: Int,
-                    parent: RecyclerView
-                ) {
-                    if (itemPosition == 0) {
-                        outRect.left = normal
-                    } else {
-                        outRect.left = half
-                    }
-                    outRect.bottom = half
-                    outRect.top = half
-                    if (itemPosition + 1 == parent.adapter?.itemCount) {
-                        outRect.right = normal
-                    } else {
-                        outRect.right = 0
+            addItemDecoration(
+                object : RecyclerView.ItemDecoration() {
+                    val normal = 16.dpToPx
+                    val half = 8.dpToPx
+                    override fun getItemOffsets(
+                        outRect: Rect,
+                        itemPosition: Int,
+                        parent: RecyclerView
+                    ) {
+                        if (itemPosition == 0) {
+                            outRect.left = normal
+                        } else {
+                            outRect.left = half
+                        }
+                        outRect.bottom = half
+                        outRect.top = half
+                        if (itemPosition + 1 == parent.adapter?.itemCount) {
+                            outRect.right = normal
+                        } else {
+                            outRect.right = 0
+                        }
                     }
                 }
-            })
+            )
         }
         user.setOnClickListener {
             val position = adapterPosition
@@ -142,26 +146,30 @@ fun messageWithMediaDelegate(listener: (Int) -> Unit) =
 val itemCallback: DiffUtil.ItemCallback<MessageListItem> =
     object : DiffUtil.ItemCallback<MessageListItem>() {
         override fun areItemsTheSame(oldItem: MessageListItem, newItem: MessageListItem): Boolean {
-            if (oldItem is MessageItem && newItem is MessageItem) {
-                return oldItem.message.id == newItem.message.id
+            return when {
+                oldItem is MessageItem && newItem is MessageItem -> {
+                    oldItem.message.id == newItem.message.id
+                }
+                oldItem is MessageWithMediaItem && newItem is MessageWithMediaItem -> {
+                    oldItem.message.id == newItem.message.id
+                }
+                else -> false
             }
-            if (oldItem is MessageWithMediaItem && newItem is MessageWithMediaItem) {
-                return oldItem.message.id == newItem.message.id
-            }
-            return false
         }
 
         override fun areContentsTheSame(
             oldItem: MessageListItem,
             newItem: MessageListItem
         ): Boolean {
-            if (oldItem is MessageItem && newItem is MessageItem) {
-                return oldItem.message == newItem.message
+            return when {
+                oldItem is MessageItem && newItem is MessageItem -> {
+                    oldItem.message == newItem.message
+                }
+                oldItem is MessageWithMediaItem && newItem is MessageWithMediaItem -> {
+                    oldItem.message == newItem.message
+                }
+                else -> false
             }
-            if (oldItem is MessageWithMediaItem && newItem is MessageWithMediaItem) {
-                return oldItem.message == newItem.message
-            }
-            return false
         }
     }
 
