@@ -27,6 +27,7 @@ plugins {
 allprojects {
     apply from: "$rootDir/detekt.gradle"
     apply from: "$rootDir/ktlint.gradle"
+    apply from: "$rootDir/quality.gradle"
 
     repositories {
         google()
