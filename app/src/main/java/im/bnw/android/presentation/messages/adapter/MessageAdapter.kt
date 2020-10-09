@@ -90,7 +90,7 @@ fun messageWithMediaDelegate(listener: (Int) -> Unit) =
             true
         }
 
-        val mediaAdapter = MediaAdapter()
+        val mediaAdapter = MediaAdapter(listener)
         val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         with(media_list) {
             layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }

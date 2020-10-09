@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import im.bnw.android.R
 import im.bnw.android.presentation.core.BaseFragment
+import im.bnw.android.presentation.medialist.MediaAdapter
 import im.bnw.android.presentation.messages.adapter.MessageAdapter
 import im.bnw.android.presentation.util.withInitialArguments
 import kotlinx.android.synthetic.main.fragment_messages_list.*
@@ -18,6 +19,7 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     R.layout.fragment_messages_list
 ) {
     private lateinit var messageAdapter: MessageAdapter
+    private lateinit var mediaAdapter: MediaAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
 
     companion object {
@@ -31,6 +33,7 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
         super.onViewCreated(view, savedInstanceState)
 
         messageAdapter = MessageAdapter { position -> viewModel.userClicked(position) }
+        mediaAdapter = MediaAdapter { position -> viewModel.mediaClicked(position) }
         linearLayoutManager = LinearLayoutManager(requireContext())
         with(messages_list) {
             layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }

@@ -135,4 +135,13 @@ class MessagesViewModel @Inject constructor(
         }
         router.navigateTo(Tab.GLOBAL, Screens.Messages(userId))
     }
+
+    fun mediaClicked(position: Int) {
+        // messages pos == media pos
+        val fullUrl = state.messages[position].message().content.media[position].fullUrl
+        if (state.messages[position].message().content.media[position].fullUrl == fullUrl) {
+            return
+        }
+        router.navigateTo(Tab.GLOBAL, Screens.ImageView(fullUrl))
+    }
 }

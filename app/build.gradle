@@ -60,6 +60,9 @@ dependencies {
     def adapDelVersion = "4.2.0"
     implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:$adapDelVersion"
 
+    def photoViewVersion = "2.3.0"
+    implementation "com.github.chrisbanes:PhotoView:$photoViewVersion"
+
     implementation "me.zhanghai.android.materialprogressbar:library:1.6.1"
 
     def glideVersion = "4.10.0"
