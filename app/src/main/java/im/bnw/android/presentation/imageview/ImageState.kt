@@ -4,4 +4,4 @@ import im.bnw.android.presentation.core.State
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class ImageState : State()
+data class ImageState(val fullUrl: String = "") : State()
