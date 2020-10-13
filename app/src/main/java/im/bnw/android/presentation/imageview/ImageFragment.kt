@@ -21,23 +21,25 @@ class ImageFragment : BaseFragment<ImageViewModel, ImageState>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val window = activity?.window
-        if (window != null) {
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-        }
+        setDecorFits(false)
+        btn_close.setOnClickListener { viewModel.backPressed() }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        val window = activity?.window
-        if (window != null) {
-            WindowCompat.setDecorFitsSystemWindows(window, true)
-        }
+        setDecorFits(true)
     }
 
     override fun updateState(state: ImageState) {
         Glide.with(requireContext())
             .load(state.fullUrl)
             .into(image_view)
+    }
+
+    private fun setDecorFits(decorFits: Boolean) {
+        val window = activity?.window
+        if (window != null) {
+            WindowCompat.setDecorFitsSystemWindows(window, decorFits)
+        }
     }
 }
