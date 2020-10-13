@@ -72,7 +72,7 @@ fun messageDelegate(listener: (Int) -> Unit) =
         }
     }
 
-fun messageWithMediaDelegate(listener: (Int) -> Unit, mediaListener: (Int) -> Unit) =
+fun messageWithMediaDelegate(listener: (Int) -> Unit, mediaListener: (Int, Int) -> Unit) =
     adapterDelegateLayoutContainer<MessageWithMediaItem, MessageListItem>(
         R.layout.item_message_card_with_media
     ) {
@@ -90,7 +90,12 @@ fun messageWithMediaDelegate(listener: (Int) -> Unit, mediaListener: (Int) -> Un
             true
         }
 
-        val mediaAdapter = MediaAdapter(mediaListener)
+        val mediaAdapter = MediaAdapter() { mediaPosition ->
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                mediaListener(position, mediaPosition)
+            }
+        }
         val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         with(media_list) {
             layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
@@ -173,8 +178,10 @@ val itemCallback: DiffUtil.ItemCallback<MessageListItem> =
         }
     }
 
-class MessageAdapter(listener: (Int) -> Unit, mediaListener: (Int) -> Unit) :
-    AsyncListDifferDelegationAdapter<MessageListItem>(itemCallback) {
+class MessageAdapter(
+    listener: (Int) -> Unit,
+    mediaListener: (Int, Int) -> Unit
+) : AsyncListDifferDelegationAdapter<MessageListItem>(itemCallback) {
     init {
         delegatesManager.apply {
             addDelegate(messageDelegate(listener))

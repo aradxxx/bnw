@@ -2,10 +2,10 @@ package im.bnw.android.presentation.imageview
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.WindowCompat
+import com.bumptech.glide.Glide
 import im.bnw.android.R
 import im.bnw.android.presentation.core.BaseFragment
-import im.bnw.android.presentation.messages.MessagesFragment
-import im.bnw.android.presentation.messages.MessagesScreenParams
 import im.bnw.android.presentation.util.withInitialArguments
 import kotlinx.android.synthetic.main.fragment_image_view.*
 
@@ -21,7 +21,23 @@ class ImageFragment : BaseFragment<ImageViewModel, ImageState>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val window = activity?.window
+        if (window != null) {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+        }
+    }
 
-        //image_view.setImageResource()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val window = activity?.window
+        if (window != null) {
+            WindowCompat.setDecorFitsSystemWindows(window, true)
+        }
+    }
+
+    override fun updateState(state: ImageState) {
+        Glide.with(requireContext())
+            .load(state.fullUrl)
+            .into(image_view)
     }
 }
