@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.item_message_card.text
 import kotlinx.android.synthetic.main.item_message_card.user
 import kotlinx.android.synthetic.main.item_message_card_with_media.*
 
-fun messageDelegate(listener: (Int) -> Unit) =
+fun messageDelegate(userNameListener: (Int) -> Unit) =
     adapterDelegateLayoutContainer<MessageItem, MessageListItem>(
         R.layout.item_message_card,
         on = { item, _, _ -> item is MessageItem }
@@ -51,7 +51,7 @@ fun messageDelegate(listener: (Int) -> Unit) =
         user.setOnClickListener {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                listener(position)
+                userNameListener(position)
             }
         }
 
@@ -72,7 +72,7 @@ fun messageDelegate(listener: (Int) -> Unit) =
         }
     }
 
-fun messageWithMediaDelegate(listener: (Int) -> Unit) =
+fun messageWithMediaDelegate(userNameListener: (Int) -> Unit, mediaListener: (Int, Int) -> Unit) =
     adapterDelegateLayoutContainer<MessageWithMediaItem, MessageListItem>(
         R.layout.item_message_card_with_media
     ) {
@@ -90,7 +90,12 @@ fun messageWithMediaDelegate(listener: (Int) -> Unit) =
             true
         }
 
-        val mediaAdapter = MediaAdapter()
+        val mediaAdapter = MediaAdapter() { mediaPosition ->
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                mediaListener(position, mediaPosition)
+            }
+        }
         val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         with(media_list) {
             layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
@@ -123,7 +128,7 @@ fun messageWithMediaDelegate(listener: (Int) -> Unit) =
         user.setOnClickListener {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                listener(position)
+                userNameListener(position)
             }
         }
 
@@ -173,12 +178,14 @@ val itemCallback: DiffUtil.ItemCallback<MessageListItem> =
         }
     }
 
-class MessageAdapter(listener: (Int) -> Unit) :
-    AsyncListDifferDelegationAdapter<MessageListItem>(itemCallback) {
+class MessageAdapter(
+    userNameListener: (Int) -> Unit,
+    mediaListener: (Int, Int) -> Unit
+) : AsyncListDifferDelegationAdapter<MessageListItem>(itemCallback) {
     init {
         delegatesManager.apply {
-            addDelegate(messageDelegate(listener))
-            addDelegate(messageWithMediaDelegate(listener))
+            addDelegate(messageDelegate(userNameListener))
+            addDelegate(messageWithMediaDelegate(userNameListener, mediaListener))
         }
     }
 }

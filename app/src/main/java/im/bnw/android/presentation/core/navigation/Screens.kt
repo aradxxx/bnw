@@ -2,6 +2,8 @@ package im.bnw.android.presentation.core.navigation
 
 import androidx.fragment.app.Fragment
 import im.bnw.android.presentation.core.navigation.tab.TabsContainerFragment
+import im.bnw.android.presentation.imageview.ImageFragment
+import im.bnw.android.presentation.imageview.ImageScreenParams
 import im.bnw.android.presentation.login.LoginFragment
 import im.bnw.android.presentation.messages.MessagesFragment
 import im.bnw.android.presentation.messages.MessagesScreenParams
@@ -20,6 +22,11 @@ object Screens {
     class Messages(private val user: String) : SupportAppScreen() {
         override fun getFragment(): Fragment =
             MessagesFragment.newInstance(MessagesScreenParams(user))
+    }
+
+    class ImageView(private val url: String) : SupportAppScreen() {
+        override fun getFragment(): Fragment =
+            ImageFragment.newInstance(ImageScreenParams(url))
     }
 
     object Login : SupportAppScreen() {

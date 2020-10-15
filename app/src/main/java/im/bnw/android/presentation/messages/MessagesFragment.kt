@@ -30,7 +30,10 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        messageAdapter = MessageAdapter { position -> viewModel.userClicked(position) }
+        messageAdapter = MessageAdapter(
+            { position -> viewModel.userClicked(position) },
+            { messagePosition, mediaPosition -> viewModel.mediaClicked(messagePosition, mediaPosition) }
+        )
         linearLayoutManager = LinearLayoutManager(requireContext())
         with(messages_list) {
             layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
