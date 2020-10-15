@@ -26,8 +26,8 @@ class ImageFragment : BaseFragment<ImageViewModel, ImageState>(
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         setDecorFits(true)
+        super.onDestroyView()
     }
 
     override fun updateState(state: ImageState) {

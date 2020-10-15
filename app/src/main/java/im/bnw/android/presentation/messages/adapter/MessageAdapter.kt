@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.item_message_card.text
 import kotlinx.android.synthetic.main.item_message_card.user
 import kotlinx.android.synthetic.main.item_message_card_with_media.*
 
-fun messageDelegate(listener: (Int) -> Unit) =
+fun messageDelegate(userNameListener: (Int) -> Unit) =
     adapterDelegateLayoutContainer<MessageItem, MessageListItem>(
         R.layout.item_message_card,
         on = { item, _, _ -> item is MessageItem }
@@ -51,7 +51,7 @@ fun messageDelegate(listener: (Int) -> Unit) =
         user.setOnClickListener {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                listener(position)
+                userNameListener(position)
             }
         }
 
@@ -72,7 +72,7 @@ fun messageDelegate(listener: (Int) -> Unit) =
         }
     }
 
-fun messageWithMediaDelegate(listener: (Int) -> Unit, mediaListener: (Int, Int) -> Unit) =
+fun messageWithMediaDelegate(userNameListener: (Int) -> Unit, mediaListener: (Int, Int) -> Unit) =
     adapterDelegateLayoutContainer<MessageWithMediaItem, MessageListItem>(
         R.layout.item_message_card_with_media
     ) {
@@ -128,7 +128,7 @@ fun messageWithMediaDelegate(listener: (Int) -> Unit, mediaListener: (Int, Int) 
         user.setOnClickListener {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                listener(position)
+                userNameListener(position)
             }
         }
 
@@ -179,13 +179,13 @@ val itemCallback: DiffUtil.ItemCallback<MessageListItem> =
     }
 
 class MessageAdapter(
-    listener: (Int) -> Unit,
+    userNameListener: (Int) -> Unit,
     mediaListener: (Int, Int) -> Unit
 ) : AsyncListDifferDelegationAdapter<MessageListItem>(itemCallback) {
     init {
         delegatesManager.apply {
-            addDelegate(messageDelegate(listener))
-            addDelegate(messageWithMediaDelegate(listener, mediaListener))
+            addDelegate(messageDelegate(userNameListener))
+            addDelegate(messageWithMediaDelegate(userNameListener, mediaListener))
         }
     }
 }
