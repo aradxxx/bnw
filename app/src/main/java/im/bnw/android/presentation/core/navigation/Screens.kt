@@ -24,9 +24,9 @@ object Screens {
             MessagesFragment.newInstance(MessagesScreenParams(user))
     }
 
-    class ImageView(private val fullUrl: String) : SupportAppScreen() {
+    class ImageView(private val url: String) : SupportAppScreen() {
         override fun getFragment(): Fragment =
-            ImageFragment.newInstance(ImageScreenParams(fullUrl))
+            ImageFragment.newInstance(ImageScreenParams(url))
     }
 
     object Login : SupportAppScreen() {

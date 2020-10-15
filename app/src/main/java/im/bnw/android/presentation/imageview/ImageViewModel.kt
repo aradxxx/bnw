@@ -9,6 +9,6 @@ class ImageViewModel @Inject constructor(
     restoredState: ImageState?,
     screenParams: ImageScreenParams,
 ) : BaseViewModel<ImageState>(
-    restoredState ?: ImageState(fullUrl = screenParams.fullUrl),
+    restoredState ?: ImageState(url = screenParams.url),
     router
 )

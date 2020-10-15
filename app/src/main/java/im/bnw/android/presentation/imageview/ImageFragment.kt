@@ -32,7 +32,7 @@ class ImageFragment : BaseFragment<ImageViewModel, ImageState>(
 
     override fun updateState(state: ImageState) {
         Glide.with(requireContext())
-            .load(state.fullUrl)
+            .load(state.url)
             .into(image_view)
     }
 
