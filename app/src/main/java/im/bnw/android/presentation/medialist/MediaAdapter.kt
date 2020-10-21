@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.medialist
 
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
@@ -22,10 +23,12 @@ fun mediaDelegate(listener: (Int) -> Unit) =
 
         bind {
             if (!item.isYoutube()) {
+                play_button.isVisible = false
                 Glide.with(context)
                     .load(item.fullUrl)
                     .into(media)
             } else {
+                play_button.isVisible = true
                 Glide.with(context)
                     .load(item.youtubePreviewLink())
                     .into(media)

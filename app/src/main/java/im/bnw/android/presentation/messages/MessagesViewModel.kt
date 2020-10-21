@@ -139,7 +139,9 @@ class MessagesViewModel @Inject constructor(
     fun mediaClicked(messagePosition: Int, mediaPosition: Int) {
         val message = state.messages.getOrNull(messagePosition) ?: return
         val media = message.message().content.media.getOrNull(mediaPosition) ?: return
-        if (!media.isYoutube()) {
+        if (media.isYoutube()) {
+            router.navigateTo(Tab.GLOBAL, Screens.ExternalHyperlink(media.fullUrl))
+        } else {
             router.navigateTo(Tab.GLOBAL, Screens.ImageView(media.fullUrl))
         }
     }
