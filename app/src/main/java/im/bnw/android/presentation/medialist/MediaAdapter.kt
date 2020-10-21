@@ -23,6 +23,7 @@ fun mediaDelegate(listener: (Int) -> Unit) =
 
         bind {
             if (!item.isYoutube()) {
+                play_button.isVisible = false
                 Glide.with(context)
                     .load(item.fullUrl)
                     .into(media)
