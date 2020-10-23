@@ -7,6 +7,8 @@
     <string name="connection_error_blocking">Check internet connection. Perhaps https://bnw.im blocked by provider</string>
     <string name="ok">OK</string>
 
+    <string name="sign_in">Sign In</string>
+
     <plurals name="minutes" tools:ignore="UnusedQuantity">
         <item quantity="zero">%1$d minutes ago</item>
         <item quantity="one">%1$d minute ago</item>

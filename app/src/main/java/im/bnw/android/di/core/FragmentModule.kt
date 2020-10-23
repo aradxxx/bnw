@@ -16,7 +16,7 @@ abstract class FragmentModule<F : BaseFragment<*, S>, S : State> {
 
     @Provides
     fun provideRouter(fragment: F): AppRouter {
-        val parentFragment = fragment.getParentFragment()
+        val parentFragment = fragment.parentFragment
         if (parentFragment is NavigationContainer<*>) {
             val router = parentFragment.router()
             if (router is AppRouter) return router

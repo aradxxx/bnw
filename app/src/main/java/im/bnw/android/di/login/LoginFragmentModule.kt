@@ -12,7 +12,7 @@ import im.bnw.android.presentation.login.LoginViewModel
 
 @Module(includes = [LoginFragmentModule.ViewModelModule::class])
 class LoginFragmentModule : FragmentModule<LoginFragment, LoginState>() {
-    @Module
+    @Module(includes = [LoginModule::class])
     interface ViewModelModule {
         @Binds
         @IntoMap

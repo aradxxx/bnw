@@ -120,14 +120,6 @@ class MessagesViewModel @Inject constructor(
         loadBefore()
     }
 
-    override fun handleException(e: Throwable) {
-        super.handleException(e)
-        when (e) {
-            is SSLException -> postEvent(DialogEvent(R.string.connection_error_blocking))
-            is IOException -> postEvent(DialogEvent(R.string.connection_error))
-        }
-    }
-
     fun userClicked(position: Int) {
         val userId = state.messages[position].message().user
         if (state.user == userId) {
