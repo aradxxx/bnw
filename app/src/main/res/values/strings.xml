@@ -8,6 +8,7 @@
     <string name="connection_error_blocking">Проверьте интернет соединение. Возможно https://bnw.im заблокирован провайдером</string>
     <string name="ok">OK</string>
 
+    <!--login-->
     <string name="sign_in">Войти</string>
 
     <plurals name="minutes">

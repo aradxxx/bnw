@@ -1,10 +1,8 @@
 package im.bnw.android.presentation.messages
 
-import im.bnw.android.R
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.presentation.core.BaseViewModel
-import im.bnw.android.presentation.core.DialogEvent
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
@@ -15,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
-import javax.net.ssl.SSLException
 
 private const val PAGE_SIZE = 20
 

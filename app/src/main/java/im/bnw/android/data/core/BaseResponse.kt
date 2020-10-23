@@ -7,6 +7,4 @@ class BaseResponse(
     val ok: Boolean,
     @SerializedName("desc")
     val desc: String,
-) {
-    fun isSuccess(): Boolean = ok
-}
+)
