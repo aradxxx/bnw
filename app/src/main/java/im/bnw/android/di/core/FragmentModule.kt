@@ -1,11 +1,11 @@
 package im.bnw.android.di.core
 
+import com.github.aradxxx.ciceroneflow.NavigationContainer
 import dagger.Module
 import dagger.Provides
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.State
 import im.bnw.android.presentation.core.navigation.AppRouter
-import ru.aradxxx.ciceronetabs.NavigationContainer
 
 @Module
 abstract class FragmentModule<F : BaseFragment<*, S>, S : State> {

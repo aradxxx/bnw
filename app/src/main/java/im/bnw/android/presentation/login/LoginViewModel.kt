@@ -11,7 +11,10 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     router: AppRouter,
     private val loginInteractor: LoginInteractor
-) : BaseViewModel<LoginState>(LoginState(), router) {
+) : BaseViewModel<LoginState>(
+    LoginState(),
+    router
+) {
     private fun authorization() {
         if (state.loading) {
             return

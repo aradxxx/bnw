@@ -4,36 +4,38 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.widget.doAfterTextChanged
 import im.bnw.android.R
+import im.bnw.android.databinding.FragmentLoginBinding
 import im.bnw.android.presentation.core.BaseFragment
-import kotlinx.android.synthetic.main.fragment_login.*
+import im.bnw.android.presentation.util.viewBinding
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginState>(
     R.layout.fragment_login
 ) {
+    override val vmClass = LoginViewModel::class.java
+    private val binding by viewBinding(FragmentLoginBinding::bind)
+
     companion object {
         fun newInstance() = LoginFragment()
     }
 
-    override val vmClass = LoginViewModel::class.java
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        login.doAfterTextChanged { viewModel.userNameChanged(it.toString()) }
-        password.doAfterTextChanged { viewModel.passwordChanged(it.toString()) }
-        auth.setOnClickListener { viewModel.onAuthClicked() }
+        binding.login.doAfterTextChanged { viewModel.userNameChanged(it.toString()) }
+        binding.password.doAfterTextChanged { viewModel.passwordChanged(it.toString()) }
+        binding.auth.setOnClickListener { viewModel.onAuthClicked() }
     }
 
     override fun updateState(state: LoginState) {
-        if (login.text.toString() != state.userName) {
-            login.setText(state.userName)
+        if (binding.login.text.toString() != state.userName) {
+            binding.login.setText(state.userName)
         }
-        if (password.text.toString() != state.password) {
-            password.setText(state.password)
+        if (binding.password.text.toString() != state.password) {
+            binding.password.setText(state.password)
         }
-        login.isEnabled = !state.loading
-        password.isEnabled = !state.loading
-        auth.isEnabled =
+        binding.login.isEnabled = !state.loading
+        binding.password.isEnabled = !state.loading
+        binding.auth.isEnabled =
             !state.loading && (state.userName.isNotEmpty() && state.password.isNotEmpty())
     }
 }

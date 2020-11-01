@@ -122,16 +122,16 @@ class MessagesViewModel @Inject constructor(
         if (state.user == userId) {
             return
         }
-        router.navigateTo(Tab.GLOBAL, Screens.Messages(userId))
+        router.navigateTo(Tab.GLOBAL, Screens.messagesScreen(userId))
     }
 
     fun mediaClicked(messagePosition: Int, mediaPosition: Int) {
         val message = state.messages.getOrNull(messagePosition) ?: return
         val media = message.message().content.media.getOrNull(mediaPosition) ?: return
         if (media.isYoutube()) {
-            router.navigateTo(Tab.GLOBAL, Screens.ExternalHyperlink(media.fullUrl))
+            router.navigateTo(Tab.GLOBAL, Screens.externalHyperlinkScreen(media.fullUrl))
         } else {
-            router.navigateTo(Tab.GLOBAL, Screens.ImageView(media.fullUrl))
+            router.navigateTo(Tab.GLOBAL, Screens.imageViewScreen(media.fullUrl))
         }
     }
 }

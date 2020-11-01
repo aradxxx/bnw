@@ -1,16 +1,16 @@
 package im.bnw.android.presentation.core.navigation
 
+import com.github.aradxxx.ciceroneflow.FlowRouter
+import com.github.terrakok.cicerone.Screen
 import im.bnw.android.presentation.core.navigation.tab.Tab
-import ru.aradxxx.ciceronetabs.TabRouter
-import ru.terrakok.cicerone.Screen
 
-class AppRouter : TabRouter() {
+class AppRouter : FlowRouter() {
     fun backToRoot(tab: Tab) {
         super.backTo(tab.screenKey(), null)
     }
 
     fun switchTab(tab: Tab) {
-        super.switchTab(tab.screen())
+        super.switch(tab.screen())
     }
 
     fun backTo(tab: Tab, screen: Screen?) {
@@ -22,18 +22,18 @@ class AppRouter : TabRouter() {
     }
 
     fun navigateTo(tab: Tab, screen: Screen) {
-        super.navigateTo(tab.screenKey(), screen)
+        super.navigateTo(tab.screenKey(), screen, true)
     }
 
-    @SuppressWarnings("SpreadOperator")
+    /*@SuppressWarnings("SpreadOperator")
     fun newChain(tab: Tab, vararg screens: Screen?) {
-        super.newChain(tab.screenKey(), *screens)
+        super.newChain(tab.screenKey(), *screens, true)
     }
 
     @SuppressWarnings("SpreadOperator")
     fun newRootChain(tab: Tab, vararg screens: Screen?) {
-        super.newRootChain(tab.screenKey(), *screens)
-    }
+        super.newRootChain(tab.screenKey(), *screens, true)
+    }*/
 
     fun newRootScreen(tab: Tab, screen: Screen) {
         super.newRootScreen(tab.screenKey(), screen)
