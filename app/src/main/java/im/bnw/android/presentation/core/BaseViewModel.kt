@@ -32,11 +32,11 @@ abstract class BaseViewModel<S : State>(
         if (e is CancellationException) {
             return
         }
-        Timber.e(e)
         when (e) {
             is SSLException -> postEvent(DialogEvent(R.string.connection_error_blocking))
             is IOException -> postEvent(DialogEvent(R.string.connection_error))
         }
+        Timber.e(e)
     }
 
     open fun stateLiveData(): LiveData<S> = stateLiveData

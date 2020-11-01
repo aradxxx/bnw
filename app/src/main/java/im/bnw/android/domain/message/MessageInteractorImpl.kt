@@ -6,8 +6,9 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
-class MessageInteractorImpl @Inject constructor(private val api: Api) :
-    MessageInteractor {
+class MessageInteractorImpl @Inject constructor(
+    private val api: Api,
+) : MessageInteractor {
     override suspend fun messages(after: String, before: String, user: String): List<Message> =
         withContext(Dispatchers.IO) {
             Timber.d(Thread.currentThread().name)

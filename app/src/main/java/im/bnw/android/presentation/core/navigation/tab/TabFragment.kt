@@ -4,8 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import dagger.android.support.AndroidSupportInjection
 import im.bnw.android.R
-import im.bnw.android.di.core.AndroidXInjection
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.util.Const
 import im.bnw.android.presentation.util.tabNavigator
@@ -26,7 +26,7 @@ class TabFragment : Fragment(R.layout.fragment_tab), NavigationContainer<TabRout
     private var tabListener: TabListener? = null
 
     override fun onAttach(context: Context) {
-        AndroidXInjection.inject(this)
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         if (parentFragment is TabListener) {
             tabListener = parentFragment as TabListener

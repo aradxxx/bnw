@@ -11,35 +11,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
-import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
+import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import im.bnw.android.BuildConfig
-import im.bnw.android.R
+import im.bnw.android.databinding.ItemMessageCardBinding
+import im.bnw.android.databinding.ItemMessageCardWithMediaBinding
 import im.bnw.android.presentation.medialist.MediaAdapter
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.formatDateTime
 import im.bnw.android.presentation.util.timeAgoString
 import io.noties.markwon.Markwon
 import io.noties.markwon.linkify.LinkifyPlugin
-import kotlinx.android.synthetic.main.item_message_card.ava
-import kotlinx.android.synthetic.main.item_message_card.comments
-import kotlinx.android.synthetic.main.item_message_card.date
-import kotlinx.android.synthetic.main.item_message_card.id
-import kotlinx.android.synthetic.main.item_message_card.recommends
-import kotlinx.android.synthetic.main.item_message_card.text
-import kotlinx.android.synthetic.main.item_message_card.user
-import kotlinx.android.synthetic.main.item_message_card_with_media.*
 
 fun messageDelegate(userNameListener: (Int) -> Unit) =
-    adapterDelegateLayoutContainer<MessageItem, MessageListItem>(
-        R.layout.item_message_card,
-        on = { item, _, _ -> item is MessageItem }
+    adapterDelegateViewBinding<MessageItem, MessageListItem, ItemMessageCardBinding>(
+        { layoutInflater, root -> ItemMessageCardBinding.inflate(layoutInflater, root, false) }
     ) {
-        text.movementMethod = LinkMovementMethod.getInstance()
+        binding.text.movementMethod = LinkMovementMethod.getInstance()
         val markwon = Markwon.builder(context)
             .usePlugin(LinkifyPlugin.create())
             .build()
 
-        date.setOnLongClickListener {
+        binding.date.setOnLongClickListener {
             Toast.makeText(
                 context,
                 timeAgoString(context, item.message.timestamp()),
@@ -48,7 +40,7 @@ fun messageDelegate(userNameListener: (Int) -> Unit) =
             true
         }
 
-        user.setOnClickListener {
+        binding.user.setOnClickListener {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 userNameListener(position)
@@ -57,31 +49,31 @@ fun messageDelegate(userNameListener: (Int) -> Unit) =
 
         bind {
             val message = item.message
-            markwon.setMarkdown(text, message.text)
-            user.text = message.user
-            date.text = item.message.timestamp().formatDateTime()
-            id.text = message.id
+            markwon.setMarkdown(binding.text, message.text)
+            binding.user.text = message.user
+            binding.date.text = item.message.timestamp().formatDateTime()
+            binding.id.text = message.id
 
-            comments.text = message.replyCount.toString()
-            recommends.text = message.recommendations.size.toString()
+            binding.comments.text = message.replyCount.toString()
+            binding.recommends.text = message.recommendations.size.toString()
 
             Glide.with(context)
                 .load(String.format(BuildConfig.USER_AVA_URL, message.user))
                 .transform(CircleCrop())
-                .into(ava)
+                .into(binding.ava)
         }
     }
 
 fun messageWithMediaDelegate(userNameListener: (Int) -> Unit, mediaListener: (Int, Int) -> Unit) =
-    adapterDelegateLayoutContainer<MessageWithMediaItem, MessageListItem>(
-        R.layout.item_message_card_with_media
+    adapterDelegateViewBinding<MessageWithMediaItem, MessageListItem, ItemMessageCardWithMediaBinding>(
+        { layoutInflater, root -> ItemMessageCardWithMediaBinding.inflate(layoutInflater, root, false) }
     ) {
-        text.movementMethod = LinkMovementMethod.getInstance()
+        binding.text.movementMethod = LinkMovementMethod.getInstance()
         val markwon = Markwon.builder(context)
             .usePlugin(LinkifyPlugin.create())
             .build()
 
-        date.setOnLongClickListener {
+        binding.date.setOnLongClickListener {
             Toast.makeText(
                 context,
                 timeAgoString(context, item.message.timestamp()),
@@ -97,7 +89,7 @@ fun messageWithMediaDelegate(userNameListener: (Int) -> Unit, mediaListener: (In
             }
         }
         val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        with(media_list) {
+        with(binding.mediaList) {
             layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
             adapter = mediaAdapter
             addItemDecoration(
@@ -125,7 +117,7 @@ fun messageWithMediaDelegate(userNameListener: (Int) -> Unit, mediaListener: (In
                 }
             )
         }
-        user.setOnClickListener {
+        binding.user.setOnClickListener {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 userNameListener(position)
@@ -135,16 +127,16 @@ fun messageWithMediaDelegate(userNameListener: (Int) -> Unit, mediaListener: (In
         bind {
             val message = item.message
             mediaAdapter.items = message.content.media
-            markwon.setMarkdown(text, message.text)
-            user.text = message.user
-            date.text = item.message.timestamp().formatDateTime()
-            id.text = message.id
-            comments.text = message.replyCount.toString()
-            recommends.text = message.recommendations.size.toString()
+            markwon.setMarkdown(binding.text, message.text)
+            binding.user.text = message.user
+            binding.date.text = item.message.timestamp().formatDateTime()
+            binding.id.text = message.id
+            binding.comments.text = message.replyCount.toString()
+            binding.recommends.text = message.recommendations.size.toString()
             Glide.with(context)
                 .load(String.format(BuildConfig.USER_AVA_URL, message.user))
                 .transform(CircleCrop())
-                .into(ava)
+                .into(binding.ava)
         }
     }
 

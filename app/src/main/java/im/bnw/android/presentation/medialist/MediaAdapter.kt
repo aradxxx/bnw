@@ -4,17 +4,16 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
-import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateLayoutContainer
-import im.bnw.android.R
+import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
+import im.bnw.android.databinding.ItemMediaBinding
 import im.bnw.android.domain.message.Media
 import im.bnw.android.presentation.util.itemCallback
-import kotlinx.android.synthetic.main.item_media.*
 
 fun mediaDelegate(listener: (Int) -> Unit) =
-    adapterDelegateLayoutContainer<Media, Media>(
-        R.layout.item_media,
+    adapterDelegateViewBinding<Media, Media, ItemMediaBinding>(
+        { layoutInflater, root -> ItemMediaBinding.inflate(layoutInflater, root, false) }
     ) {
-        media.setOnClickListener {
+        binding.media.setOnClickListener {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 listener(position)
@@ -23,15 +22,15 @@ fun mediaDelegate(listener: (Int) -> Unit) =
 
         bind {
             if (!item.isYoutube()) {
-                play_button.isVisible = false
+                binding.playButton.isVisible = false
                 Glide.with(context)
                     .load(item.fullUrl)
-                    .into(media)
+                    .into(binding.media)
             } else {
-                play_button.isVisible = true
+                binding.playButton.isVisible = true
                 Glide.with(context)
                     .load(item.youtubePreviewLink())
-                    .into(media)
+                    .into(binding.media)
             }
         }
     }

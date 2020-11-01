@@ -4,11 +4,12 @@ import android.content.Context
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.android.support.AndroidSupportInjection
 import im.bnw.android.R
-import im.bnw.android.di.core.AndroidXInjection
+import im.bnw.android.databinding.FragmentTabsContainerBinding
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.util.tabNavigator
-import kotlinx.android.synthetic.main.fragment_tabs_container.*
+import im.bnw.android.presentation.util.viewBinding
 import ru.aradxxx.ciceronetabs.TabCicerone
 import ru.aradxxx.ciceronetabs.TabNavigator
 import javax.inject.Inject
@@ -23,6 +24,7 @@ class TabsContainerFragment :
     private val navigator: TabNavigator<AppRouter> by lazy {
         tabNavigator(tabCicerone, R.id.tabs_container)
     }
+    private val binding by viewBinding(FragmentTabsContainerBinding::bind)
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         bnwSilently { router().switchTab(Tab.from(menuItem.itemId).screen()) }
@@ -34,19 +36,19 @@ class TabsContainerFragment :
     }
 
     override fun tabChanged(tag: Int) {
-        bnwSilently { bottom_navigation_view.selectedItemId = tag }
+        bnwSilently { binding.bottomNavigationView.selectedItemId = tag }
     }
 
     override fun onAttach(context: Context) {
-        AndroidXInjection.inject(this)
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
     override fun onResume() {
         super.onResume()
         tabCicerone.tabsContainerCicerone().navigatorHolder.setNavigator(navigator)
-        bottom_navigation_view.setOnNavigationItemSelectedListener(this)
-        bottom_navigation_view.setOnNavigationItemReselectedListener(this)
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener(this)
+        binding.bottomNavigationView.setOnNavigationItemReselectedListener(this)
     }
 
     override fun onPause() {
@@ -59,10 +61,10 @@ class TabsContainerFragment :
     }
 
     private fun bnwSilently(action: () -> Unit) {
-        bottom_navigation_view.setOnNavigationItemSelectedListener(null)
-        bottom_navigation_view.setOnNavigationItemReselectedListener(null)
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener(null)
+        binding.bottomNavigationView.setOnNavigationItemReselectedListener(null)
         action()
-        bottom_navigation_view.setOnNavigationItemSelectedListener(this)
-        bottom_navigation_view.setOnNavigationItemReselectedListener(this)
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener(this)
+        binding.bottomNavigationView.setOnNavigationItemReselectedListener(this)
     }
 }

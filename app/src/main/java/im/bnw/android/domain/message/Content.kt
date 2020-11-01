@@ -9,10 +9,9 @@ import com.google.gson.JsonParseException
 import kotlinx.android.parcel.Parcelize
 import java.lang.reflect.Type
 
-private const val YOUTUBE = "youtube"
-private const val YOUTU = "youtu.be"
-private const val YOUTUBE_THUMB =
-    "https://img.youtube.com/vi/%s/default.jpg"
+private const val YOUTUBE_DOMAIN = "youtube"
+private const val YOUTUBE_SHORT = "youtu.be"
+private const val YOUTUBE_THUMB = "https://img.youtube.com/vi/%s/default.jpg"
 
 @Parcelize
 data class Content(
@@ -25,11 +24,11 @@ data class Media(
     val previewUrl: String,
     val fullUrl: String
 ) : Parcelable {
-    fun isYoutube() = fullUrl.contains(YOUTUBE) || fullUrl.contains(YOUTU)
+    fun isYoutube() = fullUrl.contains(YOUTUBE_DOMAIN) || fullUrl.contains(YOUTUBE_SHORT)
 
     fun youtubePreviewLink(): String {
         val uri = Uri.parse(fullUrl)
-        val id = if (fullUrl.contains(YOUTU)) {
+        val id = if (fullUrl.contains(YOUTUBE_SHORT)) {
             uri.lastPathSegment
         } else {
             uri.getQueryParameter("v") ?: ""

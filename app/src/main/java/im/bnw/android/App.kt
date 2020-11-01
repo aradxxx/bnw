@@ -10,7 +10,9 @@ import timber.log.Timber
 class App : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
-        Timber.plant(DebugTree("DDD"))
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree("DDD"))
+        }
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

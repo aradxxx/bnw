@@ -1,6 +1,5 @@
 package im.bnw.android.presentation.core
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
@@ -9,13 +8,8 @@ import androidx.annotation.CallSuper
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.isExecutionActions
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import im.bnw.android.di.core.AndroidXInjection
+import dagger.android.support.DaggerFragment
 import im.bnw.android.di.core.ViewModelFactory
 import im.bnw.android.presentation.core.dialog.NotificationDialog
 import im.bnw.android.presentation.core.lifecycle.LCHandler
@@ -28,10 +22,7 @@ private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
 @SuppressWarnings("TooManyFunctions")
 abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     layoutRes: Int
-) : Fragment(layoutRes), HasAndroidInjector {
-    @Inject
-    lateinit var androidInjector: DispatchingAndroidInjector<Any>
-
+) : DaggerFragment(layoutRes) {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val backPressedDispatcher: OnBackPressedCallback =
@@ -62,11 +53,6 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
         }
     }
 
-    override fun onAttach(context: Context) {
-        AndroidXInjection.inject(this)
-        super.onAttach(context)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         restoredState = savedInstanceState?.getParcelable(BUNDLE_VIEW_STATE)
         super.onCreate(savedInstanceState)
@@ -85,25 +71,19 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.apply {
-            stateLiveData().observe(
-                viewLifecycleOwner,
-                {
-                    Timber.d("new state: %s", it.toString())
-                    updateState(it)
-                }
-            )
-            eventLiveData().observe(viewLifecycleOwner, Observer { onEvent(it) })
-        }
+        viewModel.stateLiveData().observe(
+            viewLifecycleOwner,
+            {
+                Timber.d("new state: %s", it.toString())
+                updateState(it)
+            }
+        )
+        viewModel.eventLiveData().observe(viewLifecycleOwner, { onEvent(it) })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(BUNDLE_VIEW_STATE, viewModel.stateLiveData().value)
         super.onSaveInstanceState(outState)
-    }
-
-    override fun androidInjector(): AndroidInjector<Any> {
-        return androidInjector
     }
 
     fun <A : Parcelable> initialArguments(): A {
@@ -112,8 +92,7 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     }
 
     private fun getDialogFragment(tag: String): DialogFragment? {
-        val fragmentManager: FragmentManager = requireFragmentManager()
-        val fragment: Fragment? = fragmentManager.findFragmentByTag(tag)
+        val fragment: Fragment? = parentFragmentManager.findFragmentByTag(tag)
         if (fragment is DialogFragment) {
             val dialogFragment: DialogFragment = fragment
             return if (dialogFragment.dialog != null && dialogFragment.dialog?.isShowing == true) {
@@ -134,17 +113,18 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
         showDialog(NotificationDialog.NOTIFICATION_DIALOG_TAG, dialogFragment)
     }
 
+    @Suppress("SwallowedException")
     protected fun showDialog(tag: String, dialogFragment: () -> DialogFragment) {
         if (getDialogFragment(tag) != null) {
             return
         }
         handler.post {
             dismissDialog(tag)
-            val fragmentManager: FragmentManager = requireFragmentManager()
+            val fragmentManager: FragmentManager = childFragmentManager
             val df = dialogFragment()
-            if (!isExecutionActions(fragmentManager)) {
+            try {
                 df.show(fragmentManager, tag)
-            } else {
+            } catch (e: IllegalStateException) {
                 handler.post { showDialog(tag, dialogFragment) }
             }
         }
