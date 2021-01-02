@@ -34,6 +34,6 @@ object Screens {
     }
 
     fun loginScreen() = FragmentScreen() {
-        LoginFragment.newInstance()
+        LoginFragment()
     }
 }
