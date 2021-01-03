@@ -71,8 +71,9 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
 
     override fun updateState(state: MessagesState) {
         messageAdapter.items = state.messages
-        binding.progressBarLine.isVisible = state.beforeLoading && state.messages.isNotEmpty()
-        binding.swipeToRefresh.isRefreshing =
-            state.afterLoading || (state.beforeLoading && state.messages.isEmpty())
+        with(binding) {
+            progressBarLine.isVisible = state.beforeLoading && state.messages.isNotEmpty()
+            swipeToRefresh.isRefreshing = state.afterLoading || (state.beforeLoading && state.messages.isEmpty())
+        }
     }
 }

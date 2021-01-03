@@ -3,6 +3,7 @@ package im.bnw.android.presentation.util
 import android.content.res.Resources
 import android.os.Parcelable
 import android.view.View
+import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
@@ -29,3 +30,11 @@ fun <T : ViewBinding> Fragment.viewBinding(viewBindingFactory: (View) -> T) =
 
 val Int.dpToPx: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+var TextView.newText: String
+    get() = text.toString()
+    set(newText) {
+        if (text.toString() != newText) {
+            text = newText
+        }
+    }
