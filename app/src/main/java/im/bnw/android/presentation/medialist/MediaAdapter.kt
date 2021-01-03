@@ -21,16 +21,16 @@ fun mediaDelegate(listener: (Int) -> Unit) =
         }
 
         bind {
-            if (!item.isYoutube()) {
-                binding.playButton.isVisible = false
+            with(binding) {
+                val image = if (item.isYoutube()) {
+                    item.youtubePreviewLink()
+                } else {
+                    item.fullUrl
+                }
+                playButton.isVisible = item.isYoutube()
                 Glide.with(context)
-                    .load(item.fullUrl)
-                    .into(binding.media)
-            } else {
-                binding.playButton.isVisible = true
-                Glide.with(context)
-                    .load(item.youtubePreviewLink())
-                    .into(binding.media)
+                    .load(image)
+                    .into(media)
             }
         }
     }

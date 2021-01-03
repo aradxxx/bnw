@@ -18,6 +18,7 @@ import im.bnw.android.databinding.ItemMessageCardWithMediaBinding
 import im.bnw.android.presentation.medialist.MediaAdapter
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.formatDateTime
+import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.timeAgoString
 import io.noties.markwon.Markwon
 import io.noties.markwon.linkify.LinkifyPlugin
@@ -26,41 +27,45 @@ fun messageDelegate(userNameListener: (Int) -> Unit) =
     adapterDelegateViewBinding<MessageItem, MessageListItem, ItemMessageCardBinding>(
         { layoutInflater, root -> ItemMessageCardBinding.inflate(layoutInflater, root, false) }
     ) {
-        binding.text.movementMethod = LinkMovementMethod.getInstance()
         val markwon = Markwon.builder(context)
             .usePlugin(LinkifyPlugin.create())
             .build()
 
-        binding.date.setOnLongClickListener {
-            Toast.makeText(
-                context,
-                timeAgoString(context, item.message.timestamp()),
-                Toast.LENGTH_SHORT
-            ).show()
-            true
-        }
-
-        binding.user.setOnClickListener {
-            val position = adapterPosition
-            if (position != RecyclerView.NO_POSITION) {
-                userNameListener(position)
+        with(binding) {
+            text.movementMethod = LinkMovementMethod.getInstance()
+            user.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    userNameListener(position)
+                }
+            }
+            date.setOnLongClickListener {
+                Toast.makeText(
+                    context,
+                    timeAgoString(context, item.message.timestamp()),
+                    Toast.LENGTH_SHORT
+                ).show()
+                true
             }
         }
 
         bind {
             val message = item.message
-            markwon.setMarkdown(binding.text, message.text)
-            binding.user.text = message.user
-            binding.date.text = item.message.timestamp().formatDateTime()
-            binding.id.text = message.id
+            with(binding) {
+                markwon.setMarkdown(text, message.text)
 
-            binding.comments.text = message.replyCount.toString()
-            binding.recommends.text = message.recommendations.size.toString()
+                user.newText = message.user
+                date.newText = item.message.timestamp().formatDateTime()
+                id.newText = message.id
 
-            Glide.with(context)
-                .load(String.format(BuildConfig.USER_AVA_URL, message.user))
-                .transform(CircleCrop())
-                .into(binding.ava)
+                comments.newText = message.replyCount.toString()
+                recommends.newText = message.recommendations.size.toString()
+
+                Glide.with(context)
+                    .load(String.format(BuildConfig.USER_AVA_URL, message.user))
+                    .transform(CircleCrop())
+                    .into(ava)
+            }
         }
     }
 
@@ -68,75 +73,83 @@ fun messageWithMediaDelegate(userNameListener: (Int) -> Unit, mediaListener: (In
     adapterDelegateViewBinding<MessageWithMediaItem, MessageListItem, ItemMessageCardWithMediaBinding>(
         { layoutInflater, root -> ItemMessageCardWithMediaBinding.inflate(layoutInflater, root, false) }
     ) {
-        binding.text.movementMethod = LinkMovementMethod.getInstance()
-        val markwon = Markwon.builder(context)
-            .usePlugin(LinkifyPlugin.create())
-            .build()
-
-        binding.date.setOnLongClickListener {
-            Toast.makeText(
-                context,
-                timeAgoString(context, item.message.timestamp()),
-                Toast.LENGTH_SHORT
-            ).show()
-            true
-        }
-
+        val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         val mediaAdapter = MediaAdapter() { mediaPosition ->
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 mediaListener(position, mediaPosition)
             }
         }
-        val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        with(binding.mediaList) {
-            layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
-            adapter = mediaAdapter
-            addItemDecoration(
-                object : RecyclerView.ItemDecoration() {
-                    val normal = 16.dpToPx
-                    val half = 8.dpToPx
-                    override fun getItemOffsets(
-                        outRect: Rect,
-                        itemPosition: Int,
-                        parent: RecyclerView
-                    ) {
-                        if (itemPosition == 0) {
-                            outRect.left = normal
-                        } else {
-                            outRect.left = half
-                        }
-                        outRect.bottom = half
-                        outRect.top = half
-                        if (itemPosition + 1 == parent.adapter?.itemCount) {
-                            outRect.right = normal
-                        } else {
-                            outRect.right = 0
+        val markwon = Markwon.builder(context)
+            .usePlugin(LinkifyPlugin.create())
+            .build()
+
+        with(binding) {
+            text.movementMethod = LinkMovementMethod.getInstance()
+            user.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    userNameListener(position)
+                }
+            }
+            date.setOnLongClickListener {
+                Toast.makeText(
+                    context,
+                    timeAgoString(context, item.message.timestamp()),
+                    Toast.LENGTH_SHORT
+                ).show()
+                true
+            }
+
+            with(mediaList) {
+                layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
+                adapter = mediaAdapter
+                addItemDecoration(
+                    object : RecyclerView.ItemDecoration() {
+                        val normal = 16.dpToPx
+                        val half = 8.dpToPx
+                        override fun getItemOffsets(
+                            outRect: Rect,
+                            itemPosition: Int,
+                            parent: RecyclerView
+                        ) {
+                            if (itemPosition == 0) {
+                                outRect.left = normal
+                            } else {
+                                outRect.left = half
+                            }
+                            outRect.bottom = half
+                            outRect.top = half
+                            if (itemPosition + 1 == parent.adapter?.itemCount) {
+                                outRect.right = normal
+                            } else {
+                                outRect.right = 0
+                            }
                         }
                     }
-                }
-            )
-        }
-        binding.user.setOnClickListener {
-            val position = adapterPosition
-            if (position != RecyclerView.NO_POSITION) {
-                userNameListener(position)
+                )
             }
         }
 
         bind {
             val message = item.message
             mediaAdapter.items = message.content.media
-            markwon.setMarkdown(binding.text, message.text)
-            binding.user.text = message.user
-            binding.date.text = item.message.timestamp().formatDateTime()
-            binding.id.text = message.id
-            binding.comments.text = message.replyCount.toString()
-            binding.recommends.text = message.recommendations.size.toString()
-            Glide.with(context)
-                .load(String.format(BuildConfig.USER_AVA_URL, message.user))
-                .transform(CircleCrop())
-                .into(binding.ava)
+
+            with(binding) {
+                markwon.setMarkdown(text, message.text)
+
+                user.newText = message.user
+                date.newText = item.message.timestamp().formatDateTime()
+                id.newText = message.id
+
+                comments.newText = message.replyCount.toString()
+                recommends.newText = message.recommendations.size.toString()
+
+                Glide.with(context)
+                    .load(String.format(BuildConfig.USER_AVA_URL, message.user))
+                    .transform(CircleCrop())
+                    .into(ava)
+            }
         }
     }
 

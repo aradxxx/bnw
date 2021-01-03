@@ -42,8 +42,10 @@ class TabsContainerFragment :
     override fun onResume() {
         super.onResume()
         flowCicerone.flowContainerCicerone().getNavigatorHolder().setNavigator(navigator)
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener(this)
-        binding.bottomNavigationView.setOnNavigationItemReselectedListener(this)
+        with(binding) {
+            bottomNavigationView.setOnNavigationItemSelectedListener(this@TabsContainerFragment)
+            bottomNavigationView.setOnNavigationItemReselectedListener(this@TabsContainerFragment)
+        }
     }
 
     override fun onPause() {
@@ -56,10 +58,12 @@ class TabsContainerFragment :
     }
 
     private fun bnwSilently(action: () -> Unit) {
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener(null)
-        binding.bottomNavigationView.setOnNavigationItemReselectedListener(null)
-        action()
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener(this)
-        binding.bottomNavigationView.setOnNavigationItemReselectedListener(this)
+        with(binding) {
+            bottomNavigationView.setOnNavigationItemSelectedListener(null)
+            bottomNavigationView.setOnNavigationItemReselectedListener(null)
+            action()
+            bottomNavigationView.setOnNavigationItemSelectedListener(this@TabsContainerFragment)
+            bottomNavigationView.setOnNavigationItemReselectedListener(this@TabsContainerFragment)
+        }
     }
 }

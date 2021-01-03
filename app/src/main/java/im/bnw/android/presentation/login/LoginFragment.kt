@@ -6,6 +6,7 @@ import androidx.core.widget.doAfterTextChanged
 import im.bnw.android.R
 import im.bnw.android.databinding.FragmentLoginBinding
 import im.bnw.android.presentation.core.BaseFragment
+import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.viewBinding
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginState>(
@@ -20,22 +21,20 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginState>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.login.doAfterTextChanged { viewModel.userNameChanged(it.toString()) }
-        binding.password.doAfterTextChanged { viewModel.passwordChanged(it.toString()) }
-        binding.auth.setOnClickListener { viewModel.onAuthClicked() }
+        with(binding) {
+            login.doAfterTextChanged { viewModel.userNameChanged(it.toString()) }
+            password.doAfterTextChanged { viewModel.passwordChanged(it.toString()) }
+            auth.setOnClickListener { viewModel.onAuthClicked() }
+        }
     }
 
     override fun updateState(state: LoginState) {
-        if (binding.login.text.toString() != state.userName) {
-            binding.login.setText(state.userName)
+        with(binding) {
+            login.newText = state.userName
+            password.newText = state.password
+            login.isEnabled = !state.loading
+            password.isEnabled = !state.loading
+            auth.isEnabled = !state.loading && (state.userName.isNotEmpty() && state.password.isNotEmpty())
         }
-        if (binding.password.text.toString() != state.password) {
-            binding.password.setText(state.password)
-        }
-        binding.login.isEnabled = !state.loading
-        binding.password.isEnabled = !state.loading
-        binding.auth.isEnabled =
-            !state.loading && (state.userName.isNotEmpty() && state.password.isNotEmpty())
     }
 }
