@@ -9,6 +9,8 @@
     <string name="ok">OK</string>
 
     <!--login-->
+    <string name="user_name">Имя</string>
+    <string name="password">Пароль</string>
     <string name="sign_in">Войти</string>
 
     <plurals name="minutes">
