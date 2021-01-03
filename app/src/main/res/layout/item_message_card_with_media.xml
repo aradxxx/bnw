@@ -27,8 +27,7 @@
             <ImageView
                 android:id="@+id/ava"
                 android:layout_width="48dp"
-                android:layout_height="48dp"
-                tools:src="@drawable/ic_launcher_background" />
+                android:layout_height="48dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -43,11 +42,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="-1dp"
-                    android:drawableStart="@drawable/ic_at"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:textAppearance="@style/Text.Body1.Secondary"
+                    app:drawableStartCompat="@drawable/ic_at"
                     app:drawableTint="@color/text_secondary_dark"
                     tools:text="user" />
 

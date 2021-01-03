@@ -12,7 +12,7 @@ data class MessagesState(
     val beforeLoading: Boolean = false,
     val afterLoading: Boolean = false,
     val fullLoaded: Boolean = false
-) : State()
+) : State
 
 sealed class Event {
     object ScrollToTop : Event()

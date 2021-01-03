@@ -4,4 +4,8 @@ import im.bnw.android.presentation.core.State
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class LoginState : State()
+data class LoginState(
+    val userName: String = "",
+    val password: String = "",
+    val loading: Boolean = false,
+) : State

@@ -2,38 +2,38 @@ package im.bnw.android.presentation.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
+import com.github.aradxxx.ciceroneflow.FlowCicerone
+import com.github.aradxxx.ciceroneflow.FlowNavigator
+import com.github.aradxxx.ciceroneflow.NavigationContainer
 import im.bnw.android.R
 import im.bnw.android.presentation.core.BaseActivity
 import im.bnw.android.presentation.core.navigation.AppRouter
-import ru.aradxxx.ciceronetabs.NavigationContainer
-import ru.aradxxx.ciceronetabs.TabCicerone
-import ru.aradxxx.ciceronetabs.TabNavigator
 import javax.inject.Inject
 
 class MainActivity :
     BaseActivity<MainViewModel, MainState>(R.layout.activity_main, MainViewModel::class.java),
     NavigationContainer<AppRouter> {
     @Inject
-    lateinit var tabCicerone: TabCicerone<AppRouter>
-    lateinit var navigator: TabNavigator<AppRouter>
+    lateinit var flowCicerone: FlowCicerone<AppRouter>
+    lateinit var navigator: FlowNavigator<AppRouter>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
-        navigator = TabNavigator(this, tabCicerone, R.id.container)
+        navigator = FlowNavigator(this, R.id.container, flowCicerone)
     }
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        tabCicerone.activityCicerone().navigatorHolder.setNavigator(navigator)
+        flowCicerone.mainCicerone().getNavigatorHolder().setNavigator(navigator)
     }
 
     override fun onPause() {
-        tabCicerone.activityCicerone().navigatorHolder.removeNavigator()
+        flowCicerone.mainCicerone().getNavigatorHolder().removeNavigator()
         super.onPause()
     }
 
     override fun router(): AppRouter {
-        return tabCicerone.activityRouter()
+        return flowCicerone.mainRouter()
     }
 }

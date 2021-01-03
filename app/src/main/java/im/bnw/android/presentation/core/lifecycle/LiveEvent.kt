@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 
 class LiveEvent<T> : MediatorLiveData<T>() {
     private val observers = ArraySet<ObserverWrapper<in T>>()
+
     @MainThread
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         val wrapper = ObserverWrapper(observer)

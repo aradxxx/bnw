@@ -5,24 +5,25 @@ import android.view.View
 import androidx.core.view.WindowCompat
 import com.bumptech.glide.Glide
 import im.bnw.android.R
+import im.bnw.android.databinding.FragmentImageViewBinding
 import im.bnw.android.presentation.core.BaseFragment
+import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
-import kotlinx.android.synthetic.main.fragment_image_view.*
 
 class ImageFragment : BaseFragment<ImageViewModel, ImageState>(
     R.layout.fragment_image_view
 ) {
-    companion object {
-        fun newInstance(params: ImageScreenParams) =
-            ImageFragment().withInitialArguments(params)
-    }
-
     override val vmClass = ImageViewModel::class.java
+    private val binding by viewBinding(FragmentImageViewBinding::bind)
+
+    companion object {
+        fun newInstance(params: ImageScreenParams) = ImageFragment().withInitialArguments(params)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setDecorFits(false)
-        btn_close.setOnClickListener { viewModel.backPressed() }
+        binding.btnClose.setOnClickListener { viewModel.backPressed() }
     }
 
     override fun onDestroyView() {
@@ -33,7 +34,7 @@ class ImageFragment : BaseFragment<ImageViewModel, ImageState>(
     override fun updateState(state: ImageState) {
         Glide.with(requireContext())
             .load(state.url)
-            .into(image_view)
+            .into(binding.imageView)
     }
 
     private fun setDecorFits(decorFits: Boolean) {

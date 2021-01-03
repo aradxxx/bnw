@@ -4,13 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import im.bnw.android.R
 import im.bnw.android.presentation.core.lifecycle.LiveEvent
 import im.bnw.android.presentation.core.navigation.AppRouter
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.plus
 import timber.log.Timber
+import java.io.IOException
 import java.util.concurrent.atomic.AtomicReference
+import javax.net.ssl.SSLException
 
 abstract class BaseViewModel<S : State>(
     initialState: S,
@@ -28,6 +31,10 @@ abstract class BaseViewModel<S : State>(
     protected open fun handleException(e: Throwable) {
         if (e is CancellationException) {
             return
+        }
+        when (e) {
+            is SSLException -> postEvent(DialogEvent(R.string.connection_error_blocking))
+            is IOException -> postEvent(DialogEvent(R.string.connection_error))
         }
         Timber.e(e)
     }

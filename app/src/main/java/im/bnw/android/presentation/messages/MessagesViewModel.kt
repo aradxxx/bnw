@@ -1,10 +1,8 @@
 package im.bnw.android.presentation.messages
 
-import im.bnw.android.R
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.presentation.core.BaseViewModel
-import im.bnw.android.presentation.core.DialogEvent
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
@@ -15,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
-import javax.net.ssl.SSLException
 
 private const val PAGE_SIZE = 20
 
@@ -120,29 +117,21 @@ class MessagesViewModel @Inject constructor(
         loadBefore()
     }
 
-    override fun handleException(e: Throwable) {
-        super.handleException(e)
-        when (e) {
-            is SSLException -> postEvent(DialogEvent(R.string.connection_error_blocking))
-            is IOException -> postEvent(DialogEvent(R.string.connection_error))
-        }
-    }
-
     fun userClicked(position: Int) {
         val userId = state.messages[position].message().user
         if (state.user == userId) {
             return
         }
-        router.navigateTo(Tab.GLOBAL, Screens.Messages(userId))
+        router.navigateTo(Tab.GLOBAL, Screens.messagesScreen(userId))
     }
 
     fun mediaClicked(messagePosition: Int, mediaPosition: Int) {
         val message = state.messages.getOrNull(messagePosition) ?: return
         val media = message.message().content.media.getOrNull(mediaPosition) ?: return
         if (media.isYoutube()) {
-            router.navigateTo(Tab.GLOBAL, Screens.ExternalHyperlink(media.fullUrl))
+            router.navigateTo(Tab.GLOBAL, Screens.externalHyperlinkScreen(media.fullUrl))
         } else {
-            router.navigateTo(Tab.GLOBAL, Screens.ImageView(media.fullUrl))
+            router.navigateTo(Tab.GLOBAL, Screens.imageViewScreen(media.fullUrl))
         }
     }
 }
