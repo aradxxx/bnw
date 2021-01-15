@@ -1,10 +1,10 @@
-package im.bnw.android.data.login
+package im.bnw.android.data.auth
 
 import com.google.gson.annotations.SerializedName
 
-class LoginResponse(
+class AuthResponse(
     @SerializedName("ok")
-    val ok: String,
+    val ok: Boolean,
     @SerializedName("desc")
     val token: String,
 )

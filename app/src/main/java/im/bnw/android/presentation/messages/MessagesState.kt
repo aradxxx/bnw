@@ -2,7 +2,7 @@ package im.bnw.android.presentation.messages
 
 import im.bnw.android.presentation.core.State
 import im.bnw.android.presentation.messages.adapter.MessageListItem
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import okhttp3.internal.immutableListOf
 
 @Parcelize

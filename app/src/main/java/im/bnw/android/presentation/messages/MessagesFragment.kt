@@ -18,11 +18,11 @@ import im.bnw.android.presentation.util.withInitialArguments
 class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     R.layout.fragment_messages_list
 ) {
+    private val binding by viewBinding(FragmentMessagesListBinding::bind)
+    override val vmClass = MessagesViewModel::class.java
+
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
-
-    override val vmClass = MessagesViewModel::class.java
-    private val binding by viewBinding(FragmentMessagesListBinding::bind)
 
     companion object {
         fun newInstance(params: MessagesScreenParams) = MessagesFragment().withInitialArguments(params)
