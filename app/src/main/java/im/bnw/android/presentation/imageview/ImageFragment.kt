@@ -13,8 +13,8 @@ import im.bnw.android.presentation.util.withInitialArguments
 class ImageFragment : BaseFragment<ImageViewModel, ImageState>(
     R.layout.fragment_image_view
 ) {
-    override val vmClass = ImageViewModel::class.java
     private val binding by viewBinding(FragmentImageViewBinding::bind)
+    override val vmClass = ImageViewModel::class.java
 
     companion object {
         fun newInstance(params: ImageScreenParams) = ImageFragment().withInitialArguments(params)

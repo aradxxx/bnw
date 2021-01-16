@@ -9,6 +9,7 @@ import dagger.android.DaggerApplication
 import im.bnw.android.App
 import im.bnw.android.di.ActivityBindingModule
 import im.bnw.android.di.core.ViewModelFactoryModule
+import im.bnw.android.di.usermanager.UserManagerModule
 import javax.inject.Singleton
 
 @Singleton
@@ -18,7 +19,9 @@ import javax.inject.Singleton
         ActivityBindingModule::class,
         ViewModelFactoryModule::class,
         NetworkModule::class,
-        NavigationModule::class
+        NavigationModule::class,
+        DataStoreModule::class,
+        UserManagerModule::class,
     ]
 )
 interface AppComponent : AndroidInjector<DaggerApplication> {

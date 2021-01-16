@@ -29,6 +29,32 @@ class MessagesViewModel @Inject constructor(
         loadBefore()
     }
 
+    fun swipeRefresh() {
+        loadAfter()
+    }
+
+    fun bottomNear() {
+        loadBefore()
+    }
+
+    fun userClicked(position: Int) {
+        val userId = state.messages[position].message().user
+        if (state.user == userId) {
+            return
+        }
+        router.navigateTo(Tab.GLOBAL, Screens.messagesScreen(userId))
+    }
+
+    fun mediaClicked(messagePosition: Int, mediaPosition: Int) {
+        val message = state.messages.getOrNull(messagePosition) ?: return
+        val media = message.message().content.media.getOrNull(mediaPosition) ?: return
+        if (media.isYoutube()) {
+            router.navigateTo(Tab.GLOBAL, Screens.externalHyperlinkScreen(media.fullUrl))
+        } else {
+            router.navigateTo(Tab.GLOBAL, Screens.imageViewScreen(media.fullUrl))
+        }
+    }
+
     private fun loadBefore() {
         if (state.beforeLoading || state.fullLoaded) {
             return
@@ -107,31 +133,5 @@ class MessagesViewModel @Inject constructor(
                 }
             }
             .toList()
-    }
-
-    fun swipeRefresh() {
-        loadAfter()
-    }
-
-    fun bottomNear() {
-        loadBefore()
-    }
-
-    fun userClicked(position: Int) {
-        val userId = state.messages[position].message().user
-        if (state.user == userId) {
-            return
-        }
-        router.navigateTo(Tab.GLOBAL, Screens.messagesScreen(userId))
-    }
-
-    fun mediaClicked(messagePosition: Int, mediaPosition: Int) {
-        val message = state.messages.getOrNull(messagePosition) ?: return
-        val media = message.message().content.media.getOrNull(mediaPosition) ?: return
-        if (media.isYoutube()) {
-            router.navigateTo(Tab.GLOBAL, Screens.externalHyperlinkScreen(media.fullUrl))
-        } else {
-            router.navigateTo(Tab.GLOBAL, Screens.imageViewScreen(media.fullUrl))
-        }
     }
 }

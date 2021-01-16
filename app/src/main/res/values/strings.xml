@@ -8,10 +8,11 @@
     <string name="connection_error_blocking">Проверьте интернет соединение. Возможно https://bnw.im заблокирован провайдером</string>
     <string name="ok">OK</string>
 
-    <!--login-->
+    <!--auth-->
     <string name="user_name">Имя</string>
     <string name="password">Пароль</string>
     <string name="sign_in">Войти</string>
+    <string name="auth_failed">Неверный логин или пароль</string>
 
     <plurals name="minutes">
         <item quantity="zero">%1$d минут назад</item>

@@ -18,6 +18,6 @@ class MainViewModel @Inject constructor(
         router.newRootScreen(Screens.tabContainerScreen())
         router.switchTab(Tab.General)
         router.newRootScreen(Tab.General, Screens.messagesScreen(""))
-        router.newRootScreen(Tab.About, Screens.loginScreen())
+        router.newRootScreen(Tab.About, Screens.authScreen())
     }
 }

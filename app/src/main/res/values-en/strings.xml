@@ -11,6 +11,7 @@
     <string name="user_name">User name</string>
     <string name="password">Password</string>
     <string name="sign_in">Sign In</string>
+    <string name="auth_failed">Wrong user name or password</string>
 
     <plurals name="minutes" tools:ignore="UnusedQuantity">
         <item quantity="zero">%1$d minutes ago</item>

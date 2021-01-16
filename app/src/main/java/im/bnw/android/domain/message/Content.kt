@@ -6,7 +6,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.lang.reflect.Type
 
 private const val YOUTUBE_DOMAIN = "youtube"
@@ -46,7 +46,7 @@ class ContentDeserializer : JsonDeserializer<Content> {
         context: JsonDeserializationContext
     ): Content {
         var text = ""
-        var media: MutableList<Media> = mutableListOf()
+        val media: MutableList<Media> = mutableListOf()
 
         val secureRaw = json.asJsonObject.getAsJsonArray("secure")
         if (secureRaw.size() == 2) {
