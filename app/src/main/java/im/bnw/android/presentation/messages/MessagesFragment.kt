@@ -33,11 +33,13 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
 
         messageAdapter = MessageAdapter(
             { position -> viewModel.userClicked(position) },
-            { messagePosition, mediaPosition -> viewModel.mediaClicked(messagePosition, mediaPosition) }
+            { messagePosition, mediaPosition ->
+                viewModel.mediaClicked(messagePosition, mediaPosition)
+            }
         )
         linearLayoutManager = LinearLayoutManager(requireContext())
         with(binding.messagesList) {
-            layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
+            layoutManager = linearLayoutManager
             this.adapter = messageAdapter
             addOnScrollListener(
                 object : RecyclerView.OnScrollListener() {
