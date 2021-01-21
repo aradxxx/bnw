@@ -115,18 +115,13 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
 
     @Suppress("SwallowedException")
     protected fun showDialog(tag: String, dialogFragment: () -> DialogFragment) {
-        if (getDialogFragment(tag) != null) {
-            return
-        }
-        handler.post {
-            dismissDialog(tag)
-            val fragmentManager: FragmentManager = childFragmentManager
-            val df = dialogFragment()
-            try {
-                df.show(fragmentManager, tag)
-            } catch (e: IllegalStateException) {
-                handler.post { showDialog(tag, dialogFragment) }
-            }
+        dismissDialog(tag)
+        val fragmentManager: FragmentManager = childFragmentManager
+        val df = dialogFragment()
+        try {
+            df.show(fragmentManager, tag)
+        } catch (e: IllegalStateException) {
+            handler.post { showDialog(tag, dialogFragment) }
         }
     }
 }
