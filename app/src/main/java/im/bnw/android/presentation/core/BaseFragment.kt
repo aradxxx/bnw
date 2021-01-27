@@ -113,7 +113,6 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
         showDialog(NotificationDialog.NOTIFICATION_DIALOG_TAG, dialogFragment)
     }
 
-    @Suppress("SwallowedException")
     protected fun showDialog(tag: String, dialogFragment: () -> DialogFragment) {
         dismissDialog(tag)
         val fragmentManager: FragmentManager = childFragmentManager
@@ -121,6 +120,7 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
         try {
             df.show(fragmentManager, tag)
         } catch (e: IllegalStateException) {
+            Timber.e(e)
             handler.post { showDialog(tag, dialogFragment) }
         }
     }

@@ -31,20 +31,35 @@ fun messageDelegate(userNameListener: (Int) -> Unit) =
             .usePlugin(LinkifyPlugin.create())
             .build()
 
+        fun userClicked() {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                userNameListener(position)
+            }
+        }
+
+        fun showTime() {
+            Toast.makeText(
+                context.applicationContext,
+                timeAgoString(context, item.message.timestamp()),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
         with(binding) {
             text.movementMethod = LinkMovementMethod.getInstance()
-            user.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    userNameListener(position)
-                }
+            date.setOnClickListener {
+                userClicked()
             }
             date.setOnLongClickListener {
-                Toast.makeText(
-                    context,
-                    timeAgoString(context, item.message.timestamp()),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showTime()
+                true
+            }
+            user.setOnClickListener {
+                userClicked()
+            }
+            user.setOnLongClickListener {
+                showTime()
                 true
             }
         }
@@ -84,23 +99,37 @@ fun messageWithMediaDelegate(userNameListener: (Int) -> Unit, mediaListener: (In
             .usePlugin(LinkifyPlugin.create())
             .build()
 
+        fun userClicked() {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                userNameListener(position)
+            }
+        }
+
+        fun showTime() {
+            Toast.makeText(
+                context.applicationContext,
+                timeAgoString(context, item.message.timestamp()),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
         with(binding) {
             text.movementMethod = LinkMovementMethod.getInstance()
-            user.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    userNameListener(position)
-                }
+            date.setOnClickListener {
+                userClicked()
             }
             date.setOnLongClickListener {
-                Toast.makeText(
-                    context,
-                    timeAgoString(context, item.message.timestamp()),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showTime()
                 true
             }
-
+            user.setOnClickListener {
+                userClicked()
+            }
+            user.setOnLongClickListener {
+                showTime()
+                true
+            }
             with(mediaList) {
                 layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
                 adapter = mediaAdapter
