@@ -18,6 +18,11 @@
             android:nestedScrollingEnabled="false" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white" />
+
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         android:id="@+id/progress_bar_line"
         style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
