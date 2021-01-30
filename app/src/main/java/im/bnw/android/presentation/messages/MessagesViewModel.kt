@@ -60,7 +60,7 @@ class MessagesViewModel @Inject constructor(
             return
         }
         vmScope.launch(Dispatchers.Default) {
-            updateState { state -> state.copy(beforeLoading = true) }
+            updateState { it.copy(beforeLoading = true) }
             val last = if (state.messages.isNotEmpty()) {
                 state.messages.last().message().id
             } else {
@@ -69,19 +69,15 @@ class MessagesViewModel @Inject constructor(
             try {
                 val messages = messageInteractor.messages("", last, state.user)
                 val newPage = messagesToListItems(messages)
-                updateState { state ->
-                    state.copy(
+                updateState {
+                    it.copy(
                         beforeLoading = false,
                         messages = state.messages.plus(newPage)
                     )
                 }
             } catch (t: IOException) {
                 handleException(t)
-                updateState { state ->
-                    state.copy(
-                        beforeLoading = false
-                    )
-                }
+                updateState { it.copy(beforeLoading = false) }
             }
         }
     }
@@ -91,7 +87,7 @@ class MessagesViewModel @Inject constructor(
             return
         }
         vmScope.launch(Dispatchers.Default) {
-            updateState { state -> state.copy(afterLoading = true) }
+            updateState { it.copy(afterLoading = true) }
             val first = if (state.messages.isNotEmpty()) {
                 state.messages.first().message().id
             } else {
@@ -102,8 +98,8 @@ class MessagesViewModel @Inject constructor(
                 val messages = messageInteractor.messages(first, "", state.user)
                 val newPage = messagesToListItems(messages)
                 val needLoadMore = newPage.size == PAGE_SIZE
-                updateState { state ->
-                    state.copy(
+                updateState {
+                    it.copy(
                         afterLoading = needLoadMore,
                         messages = newPage.plus(state.messages)
                     )
@@ -115,11 +111,7 @@ class MessagesViewModel @Inject constructor(
                 }
             } catch (t: IOException) {
                 handleException(t)
-                updateState { state ->
-                    state.copy(
-                        afterLoading = false
-                    )
-                }
+                updateState { it.copy(afterLoading = false) }
             }
         }
     }

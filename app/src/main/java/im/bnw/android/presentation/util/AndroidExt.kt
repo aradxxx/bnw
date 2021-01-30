@@ -52,13 +52,13 @@ fun <T> DataStore<Preferences>.getValue(
         } else {
             throw exception
         }
-    }.map { prefs ->
-        prefs[key] ?: defaultValue
+    }.map {
+        it[key] ?: defaultValue
     }
 }
 
 suspend fun <T> DataStore<Preferences>.setValue(key: Preferences.Key<T>, value: T) {
-    edit { prefs -> prefs[key] = value }
+    edit { it[key] = value }
 }
 
 val Int.dpToPx: Int

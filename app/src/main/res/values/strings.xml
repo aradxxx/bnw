@@ -1,12 +1,17 @@
 <resources>
     <string name="general">Главная</string>
-    <string name="about">О приложении</string>
+    <string name="profile">Профиль</string>
 
     <string name="test">Test</string>
 
     <string name="connection_error">Проверьте интернет соединение</string>
     <string name="connection_error_blocking">Проверьте интернет соединение. Возможно https://bnw.im заблокирован провайдером</string>
     <string name="ok">OK</string>
+
+    <!--profile-->
+    <string name="log_in">Авторизация</string>
+    <string name="log_out">Выйти</string>
+    <string name="retry">Повторить</string>
 
     <!--auth-->
     <string name="user_name">Имя</string>

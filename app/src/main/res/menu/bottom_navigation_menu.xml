@@ -6,7 +6,7 @@
         android:title="@string/general" />
 
     <item
-        android:id="@+id/tab_about"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/about" />
+        android:id="@+id/tab_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/profile" />
 </menu>
