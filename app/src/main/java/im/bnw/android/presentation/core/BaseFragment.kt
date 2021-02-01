@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
 import im.bnw.android.di.core.ViewModelFactory
+import im.bnw.android.presentation.core.dialog.DialogResult
 import im.bnw.android.presentation.core.dialog.NotificationDialog
 import im.bnw.android.presentation.core.lifecycle.LCHandler
 import im.bnw.android.presentation.util.Const
@@ -22,7 +23,7 @@ private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
 @SuppressWarnings("TooManyFunctions")
 abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     layoutRes: Int
-) : DaggerFragment(layoutRes) {
+) : DaggerFragment(layoutRes), DialogResult {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val backPressedDispatcher: OnBackPressedCallback =

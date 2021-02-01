@@ -36,15 +36,15 @@ class TabsContainerFragment :
     }
 
     override fun tabChanged(tag: Int) {
-        bnwSilently { binding.bottomNavigationView.selectedItemId = tag }
+        bnwSilently { binding.tabsNavigation.selectedItemId = tag }
     }
 
     override fun onResume() {
         super.onResume()
         flowCicerone.flowContainerCicerone().getNavigatorHolder().setNavigator(navigator)
         with(binding) {
-            bottomNavigationView.setOnNavigationItemSelectedListener(this@TabsContainerFragment)
-            bottomNavigationView.setOnNavigationItemReselectedListener(this@TabsContainerFragment)
+            tabsNavigation.setOnNavigationItemSelectedListener(this@TabsContainerFragment)
+            tabsNavigation.setOnNavigationItemReselectedListener(this@TabsContainerFragment)
         }
     }
 
@@ -59,11 +59,11 @@ class TabsContainerFragment :
 
     private fun bnwSilently(action: () -> Unit) {
         with(binding) {
-            bottomNavigationView.setOnNavigationItemSelectedListener(null)
-            bottomNavigationView.setOnNavigationItemReselectedListener(null)
+            tabsNavigation.setOnNavigationItemSelectedListener(null)
+            tabsNavigation.setOnNavigationItemReselectedListener(null)
             action()
-            bottomNavigationView.setOnNavigationItemSelectedListener(this@TabsContainerFragment)
-            bottomNavigationView.setOnNavigationItemReselectedListener(this@TabsContainerFragment)
+            tabsNavigation.setOnNavigationItemSelectedListener(this@TabsContainerFragment)
+            tabsNavigation.setOnNavigationItemReselectedListener(this@TabsContainerFragment)
         }
     }
 }

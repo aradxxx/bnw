@@ -2,15 +2,17 @@
     <string name="general">Главная</string>
     <string name="profile">Профиль</string>
 
-    <string name="test">Test</string>
+    <string name="test">Тест</string>
 
     <string name="connection_error">Проверьте интернет соединение</string>
     <string name="connection_error_blocking">Проверьте интернет соединение. Возможно https://bnw.im заблокирован провайдером</string>
     <string name="ok">OK</string>
+    <string name="cancel">Отмена</string>
 
     <!--profile-->
     <string name="log_in">Авторизация</string>
     <string name="log_out">Выйти</string>
+    <string name="log_out_confirmation">Вы действительно хотите выйти?</string>
     <string name="retry">Повторить</string>
 
     <!--auth-->
