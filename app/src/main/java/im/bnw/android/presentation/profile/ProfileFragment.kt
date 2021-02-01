@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.profile
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -9,11 +10,14 @@ import im.bnw.android.BuildConfig
 import im.bnw.android.R
 import im.bnw.android.databinding.FragmentProfileBinding
 import im.bnw.android.presentation.core.BaseFragment
+import im.bnw.android.presentation.core.dialog.NotificationDialog
+import im.bnw.android.presentation.util.DialogCode
 import im.bnw.android.presentation.util.viewBinding
 
 class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
     R.layout.fragment_profile
 ) {
+
     private val binding by viewBinding(FragmentProfileBinding::bind)
     override val vmClass = ProfileViewModel::class.java
 
@@ -24,9 +28,31 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
-            login.setOnClickListener { viewModel.onLogInClicked() }
-            logout.setOnClickListener { viewModel.onLogOutClicked() }
-            retry.setOnClickListener { viewModel.onRetryClicked() }
+            login.setOnClickListener { viewModel.loginClicked() }
+            retry.setOnClickListener { viewModel.retryClicked() }
+            toolbar.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.item_logout -> {
+                        showDialog {
+                            NotificationDialog.newInstance(
+                                getString(R.string.log_out_confirmation),
+                                DialogCode.LOGOUT_CONFIRM_DIALOG_REQUEST_CODE,
+                                null,
+                                getString(R.string.cancel),
+                                getString(R.string.log_out)
+                            )
+                        }
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
+    }
+
+    override fun onNegativeClick(dialog: DialogInterface, which: Int, requestCode: Int) {
+        if (requestCode == DialogCode.LOGOUT_CONFIRM_DIALOG_REQUEST_CODE) {
+            viewModel.logoutConfirmed()
         }
     }
 
@@ -55,7 +81,6 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             appBar.isVisible = false
             details.detailCard.isVisible = false
             login.isVisible = false
-            logout.isVisible = false
             retry.isVisible = false
             progressBar.isVisible = false
         }
@@ -66,7 +91,6 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             appBar.isVisible = false
             details.detailCard.isVisible = false
             login.isVisible = false
-            logout.isVisible = false
             retry.isVisible = false
             progressBar.isVisible = true
         }
@@ -77,7 +101,6 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             appBar.isVisible = false
             details.detailCard.isVisible = false
             login.isVisible = false
-            logout.isVisible = false
             retry.isVisible = true
             progressBar.isVisible = false
         }
@@ -88,7 +111,6 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             appBar.isVisible = false
             details.detailCard.isVisible = false
             login.isVisible = true
-            logout.isVisible = false
             retry.isVisible = false
             progressBar.isVisible = false
         }
@@ -100,7 +122,6 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             toolbar.title = state.user.name
             details.detailCard.isVisible = true
             login.isVisible = false
-            logout.isVisible = true
             retry.isVisible = false
             progressBar.isVisible = false
 

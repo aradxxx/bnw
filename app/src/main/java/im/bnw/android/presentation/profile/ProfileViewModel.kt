@@ -27,17 +27,17 @@ class ProfileViewModel @Inject constructor(
         subscribeUserInfo()
     }
 
-    fun onLogInClicked() {
+    fun loginClicked() {
         state.nullOr<ProfileState.Unauthorized>() ?: return
         router.newChain(Tab.GLOBAL, Screens.authScreen())
     }
 
-    fun onLogOutClicked() {
+    fun logoutConfirmed() {
         state.nullOr<ProfileState.ProfileInfo>() ?: return
         logout()
     }
 
-    fun onRetryClicked() {
+    fun retryClicked() {
         state.nullOr<ProfileState.LoadingFailed>() ?: return
         retry()
     }
