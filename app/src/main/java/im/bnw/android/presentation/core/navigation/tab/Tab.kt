@@ -5,7 +5,7 @@ import im.bnw.android.R
 
 sealed class Tab(val tag: Int) {
     object General : Tab(R.id.tab_general)
-    object About : Tab(R.id.tab_about)
+    object Profile : Tab(R.id.tab_profile)
 
     fun screen() = FragmentScreen(tag.toString()) {
         TabFragment.newInstance(tag)
@@ -21,7 +21,7 @@ sealed class Tab(val tag: Int) {
         fun from(tag: Int): Tab {
             return when (tag) {
                 R.id.tab_general -> General
-                else -> About
+                else -> Profile
             }
         }
     }

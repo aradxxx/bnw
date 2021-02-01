@@ -77,7 +77,7 @@ fun messageDelegate(userNameListener: (Int) -> Unit) =
                 recommends.newText = message.recommendations.size.toString()
 
                 Glide.with(context)
-                    .load(String.format(BuildConfig.USER_AVA_URL, message.user))
+                    .load(String.format(BuildConfig.USER_AVA_THUMB_URL, message.user))
                     .transform(CircleCrop())
                     .into(ava)
             }
@@ -175,7 +175,7 @@ fun messageWithMediaDelegate(userNameListener: (Int) -> Unit, mediaListener: (In
                 recommends.newText = message.recommendations.size.toString()
 
                 Glide.with(context)
-                    .load(String.format(BuildConfig.USER_AVA_URL, message.user))
+                    .load(String.format(BuildConfig.USER_AVA_THUMB_URL, message.user))
                     .transform(CircleCrop())
                     .into(ava)
             }

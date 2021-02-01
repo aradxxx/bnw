@@ -14,11 +14,6 @@ class AuthInteractorImpl @Inject constructor(
             userManager.login(userName, password)
         }
 
-    override suspend fun logout() =
-        withContext(Dispatchers.IO) {
-            userManager.logout()
-        }
-
     override fun subscribeAuth(): Flow<Boolean> {
         return userManager.isAuthenticated()
     }

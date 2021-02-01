@@ -10,6 +10,7 @@ import im.bnw.android.presentation.imageview.ImageFragment
 import im.bnw.android.presentation.imageview.ImageScreenParams
 import im.bnw.android.presentation.messages.MessagesFragment
 import im.bnw.android.presentation.messages.MessagesScreenParams
+import im.bnw.android.presentation.profile.ProfileFragment
 import im.bnw.android.presentation.splash.SplashFragment
 
 object Screens {
@@ -31,6 +32,10 @@ object Screens {
 
     fun externalHyperlinkScreen(url: String) = ActivityScreen() {
         Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    }
+
+    fun profileScreen() = FragmentScreen() {
+        ProfileFragment()
     }
 
     fun authScreen() = FragmentScreen() {

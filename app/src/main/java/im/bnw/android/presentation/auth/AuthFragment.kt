@@ -23,6 +23,7 @@ class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
+            toolbar.setOnClickListener { viewModel.backPressed() }
             loginEdit.doAfterTextChanged { viewModel.onLoginChanged(it.toString()) }
             passwordEdit.doAfterTextChanged { viewModel.onPasswordChanged(it.toString()) }
             signIn.setOnClickListener { viewModel.onSignInClicked() }
@@ -33,11 +34,7 @@ class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
         if (state.loading) {
             renderLoadingState()
         } else {
-            if (state.authorized) {
-                renderAuthorizedState()
-            } else {
-                renderIdleState(state)
-            }
+            renderIdleState(state)
         }
     }
 
@@ -51,18 +48,6 @@ class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
             passwordEdit.newText = state.password
             signIn.isVisible = true
             signIn.isEnabled = state.userName.isNotEmpty() && state.password.isNotEmpty()
-            progressBar.isVisible = false
-        }
-    }
-
-    private fun renderAuthorizedState() {
-        with(binding) {
-            login.isVisible = true
-            login.isEnabled = false
-            password.isVisible = true
-            password.isEnabled = false
-            signIn.isVisible = true
-            signIn.isEnabled = false
             progressBar.isVisible = false
         }
     }
