@@ -30,7 +30,6 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         messageAdapter = MessageAdapter(
             { position -> viewModel.userClicked(position) },
             { messagePosition, mediaPosition ->
@@ -50,6 +49,7 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
                     }
                 }
             )
+            addOnScrollListener(FabVisibilityScrollListener(binding.createMessage))
         }
         with(binding.swipeToRefresh) {
             setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.white))
@@ -76,6 +76,9 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
         with(binding) {
             progressBarLine.isVisible = state.beforeLoading && state.messages.isNotEmpty()
             swipeToRefresh.isRefreshing = state.afterLoading || (state.beforeLoading && state.messages.isEmpty())
+            val createMessageEnabled = state.createMessageVisible && state.messages.isNotEmpty()
+            createMessage.isEnabled = createMessageEnabled
+            createMessage.isVisible = createMessageEnabled
         }
     }
 }

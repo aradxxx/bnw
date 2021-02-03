@@ -2,6 +2,7 @@ package im.bnw.android.presentation.messages
 
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageInteractor
+import im.bnw.android.domain.usermanager.UserManager
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
@@ -10,6 +11,9 @@ import im.bnw.android.presentation.messages.adapter.MessageItem
 import im.bnw.android.presentation.messages.adapter.MessageListItem
 import im.bnw.android.presentation.messages.adapter.MessageWithMediaItem
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
@@ -20,13 +24,15 @@ class MessagesViewModel @Inject constructor(
     router: AppRouter,
     restoredState: MessagesState?,
     screenParams: MessagesScreenParams,
-    private val messageInteractor: MessageInteractor
+    private val messageInteractor: MessageInteractor,
+    private val userManager: UserManager
 ) : BaseViewModel<MessagesState>(
     restoredState ?: MessagesState(user = screenParams.user),
     router
 ) {
     init {
         loadBefore()
+        subscribeUserAuthState()
     }
 
     fun swipeRefresh() {
@@ -125,5 +131,16 @@ class MessagesViewModel @Inject constructor(
                 }
             }
             .toList()
+    }
+
+    private fun subscribeUserAuthState() = vmScope.launch {
+        userManager.isAuthenticated()
+            .map {
+                state.copy(createMessageVisible = it)
+            }
+            .flowOn(Dispatchers.IO)
+            .collect { newState ->
+                updateState { newState }
+            }
     }
 }
