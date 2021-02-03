@@ -25,15 +25,15 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun onLoginChanged(userName: String) {
+    fun loginChanged(userName: String) {
         updateState { it.copy(userName = userName) }
     }
 
-    fun onPasswordChanged(password: String) {
+    fun passwordChanged(password: String) {
         updateState { it.copy(password = password) }
     }
 
-    fun onSignInClicked() {
+    fun signInClicked() {
         if (state.loading) {
             return
         }

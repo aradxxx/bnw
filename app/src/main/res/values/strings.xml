@@ -10,6 +10,8 @@
     <string name="cancel">Отмена</string>
 
     <!--profile-->
+    <string name="messages_count">Сообщений</string>
+    <string name="comments_count">Комментариев</string>
     <string name="log_in">Авторизация</string>
     <string name="log_out">Выйти</string>
     <string name="log_out_confirmation">Вы действительно хотите выйти?</string>

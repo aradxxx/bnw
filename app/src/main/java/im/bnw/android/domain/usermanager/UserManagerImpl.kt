@@ -50,6 +50,7 @@ class UserManagerImpl @Inject constructor(
                             User(
                                 response.user,
                                 response.messagesCount,
+                                response.regDate,
                                 response.commentsCount
                             )
                         )
