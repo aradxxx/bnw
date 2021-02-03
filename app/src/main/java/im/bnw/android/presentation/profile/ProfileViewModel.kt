@@ -37,6 +37,11 @@ class ProfileViewModel @Inject constructor(
         logout()
     }
 
+    fun messagesClicked() {
+        val currentState = state.nullOr<ProfileState.ProfileInfo>() ?: return
+        router.navigateTo(Tab.GLOBAL, Screens.messagesScreen(currentState.user.name))
+    }
+
     fun retryClicked() {
         state.nullOr<ProfileState.LoadingFailed>() ?: return
         retry()

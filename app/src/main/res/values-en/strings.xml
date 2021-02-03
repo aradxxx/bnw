@@ -10,6 +10,8 @@
     <string name="cancel">Cancel</string>
 
     <!--profile-->
+    <string name="messages_count">Messages</string>
+    <string name="comments_count">Comments</string>
     <string name="log_in">Log In</string>
     <string name="log_out">Log Out</string>
     <string name="log_out_confirmation">Are you sure you want to log out?</string>

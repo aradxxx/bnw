@@ -3,6 +3,7 @@ package im.bnw.android.domain.message
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import java.util.concurrent.TimeUnit
 
 @Parcelize
 data class Message(
@@ -36,6 +37,5 @@ data class Message(
     @SerializedName("recommendations")
     val recommendations: List<String>
 ) : Parcelable {
-    @SuppressWarnings("MagicNumber")
-    fun timestamp(): Long = (date * 1000).toLong()
+    fun timestamp() = TimeUnit.SECONDS.toMillis(date.toLong())
 }

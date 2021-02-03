@@ -24,9 +24,9 @@ class ProfileResponse(
     @SerializedName("subscriptions_all")
     val subscriptionsAll: List<String>,
     @SerializedName("characters_count")
-    val charactersCount: Int,
+    val charactersCount: Int,*/
     @SerializedName("regdate")
-    val regDate: Long,*/
+    val regDate: Long,
     @SerializedName("comments_count")
     val commentsCount: Int,
     /*@SerializedName("subscribers_all")

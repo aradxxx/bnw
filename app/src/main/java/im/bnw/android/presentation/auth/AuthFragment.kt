@@ -24,9 +24,10 @@ class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
             toolbar.setOnClickListener { viewModel.backPressed() }
-            loginEdit.doAfterTextChanged { viewModel.onLoginChanged(it.toString()) }
-            passwordEdit.doAfterTextChanged { viewModel.onPasswordChanged(it.toString()) }
-            signIn.setOnClickListener { viewModel.onSignInClicked() }
+            loginEdit.doAfterTextChanged { viewModel.loginChanged(it.toString()) }
+            passwordEdit.doAfterTextChanged { viewModel.passwordChanged(it.toString()) }
+            cancel.setOnClickListener { viewModel.backPressed() }
+            signIn.setOnClickListener { viewModel.signInClicked() }
         }
     }
 
@@ -46,6 +47,7 @@ class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
             password.isVisible = true
             password.isEnabled = true
             passwordEdit.newText = state.password
+            cancel.isVisible = true
             signIn.isVisible = true
             signIn.isEnabled = state.userName.isNotEmpty() && state.password.isNotEmpty()
             progressBar.isVisible = false
@@ -56,6 +58,7 @@ class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
         with(binding) {
             login.isVisible = false
             password.isVisible = false
+            cancel.isVisible = false
             signIn.isVisible = false
             progressBar.isVisible = true
         }
