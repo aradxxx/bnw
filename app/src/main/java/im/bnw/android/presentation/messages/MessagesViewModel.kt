@@ -8,7 +8,6 @@ import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
 import im.bnw.android.presentation.messages.adapter.MessageItem
-import im.bnw.android.presentation.messages.adapter.MessageListItem
 import im.bnw.android.presentation.messages.adapter.MessageWithMediaItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -73,12 +72,11 @@ class MessagesViewModel @Inject constructor(
                 ""
             }
             try {
-                val messages = messageInteractor.messages("", last, state.user)
-                val newPage = messagesToListItems(messages)
+                val newPage = messageInteractor.messages("", last, state.user).toListItems()
                 updateState {
                     it.copy(
                         beforeLoading = false,
-                        messages = state.messages.plus(newPage)
+                        messages = it.messages + newPage
                     )
                 }
             } catch (t: IOException) {
@@ -101,13 +99,12 @@ class MessagesViewModel @Inject constructor(
             }
 
             try {
-                val messages = messageInteractor.messages(first, "", state.user)
-                val newPage = messagesToListItems(messages)
+                val newPage = messageInteractor.messages(first, "", state.user).toListItems()
                 val needLoadMore = newPage.size == PAGE_SIZE
                 updateState {
                     it.copy(
                         afterLoading = needLoadMore,
-                        messages = newPage.plus(state.messages)
+                        messages = newPage + it.messages
                     )
                 }
                 if (needLoadMore) {
@@ -122,15 +119,11 @@ class MessagesViewModel @Inject constructor(
         }
     }
 
-    private fun messagesToListItems(messages: List<Message>): List<MessageListItem> {
-        return messages.asSequence()
-            .map {
-                return@map when {
-                    it.content.media.isEmpty() -> MessageItem(it)
-                    else -> MessageWithMediaItem(it)
-                }
-            }
-            .toList()
+    private fun List<Message>.toListItems() = map {
+        when {
+            it.content.media.isEmpty() -> MessageItem(it)
+            else -> MessageWithMediaItem(it)
+        }
     }
 
     private fun subscribeUserAuthState() = vmScope.launch {
