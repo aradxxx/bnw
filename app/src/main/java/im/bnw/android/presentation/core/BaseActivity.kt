@@ -15,7 +15,7 @@ abstract class BaseActivity<VM : BaseViewModel<S>, S : State>(
 ) : DaggerAppCompatActivity(layoutRes) {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: VM by lazy {
+    protected val viewModel: VM by lazy {
         ViewModelProvider(this, viewModelFactory).get(vmClass)
     }
     var restoredState: S? = null

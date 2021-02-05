@@ -14,7 +14,7 @@ class MainViewModel @Inject constructor(
     restoredState ?: MainState(),
     cicerone.mainRouter()
 ) {
-    init {
+    fun startNavigation() {
         router.newRootScreen(Screens.tabContainerScreen())
         router.switchTab(Tab.General)
         router.newRootScreen(Tab.General, Screens.messagesScreen(""))

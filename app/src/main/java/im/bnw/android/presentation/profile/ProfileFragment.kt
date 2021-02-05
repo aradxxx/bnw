@@ -35,7 +35,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
         with(binding) {
             login.setOnClickListener { viewModel.loginClicked() }
             retry.setOnClickListener { viewModel.retryClicked() }
-            details.messagesCount.text.setOnClickListener { viewModel.messagesClicked() }
+            details.messagesCount.content.setOnClickListener { viewModel.messagesClicked() }
             toolbar.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.item_logout -> {

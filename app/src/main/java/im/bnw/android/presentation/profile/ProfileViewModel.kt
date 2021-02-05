@@ -17,9 +17,10 @@ import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
     router: AppRouter,
+    restoredState: ProfileState?,
     private val profileInteractor: ProfileInteractor
 ) : BaseViewModel<ProfileState>(
-    ProfileState.Init,
+    restoredState ?: ProfileState.Init,
     router
 ) {
     init {

@@ -21,6 +21,9 @@ class MainActivity :
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         navigator = FlowNavigator(this, R.id.container, flowCicerone)
+        if (savedInstanceState == null) {
+            viewModel.startNavigation()
+        }
     }
 
     override fun onResumeFragments() {
