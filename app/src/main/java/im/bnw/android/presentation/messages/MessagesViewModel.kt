@@ -136,7 +136,7 @@ class MessagesViewModel @Inject constructor(
     private fun subscribeUserAuthState() = vmScope.launch {
         userManager.isAuthenticated()
             .map {
-                state.copy(createMessageVisible = it)
+                state.copy(createMessageVisible = it && state.user.isEmpty())
             }
             .flowOn(Dispatchers.IO)
             .collect { newState ->
