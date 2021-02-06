@@ -1,19 +1,20 @@
 package im.bnw.android.domain.message
 
-import im.bnw.android.data.core.network.Api
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 class MessageInteractorImpl @Inject constructor(
-    private val api: Api,
+    private val messageRepository: MessageRepository
 ) : MessageInteractor {
     override suspend fun messages(after: String, before: String, user: String): List<Message> =
-        withContext(Dispatchers.IO) {
-            Timber.d(Thread.currentThread().name)
-            val messages = api.messages(after, before, user).messages
+        withContext(Dispatchers.Default) {
+            val messages = messageRepository.messages(after, before, user)
             val sorted = messages.sortedByDescending { message -> message.timestamp() }
             sorted
         }
+
+    override suspend fun post(text: String, anonymous: Boolean) = withContext(Dispatchers.Default) {
+        messageRepository.post(text, anonymous)
+    }
 }

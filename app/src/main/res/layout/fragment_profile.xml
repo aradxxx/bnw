@@ -7,8 +7,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -53,8 +52,8 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:menu="@menu/profile"
-                    app:title="user_name" />
+                    app:title="user_name"
+                    app:menu="@menu/profile" />
             </com.google.android.material.appbar.AppBarLayout>
 
             <include

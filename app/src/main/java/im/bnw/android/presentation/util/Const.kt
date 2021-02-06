@@ -6,4 +6,5 @@ object Const {
 
 object DialogCode {
     const val LOGOUT_CONFIRM_DIALOG_REQUEST_CODE = 100
+    const val CONFIRM_SENDING_DIALOG_REQUEST_CODE = 101
 }

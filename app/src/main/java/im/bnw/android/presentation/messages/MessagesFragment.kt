@@ -49,7 +49,10 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
                     }
                 }
             )
-            addOnScrollListener(FabVisibilityScrollListener(binding.createMessage))
+            with(binding.createMessage) {
+                addOnScrollListener(FabVisibilityScrollListener(this))
+                setOnClickListener { viewModel.createPostClicked() }
+            }
         }
         with(binding.swipeToRefresh) {
             setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.white))
@@ -60,6 +63,11 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
             )
             setOnRefreshListener { viewModel.swipeRefresh() }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.resumed()
     }
 
     override fun onEvent(event: Any?) {

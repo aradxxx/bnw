@@ -22,7 +22,6 @@ import im.bnw.android.presentation.util.viewBinding
 class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
     R.layout.fragment_profile
 ) {
-
     private val binding by viewBinding(FragmentProfileBinding::bind)
     override val vmClass = ProfileViewModel::class.java
 
