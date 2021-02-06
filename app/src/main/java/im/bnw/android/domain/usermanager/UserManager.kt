@@ -10,5 +10,5 @@ interface UserManager {
     fun userInfo(): Flow<Result<User?>>
     fun isAuthenticated(): Flow<Boolean>
     fun getUserName(): Flow<String>
-    fun getToken(): Flow<String>
+    fun subscribeToken(): Flow<String>
 }

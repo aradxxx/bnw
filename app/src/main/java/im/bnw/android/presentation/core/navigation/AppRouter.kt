@@ -25,16 +25,6 @@ class AppRouter : FlowRouter() {
         super.navigateTo(tab.screenKey(), screen, true)
     }
 
-    /*@SuppressWarnings("SpreadOperator")
-    fun newChain(tab: Tab, vararg screens: Screen?) {
-        super.newChain(tab.screenKey(), *screens, true)
-    }
-
-    @SuppressWarnings("SpreadOperator")
-    fun newRootChain(tab: Tab, vararg screens: Screen?) {
-        super.newRootChain(tab.screenKey(), *screens, true)
-    }*/
-
     fun newRootScreen(tab: Tab, screen: Screen) {
         super.newRootScreen(tab.screenKey(), screen)
     }

@@ -30,7 +30,7 @@ class ProfileViewModel @Inject constructor(
 
     fun loginClicked() {
         state.nullOr<ProfileState.Unauthorized>() ?: return
-        router.newChain(Tab.GLOBAL, Screens.authScreen())
+        router.navigateTo(Tab.GLOBAL, Screens.authScreen())
     }
 
     fun logoutConfirmed() {

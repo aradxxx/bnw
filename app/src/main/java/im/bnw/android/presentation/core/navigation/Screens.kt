@@ -10,6 +10,7 @@ import im.bnw.android.presentation.imageview.ImageFragment
 import im.bnw.android.presentation.imageview.ImageScreenParams
 import im.bnw.android.presentation.messages.MessagesFragment
 import im.bnw.android.presentation.messages.MessagesScreenParams
+import im.bnw.android.presentation.newpost.NewPostFragment
 import im.bnw.android.presentation.profile.ProfileFragment
 import im.bnw.android.presentation.splash.SplashFragment
 
@@ -20,6 +21,10 @@ object Screens {
 
     fun splashScreen() = FragmentScreen() {
         SplashFragment()
+    }
+
+    fun newPostScreen() = FragmentScreen() {
+        NewPostFragment()
     }
 
     fun messagesScreen(user: String) = FragmentScreen() {

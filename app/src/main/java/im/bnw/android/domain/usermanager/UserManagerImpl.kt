@@ -78,7 +78,7 @@ class UserManagerImpl @Inject constructor(
         }
     }
 
-    override fun getToken(): Flow<String> {
+    override fun subscribeToken(): Flow<String> {
         return dataStore.data.map {
             it[PreferencesKeys.USER_TOKEN].orEmpty()
         }

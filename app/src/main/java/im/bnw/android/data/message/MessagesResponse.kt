@@ -5,7 +5,14 @@ import im.bnw.android.domain.message.Message
 
 class MessagesResponse(
     @SerializedName("ok")
-    val ok: String,
+    val ok: Boolean,
     @SerializedName("messages")
     val messages: List<Message>
+)
+
+class PostResponse(
+    @SerializedName("ok")
+    val ok: Boolean,
+    @SerializedName("id")
+    val id: String
 )

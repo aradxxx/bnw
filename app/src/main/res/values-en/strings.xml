@@ -8,6 +8,12 @@
     <string name="connection_error_blocking">Check internet connection. Perhaps https://bnw.im blocked by provider</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="send">Send</string>
+
+    <!--new post-->
+    <string name="create_post">Write post</string>
+    <string name="whats_new">What\'s new?</string>
+    <string name="sending_confirmation">Are you sure you want to sent?</string>
 
     <!--profile-->
     <string name="messages_count">Messages</string>

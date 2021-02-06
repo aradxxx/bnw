@@ -8,6 +8,12 @@
     <string name="connection_error_blocking">Проверьте интернет соединение. Возможно https://bnw.im заблокирован провайдером</string>
     <string name="ok">OK</string>
     <string name="cancel">Отмена</string>
+    <string name="send">Отправить</string>
+
+    <!--new post-->
+    <string name="create_post">Написать сообщение</string>
+    <string name="whats_new">Что нового?</string>
+    <string name="sending_confirmation">Вы действительно хотите отправить?</string>
 
     <!--profile-->
     <string name="messages_count">Сообщений</string>

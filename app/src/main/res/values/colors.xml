@@ -6,6 +6,8 @@
     <color name="colorAccent">#107FFF</color>
     <color name="colorAccentRipple">#42107FFF</color>
 
+    <color name="colorDisabled">#8B8B8B</color>
+
     <color name="white">#FFFFFF</color>
 
     <!--<color name="text_primary_dark">#DE000000</color>-->

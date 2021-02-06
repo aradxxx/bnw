@@ -23,7 +23,7 @@ class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
-            toolbar.setOnClickListener { viewModel.backPressed() }
+            toolbar.setNavigationOnClickListener { viewModel.backPressed() }
             loginEdit.doAfterTextChanged { viewModel.loginChanged(it.toString()) }
             passwordEdit.doAfterTextChanged { viewModel.passwordChanged(it.toString()) }
             cancel.setOnClickListener { viewModel.backPressed() }

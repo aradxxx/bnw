@@ -1,8 +1,8 @@
 package im.bnw.android.presentation.messages
 
+import im.bnw.android.domain.auth.AuthInteractor
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageInteractor
-import im.bnw.android.domain.usermanager.UserManager
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
@@ -24,7 +24,7 @@ class MessagesViewModel @Inject constructor(
     restoredState: MessagesState?,
     screenParams: MessagesScreenParams,
     private val messageInteractor: MessageInteractor,
-    private val userManager: UserManager
+    private val authInteractor: AuthInteractor
 ) : BaseViewModel<MessagesState>(
     restoredState ?: MessagesState(user = screenParams.user),
     router
@@ -60,6 +60,14 @@ class MessagesViewModel @Inject constructor(
         }
     }
 
+    fun createPostClicked() {
+        router.navigateTo(Tab.GLOBAL, Screens.newPostScreen())
+    }
+
+    fun resumed() {
+        loadAfter()
+    }
+
     private fun loadBefore() {
         if (state.beforeLoading || state.fullLoaded) {
             return
@@ -87,7 +95,7 @@ class MessagesViewModel @Inject constructor(
     }
 
     private fun loadAfter() {
-        if (state.beforeLoading && state.messages.isEmpty()) {
+        if (state.afterLoading && state.messages.isEmpty()) {
             return
         }
         vmScope.launch(Dispatchers.Default) {
@@ -127,7 +135,7 @@ class MessagesViewModel @Inject constructor(
     }
 
     private fun subscribeUserAuthState() = vmScope.launch {
-        userManager.isAuthenticated()
+        authInteractor.subscribeAuth()
             .map {
                 state.copy(createMessageVisible = it && state.user.isEmpty())
             }

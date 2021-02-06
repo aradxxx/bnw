@@ -20,7 +20,7 @@ import javax.inject.Singleton
         ViewModelFactoryModule::class,
         NetworkModule::class,
         NavigationModule::class,
-        DataStoreModule::class,
+        DataModule::class,
         UserManagerModule::class,
     ]
 )
