@@ -62,7 +62,7 @@ class UserManagerImpl @Inject constructor(
                 }
             }
             .catch {
-                emit(Result.Failure(IOException("Response is catched")))
+                emit(Result.Failure(it))
             }
     }
 

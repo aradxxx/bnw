@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.io.IOException
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
@@ -51,24 +50,14 @@ class ProfileViewModel @Inject constructor(
     private fun logout() {
         vmScope.launch(Dispatchers.Default) {
             updateState { ProfileState.Loading }
-            try {
-                profileInteractor.logout()
-            } catch (t: IOException) {
-                handleException(t)
-                updateState { ProfileState.LoadingFailed }
-            }
+            profileInteractor.logout()
         }
     }
 
     private fun retry() {
         vmScope.launch(Dispatchers.Default) {
             updateState { ProfileState.Loading }
-            try {
-                profileInteractor.retry()
-            } catch (t: IOException) {
-                handleException(t)
-                updateState { ProfileState.LoadingFailed }
-            }
+            profileInteractor.retry()
         }
     }
 
@@ -84,8 +73,8 @@ class ProfileViewModel @Inject constructor(
                             ProfileState.ProfileInfo(user)
                         }
                     }
-                    else -> {
-                        ProfileState.LoadingFailed
+                    is Result.Failure -> {
+                        ProfileState.LoadingFailed(result.throwable)
                     }
                 }
             }

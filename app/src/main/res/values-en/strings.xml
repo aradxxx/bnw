@@ -5,7 +5,7 @@
     <string name="test">Test</string>
 
     <string name="connection_error">Check internet connection</string>
-    <string name="connection_error_blocking">Check internet connection. Perhaps https://bnw.im blocked by provider</string>
+    <string name="connection_error_blocking">Check internet connection.\nPossibly https://bnw.im is blocked by your service provider</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="send">Send</string>

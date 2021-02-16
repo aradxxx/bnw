@@ -17,14 +17,13 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/retry"
-            android:layout_width="wrap_content"
-            android:layout_height="72dp"
-            android:layout_gravity="center"
-            android:text="@string/retry"
-            android:visibility="gone"
-            app:cornerRadius="32dp" />
+        <im.bnw.android.presentation.core.view.FailureView
+            android:id="@+id/failure"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:gravity="center"
+            android:visibility="gone" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/login"
@@ -52,8 +51,8 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:title="user_name"
-                    app:menu="@menu/profile" />
+                    app:menu="@menu/profile"
+                    app:title="user_name" />
             </com.google.android.material.appbar.AppBarLayout>
 
             <include
