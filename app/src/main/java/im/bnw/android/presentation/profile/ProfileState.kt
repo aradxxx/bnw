@@ -12,7 +12,9 @@ sealed class ProfileState : State {
     object Loading : ProfileState()
 
     @Parcelize
-    object LoadingFailed : ProfileState()
+    data class LoadingFailed(
+        val throwable: Throwable
+    ) : ProfileState()
 
     @Parcelize
     object Unauthorized : ProfileState()

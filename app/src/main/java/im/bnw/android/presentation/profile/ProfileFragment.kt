@@ -18,6 +18,7 @@ import im.bnw.android.presentation.util.DialogCode
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.timeAgoString
 import im.bnw.android.presentation.util.viewBinding
+import javax.net.ssl.SSLException
 
 class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
     R.layout.fragment_profile
@@ -33,7 +34,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
             login.setOnClickListener { viewModel.loginClicked() }
-            retry.setOnClickListener { viewModel.retryClicked() }
+            failure.setActionListener { viewModel.retryClicked() }
             details.messagesCount.content.setOnClickListener { viewModel.messagesClicked() }
             toolbar.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
@@ -57,7 +58,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
         when (state) {
             is ProfileState.Init -> renderInitState()
             is ProfileState.Loading -> renderLoadingState()
-            is ProfileState.LoadingFailed -> renderLoadingFailedState()
+            is ProfileState.LoadingFailed -> renderLoadingFailedState(state)
             is ProfileState.Unauthorized -> renderUnauthorizedState()
             is ProfileState.ProfileInfo -> renderProfileInfo(state)
         }
@@ -68,7 +69,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             appBar.isVisible = false
             details.detailCard.isVisible = false
             login.isVisible = false
-            retry.isVisible = false
+            failure.isVisible = false
             progressBar.isVisible = false
         }
     }
@@ -78,17 +79,23 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             appBar.isVisible = false
             details.detailCard.isVisible = false
             login.isVisible = false
-            retry.isVisible = false
+            failure.isVisible = false
             progressBar.isVisible = true
         }
     }
 
-    private fun renderLoadingFailedState() {
+    private fun renderLoadingFailedState(state: ProfileState.LoadingFailed) {
         with(binding) {
+            val messageResId = if (state.throwable is SSLException) {
+                R.string.connection_error_blocking
+            } else {
+                R.string.connection_error
+            }
             appBar.isVisible = false
             details.detailCard.isVisible = false
             login.isVisible = false
-            retry.isVisible = true
+            failure.isVisible = true
+            failure.message = getString(messageResId)
             progressBar.isVisible = false
         }
     }
@@ -98,7 +105,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             appBar.isVisible = false
             details.detailCard.isVisible = false
             login.isVisible = true
-            retry.isVisible = false
+            failure.isVisible = false
             progressBar.isVisible = false
         }
     }
@@ -108,7 +115,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             appBar.isVisible = true
             toolbar.title = state.user.name
             login.isVisible = false
-            retry.isVisible = false
+            failure.isVisible = false
             progressBar.isVisible = false
 
             with(details) {
