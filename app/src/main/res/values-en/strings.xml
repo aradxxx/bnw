@@ -4,8 +4,10 @@
 
     <string name="test">Test</string>
 
-    <string name="connection_error">Check internet connection</string>
-    <string name="connection_error_blocking">Check internet connection.\nPossibly https://bnw.im is blocked by your service provider</string>
+    <string name="no_connection">No connection</string>
+    <string name="check_connection">Check internet connection</string>
+    <string name="check_connection_and_tap_retry">Check internet connection and tap to retry</string>
+    <string name="possibly_domain_blocked">Possibly https://bnw.im is blocked by your service provider</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="send">Send</string>

@@ -33,8 +33,18 @@ abstract class BaseViewModel<S : State>(
             return
         }
         when (e) {
-            is SSLException -> postEvent(DialogEvent(R.string.connection_error_blocking))
-            is IOException -> postEvent(DialogEvent(R.string.connection_error))
+            is SSLException -> postEvent(
+                DialogEvent(
+                    R.string.no_connection,
+                    R.string.possibly_domain_blocked
+                )
+            )
+            is IOException -> postEvent(
+                DialogEvent(
+                    R.string.no_connection,
+                    R.string.check_connection
+                )
+            )
         }
         Timber.e(e)
     }

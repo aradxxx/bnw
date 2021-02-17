@@ -30,9 +30,9 @@ class NotificationDialog : DialogFragment() {
         const val NOTIFICATION_DIALOG_TAG = "NOTIFICATION_DIALOG_TAG"
 
         fun newInstance(
+            title: String? = null,
             message: String,
             requestCode: Int = UNDEFINED_VALUE,
-            title: String? = null,
             positiveTitle: String? = null,
             negativeTitle: String? = null,
             neutralTitle: String? = null

@@ -1,3 +1,10 @@
 package im.bnw.android.presentation.core
 
-data class DialogEvent(val message: Int)
+import androidx.annotation.StringRes
+
+data class DialogEvent(
+    @StringRes
+    val title: Int,
+    @StringRes
+    val message: Int? = null
+)

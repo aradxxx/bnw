@@ -4,8 +4,10 @@
 
     <string name="test">Тест</string>
 
-    <string name="connection_error">Проверьте подключение к сети</string>
-    <string name="connection_error_blocking">Проверьте подключение к сети.\nВозможно https://bnw.im заблокирован провайдером</string>
+    <string name="no_connection">Нет подключения</string>
+    <string name="check_connection">Проверьте подключение к сети</string>
+    <string name="check_connection_and_tap_retry">Проверьте подключение к сети и повторите попытку</string>
+    <string name="possibly_domain_blocked">Возможно https://bnw.im заблокирован провайдером</string>
     <string name="ok">OK</string>
     <string name="cancel">Отмена</string>
     <string name="send">Отправить</string>
