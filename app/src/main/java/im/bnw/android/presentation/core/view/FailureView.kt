@@ -24,6 +24,12 @@ class FailureView @JvmOverloads constructor(
             binding.image.setImageResource(value)
         }
 
+    var title: String = ""
+        set(value) {
+            field = value
+            binding.title.newText = value
+        }
+
     var message: String = ""
         set(value) {
             field = value
@@ -52,6 +58,11 @@ class FailureView @JvmOverloads constructor(
         val imageResourceId = typedArray.getResourceId(R.styleable.FailureView_image, 0)
         if (imageResourceId != 0) {
             imageResId = imageResourceId
+        }
+
+        val titleResId = typedArray.getResourceId(R.styleable.FailureView_title, 0)
+        if (titleResId != 0) {
+            title = resources.getString(titleResId)
         }
 
         val messageResId = typedArray.getResourceId(R.styleable.FailureView_message, 0)

@@ -49,7 +49,11 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
         // for implementing
         when (event) {
             is DialogEvent -> showDialog {
-                NotificationDialog.newInstance(getString(event.message))
+                if (event.message == null) {
+                    NotificationDialog.newInstance(null, getString(event.title))
+                } else {
+                    NotificationDialog.newInstance(getString(event.title), getString(event.message))
+                }
             }
         }
     }

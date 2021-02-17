@@ -112,9 +112,9 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
     private fun confirmSendingDialog() {
         showDialog {
             NotificationDialog.newInstance(
+                null,
                 getString(R.string.sending_confirmation),
                 DialogCode.CONFIRM_SENDING_DIALOG_REQUEST_CODE,
-                null,
                 getString(R.string.send),
                 getString(R.string.cancel)
             )

@@ -12,7 +12,7 @@
         tools:src="@drawable/ic_launcher_foreground" />
 
     <TextView
-        android:id="@+id/message"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/image"
@@ -21,7 +21,19 @@
         android:textAlignment="center"
         android:textAppearance="@style/Text.Body1.Primary"
         android:textSize="20sp"
-        tools:text="@string/connection_error_blocking" />
+        tools:text="@string/no_connection" />
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/Text.Body1.Secondary"
+        android:textSize="18sp"
+        tools:text="@string/check_connection_and_tap_retry" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/action"

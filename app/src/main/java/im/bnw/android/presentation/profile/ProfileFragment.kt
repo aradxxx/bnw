@@ -87,14 +87,15 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
     private fun renderLoadingFailedState(state: ProfileState.LoadingFailed) {
         with(binding) {
             val messageResId = if (state.throwable is SSLException) {
-                R.string.connection_error_blocking
+                R.string.possibly_domain_blocked
             } else {
-                R.string.connection_error
+                R.string.check_connection_and_tap_retry
             }
             appBar.isVisible = false
             details.detailCard.isVisible = false
             login.isVisible = false
             failure.isVisible = true
+            failure.title = getString(R.string.no_connection)
             failure.message = getString(messageResId)
             progressBar.isVisible = false
         }
@@ -155,9 +156,9 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
     private fun logoutConfirmDialog() {
         showDialog {
             NotificationDialog.newInstance(
+                null,
                 getString(R.string.log_out_confirmation),
                 DialogCode.LOGOUT_CONFIRM_DIALOG_REQUEST_CODE,
-                null,
                 getString(R.string.cancel),
                 getString(R.string.log_out)
             )
