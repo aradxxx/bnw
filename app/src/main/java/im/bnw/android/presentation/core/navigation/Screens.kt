@@ -4,7 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import com.github.terrakok.cicerone.androidx.ActivityScreen
 import com.github.terrakok.cicerone.androidx.FragmentScreen
-import im.bnw.android.presentation.auth.AuthFragment
+import im.bnw.android.presentation.auth.AuthComposeFragment
 import im.bnw.android.presentation.core.navigation.tab.TabsContainerFragment
 import im.bnw.android.presentation.imageview.ImageFragment
 import im.bnw.android.presentation.imageview.ImageScreenParams
@@ -24,7 +24,7 @@ object Screens {
     }
 
     fun newPostScreen() = FragmentScreen() {
-        NewPostFragment()
+        NewPostFragment.newInstance()
     }
 
     fun messagesScreen(user: String) = FragmentScreen() {
@@ -40,10 +40,10 @@ object Screens {
     }
 
     fun profileScreen() = FragmentScreen() {
-        ProfileFragment()
+        ProfileFragment.newInstance()
     }
 
     fun authScreen() = FragmentScreen() {
-        AuthFragment()
+        AuthComposeFragment.newInstance()
     }
 }

@@ -2,12 +2,14 @@ package im.bnw.android.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import im.bnw.android.di.auth.AuthComposeFragmentModule
 import im.bnw.android.di.auth.AuthFragmentModule
 import im.bnw.android.di.imageview.ImageFragmentModule
 import im.bnw.android.di.message.MessagesFragmentModule
 import im.bnw.android.di.newpost.NewPostFragmentModule
 import im.bnw.android.di.profile.ProfileFragmentModule
 import im.bnw.android.di.splash.SplashFragmentModule
+import im.bnw.android.presentation.auth.AuthComposeFragment
 import im.bnw.android.presentation.auth.AuthFragment
 import im.bnw.android.presentation.core.navigation.tab.TabFragment
 import im.bnw.android.presentation.core.navigation.tab.TabsContainerFragment
@@ -42,4 +44,7 @@ interface FragmentBindingModule {
 
     @ContributesAndroidInjector(modules = [ImageFragmentModule::class])
     fun bindImageFragment(): ImageFragment
+
+    @ContributesAndroidInjector(modules = [AuthComposeFragmentModule::class])
+    fun bindAuthComposeFragment(): AuthComposeFragment
 }
