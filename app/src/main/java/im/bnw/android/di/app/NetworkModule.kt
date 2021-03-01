@@ -12,8 +12,8 @@ import im.bnw.android.data.core.network.Api
 import im.bnw.android.data.core.network.ConnectionInterceptor
 import im.bnw.android.data.core.network.connectionprovider.AndroidConnectionProvider
 import im.bnw.android.data.core.network.connectionprovider.ConnectionProvider
-import im.bnw.android.domain.message.Content
-import im.bnw.android.domain.message.ContentDeserializer
+import im.bnw.android.data.message.ContentDto
+import im.bnw.android.data.message.ContentDtoDeserializer
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -26,7 +26,7 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideGson(): Gson = GsonBuilder()
-        .registerTypeAdapter(Content::class.java, ContentDeserializer())
+        .registerTypeAdapter(ContentDto::class.java, ContentDtoDeserializer)
         .create()
 
     @Provides

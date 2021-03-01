@@ -41,7 +41,7 @@ fun messageDelegate(userNameListener: (Int) -> Unit) =
         fun showTime() {
             Toast.makeText(
                 context.applicationContext,
-                timeAgoString(context, item.message.timestamp()),
+                timeAgoString(context, item.message.timestamp),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -70,7 +70,7 @@ fun messageDelegate(userNameListener: (Int) -> Unit) =
                 markwon.setMarkdown(text, message.text)
 
                 user.newText = message.user
-                date.newText = item.message.timestamp().formatDateTime()
+                date.newText = item.message.timestamp.formatDateTime()
                 id.newText = message.id
 
                 comments.newText = message.replyCount.toString()
@@ -109,7 +109,7 @@ fun messageWithMediaDelegate(userNameListener: (Int) -> Unit, mediaListener: (In
         fun showTime() {
             Toast.makeText(
                 context.applicationContext,
-                timeAgoString(context, item.message.timestamp()),
+                timeAgoString(context, item.message.timestamp),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -168,7 +168,7 @@ fun messageWithMediaDelegate(userNameListener: (Int) -> Unit, mediaListener: (In
                 markwon.setMarkdown(text, message.text)
 
                 user.newText = message.user
-                date.newText = item.message.timestamp().formatDateTime()
+                date.newText = item.message.timestamp.formatDateTime()
                 id.newText = message.id
 
                 comments.newText = message.replyCount.toString()

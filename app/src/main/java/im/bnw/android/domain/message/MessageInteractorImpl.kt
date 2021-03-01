@@ -10,7 +10,7 @@ class MessageInteractorImpl @Inject constructor(
     override suspend fun messages(after: String, before: String, user: String): List<Message> =
         withContext(Dispatchers.Default) {
             val messages = messageRepository.messages(after, before, user)
-            val sorted = messages.sortedByDescending { message -> message.timestamp() }
+            val sorted = messages.sortedByDescending { message -> message.timestamp }
             sorted
         }
 

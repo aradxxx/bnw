@@ -1,6 +1,7 @@
 package im.bnw.android.data.message
 
 import im.bnw.android.data.core.network.Api
+import im.bnw.android.data.message.MessageMapper.toMessage
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageRepository
 import im.bnw.android.domain.usermanager.UserManager
@@ -18,7 +19,7 @@ class MessageRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             val response = api.messages(after, before, user)
             if (response.ok) {
-                response.messages
+                response.messages.map { it.toMessage() }
             } else {
                 // not io
                 throw IOException("Get messages failed")

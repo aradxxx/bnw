@@ -65,11 +65,6 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.resumed()
-    }
-
     override fun onEvent(event: Any?) {
         super.onEvent(event)
         when (event) {

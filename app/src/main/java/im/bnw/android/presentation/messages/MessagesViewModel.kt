@@ -64,10 +64,6 @@ class MessagesViewModel @Inject constructor(
         router.navigateTo(Tab.GLOBAL, Screens.newPostScreen())
     }
 
-    fun resumed() {
-        loadAfter()
-    }
-
     private fun loadBefore() {
         if (state.beforeLoading || state.fullLoaded) {
             return
