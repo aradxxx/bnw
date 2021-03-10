@@ -1,6 +1,7 @@
 package im.bnw.android.data.core.network
 
 import im.bnw.android.data.auth.AuthResponse
+import im.bnw.android.data.core.network.httpresult.HttpResult
 import im.bnw.android.data.message.MessagesResponse
 import im.bnw.android.data.message.PostResponse
 import im.bnw.android.data.profile.ProfileResponse
@@ -35,7 +36,7 @@ interface Api {
     @GET("userinfo")
     suspend fun userInfo(
         @Query("user") user: String,
-    ): ProfileResponse
+    ): HttpResult<ProfileResponse>
 
     @POST("post")
     suspend fun post(

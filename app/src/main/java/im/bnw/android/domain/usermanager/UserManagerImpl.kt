@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.preferencesKey
 import im.bnw.android.data.core.network.Api
+import im.bnw.android.data.core.network.httpresult.toResult
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.profile.User
 import im.bnw.android.presentation.util.AuthFailedException
@@ -13,7 +14,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import javax.inject.Inject
 
 class UserManagerImpl @Inject constructor(
@@ -43,22 +43,16 @@ class UserManagerImpl @Inject constructor(
     override fun userInfo(): Flow<Result<User?>> {
         return getUserName()
             .map {
-                if (it.isNotEmpty()) {
-                    val response = api.userInfo(it)
-                    if (response.ok) {
-                        Result.Success(
-                            User(
-                                response.user,
-                                response.messagesCount,
-                                response.regDate,
-                                response.commentsCount
-                            )
-                        )
-                    } else {
-                        Result.Failure(IOException("Response is not ok"))
-                    }
-                } else {
-                    Result.Success(null)
+                if (it.isEmpty()) {
+                    return@map Result.Success(null)
+                }
+                return@map api.userInfo(it).toResult { response ->
+                    User(
+                        response.user,
+                        response.messagesCount,
+                        response.regDate,
+                        response.commentsCount
+                    )
                 }
             }
             .catch {

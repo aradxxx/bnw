@@ -11,6 +11,7 @@ import im.bnw.android.data.core.network.Api
 import im.bnw.android.data.core.network.ConnectionInterceptor
 import im.bnw.android.data.core.network.connectionprovider.AndroidConnectionProvider
 import im.bnw.android.data.core.network.connectionprovider.ConnectionProvider
+import im.bnw.android.data.core.network.retrofitresult.ResultAdapterFactory
 import im.bnw.android.data.message.ContentDto
 import im.bnw.android.data.message.ContentDtoDeserializer
 import okhttp3.OkHttpClient
@@ -54,6 +55,7 @@ class NetworkModule {
         Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
+            .addCallAdapterFactory(ResultAdapterFactory())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(Api::class.java)
