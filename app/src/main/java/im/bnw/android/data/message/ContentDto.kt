@@ -1,12 +1,10 @@
 package im.bnw.android.data.message
 
 import android.os.Parcelable
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import com.google.gson.JsonParseException
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonReader
+import com.squareup.moshi.JsonWriter
 import kotlinx.parcelize.Parcelize
-import java.lang.reflect.Type
 
 @Parcelize
 data class ContentDto(
@@ -20,34 +18,40 @@ data class MediaDto(
     val fullUrl: String
 ) : Parcelable
 
-object ContentDtoDeserializer : JsonDeserializer<ContentDto> {
-    @Throws(JsonParseException::class)
-    override fun deserialize(
-        json: JsonElement,
-        typeOfT: Type,
-        context: JsonDeserializationContext
-    ): ContentDto {
+class ContentDtoDeserializer : JsonAdapter<ContentDto>() {
+    override fun toJson(writer: JsonWriter, value: ContentDto?) {
+        // no op
+    }
+
+    override fun fromJson(reader: JsonReader): ContentDto {
         var text = ""
         val media: MutableList<MediaDto> = mutableListOf()
 
-        val secureRaw = json.asJsonObject.getAsJsonArray("secure")
-        if (secureRaw.size() == 2) {
-            text = secureRaw.get(0).asString
-        }
-
-        val contents = secureRaw.get(1).asJsonArray
-        if (contents.size() > 0) {
-            for (array in contents) {
-                val previewUrl = array.asJsonArray.get(1).asString
-                val fullUrl = array.asJsonArray.get(0).asString
-                media.add(
-                    MediaDto(
-                        previewUrl,
-                        fullUrl
+        reader.beginObject()
+        while (reader.hasNext()) {
+            if (reader.nextName().equals("secure")) {
+                reader.beginArray()
+                // put this html text as message text instead text from response
+                text = reader.nextString()
+                reader.beginArray()
+                while (reader.hasNext()) {
+                    reader.beginArray()
+                    media.add(
+                        MediaDto(
+                            fullUrl = reader.nextString(),
+                            previewUrl = reader.nextString(),
+                        )
                     )
-                )
+                    reader.endArray()
+                }
+                reader.endArray()
+                reader.endArray()
+            } else {
+                reader.skipValue()
             }
         }
+        reader.endObject()
+
         return ContentDto(text, media)
     }
 }

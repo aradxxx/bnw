@@ -98,9 +98,13 @@ dependencies {
 
     def retrofitVersion = "2.9.0"
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     implementation "com.squareup.okhttp3:okhttp:4.2.0"
     implementation "com.squareup.okhttp3:logging-interceptor:4.2.0"
+
+    def moshiVersion = "1.11.0"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
     implementation "com.jakewharton.timber:timber:4.7.1"
 

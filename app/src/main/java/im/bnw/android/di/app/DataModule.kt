@@ -17,7 +17,7 @@ class DataModule {
     @Provides
     @Singleton
     fun provideDataStorePreferences(context: Context): DataStore<Preferences> =
-        context.createDataStore(name = "user")
+        context.createDataStore("user")
 
     @Provides
     @Singleton
