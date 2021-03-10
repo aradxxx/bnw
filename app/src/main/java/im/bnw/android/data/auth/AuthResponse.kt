@@ -1,10 +1,12 @@
 package im.bnw.android.data.auth
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 class AuthResponse(
-    @SerializedName("ok")
+    @Json(name = "ok")
     val ok: Boolean,
-    @SerializedName("desc")
+    @Json(name = "desc")
     val token: String,
 )

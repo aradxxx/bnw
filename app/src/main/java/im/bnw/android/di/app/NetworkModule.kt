@@ -3,8 +3,7 @@
 package im.bnw.android.di.app
 
 import android.content.Context
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import im.bnw.android.BuildConfig
@@ -17,18 +16,12 @@ import im.bnw.android.data.message.ContentDtoDeserializer
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 class NetworkModule {
-    @Provides
-    @Singleton
-    fun provideGson(): Gson = GsonBuilder()
-        .registerTypeAdapter(ContentDto::class.java, ContentDtoDeserializer)
-        .create()
-
     @Provides
     @Singleton
     fun connectionProvider(context: Context): ConnectionProvider =
@@ -54,11 +47,20 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApi(okHttpClient: OkHttpClient, gson: Gson): Api =
+    fun provideApi(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi
+    ): Api =
         Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(Api::class.java)
+
+    @Provides
+    @Singleton
+    fun provideMoshi(): Moshi = Moshi.Builder()
+        .add(ContentDto::class.java, ContentDtoDeserializer())
+        .build()
 }

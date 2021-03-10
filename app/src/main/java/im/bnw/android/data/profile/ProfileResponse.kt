@@ -1,15 +1,18 @@
 package im.bnw.android.data.profile
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 
 class ProfileResponse(
-    @SerializedName("ok")
+    @Json(name = "ok")
     val ok: Boolean,
     /*@SerializedName("loltroll")
     val loltroll: List<String>,
     @SerializedName("subscriptions")
     val subscriptions: List<String>,*/
-    @SerializedName("user")
+    @Json(name = "user")
     val user: String,
     /*@SerializedName("subscribers")
     val subscribers: List<String>,
@@ -17,7 +20,7 @@ class ProfileResponse(
     val friends: List<String>,
     @SerializedName("vcard")
     val vcard: String,*/
-    @SerializedName("messages_count")
+    @Json(name = "messages_count")
     val messagesCount: Int,
     /*@SerializedName("about")
     val about: String,
@@ -25,9 +28,9 @@ class ProfileResponse(
     val subscriptionsAll: List<String>,
     @SerializedName("characters_count")
     val charactersCount: Int,*/
-    @SerializedName("regdate")
+    @Json(name = "regdate")
     val regDate: Long,
-    @SerializedName("comments_count")
+    @Json(name = "comments_count")
     val commentsCount: Int,
     /*@SerializedName("subscribers_all")
     val subscribersAll: List<String>*/

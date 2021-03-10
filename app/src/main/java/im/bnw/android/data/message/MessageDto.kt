@@ -1,39 +1,41 @@
 package im.bnw.android.data.message
 
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@JsonClass(generateAdapter = true)
 data class MessageDto(
-    @SerializedName("tags")
+    @Json(name = "tags")
     val tags: List<String>,
 
-    @SerializedName("text")
+    @Json(name = "text")
     val text: String,
 
-    @SerializedName("user")
+    @Json(name = "user")
     val user: String,
 
-    @SerializedName("html")
+    @Json(name = "html")
     val contentDto: ContentDto,
 
-    @SerializedName("date")
+    @Json(name = "date")
     val date: Double,
 
-    @SerializedName("id")
+    @Json(name = "id")
     val id: String,
 
-    @SerializedName("anonymous")
+    @Json(name = "anonymous")
     val anonymous: Boolean,
 
-    @SerializedName("anoncomments")
+    @Json(name = "anoncomments")
     val anoncomments: Boolean,
 
-    @SerializedName("replycount")
+    @Json(name = "replycount")
     val replyCount: Int,
 
-    @SerializedName("recommendations")
+    @Json(name = "recommendations")
     val recommendations: List<String>
 ) : Parcelable {
     @SuppressWarnings("MagicNumber")
