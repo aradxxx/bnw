@@ -13,10 +13,12 @@ object MessageMapper {
             user = user,
             timestamp = timestamp(),
             anonymous = anonymous,
-            anoncomments = anoncomments,
+            anonComments = anonComments,
             replyCount = replyCount,
             recommendations = recommendations,
-            content = contentDto.toContent()
+            content = contentDto.toContent(),
+            format = format ?: "",
+            clubs = clubs,
         )
     }
 
@@ -27,7 +29,7 @@ object MessageMapper {
         )
     }
 
-    fun MediaDto.toMedia(): Media {
+    private fun MediaDto.toMedia(): Media {
         return Media(
             previewUrl = previewUrl,
             fullUrl = fullUrl

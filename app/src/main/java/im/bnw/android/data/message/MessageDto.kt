@@ -30,13 +30,19 @@ data class MessageDto(
     val anonymous: Boolean,
 
     @Json(name = "anoncomments")
-    val anoncomments: Boolean,
+    val anonComments: Boolean,
 
     @Json(name = "replycount")
     val replyCount: Int,
 
     @Json(name = "recommendations")
-    val recommendations: List<String>
+    val recommendations: List<String>,
+
+    @Json(name = "format")
+    val format: String?,
+
+    @Json(name = "clubs")
+    val clubs: List<String>,
 ) : Parcelable {
     @SuppressWarnings("MagicNumber")
     fun timestamp() = (date * 1_000).toLong()

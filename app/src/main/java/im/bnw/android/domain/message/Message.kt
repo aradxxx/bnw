@@ -12,7 +12,9 @@ data class Message(
     val timestamp: Long,
     val id: String,
     val anonymous: Boolean,
-    val anoncomments: Boolean,
+    val anonComments: Boolean,
     val replyCount: Int,
-    val recommendations: List<String>
+    val recommendations: List<String>,
+    val format: String,
+    val clubs: List<String>,
 ) : Parcelable
