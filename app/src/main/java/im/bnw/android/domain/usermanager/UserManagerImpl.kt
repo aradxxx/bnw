@@ -7,9 +7,9 @@ import androidx.datastore.preferences.core.preferencesKey
 import im.bnw.android.data.core.network.Api
 import im.bnw.android.data.core.network.httpresult.toResult
 import im.bnw.android.domain.core.Result
+import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.profile.User
 import im.bnw.android.presentation.util.AuthFailedException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -18,9 +18,10 @@ import javax.inject.Inject
 
 class UserManagerImpl @Inject constructor(
     private val api: Api,
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    private val dispatchersProvider: DispatchersProvider
 ) : UserManager {
-    override suspend fun login(userName: String, password: String) = withContext(Dispatchers.IO) {
+    override suspend fun login(userName: String, password: String) = withContext(dispatchersProvider.io) {
         val response = api.login(userName, password)
         if (response.ok) {
             dataStore.edit {
@@ -33,7 +34,7 @@ class UserManagerImpl @Inject constructor(
         }
     }
 
-    override suspend fun logout() {
+    override suspend fun logout(): Unit = withContext(dispatchersProvider.io) {
         dataStore.edit {
             it[PreferencesKeys.USER_TOKEN] = ""
             it[PreferencesKeys.USER_NAME] = ""

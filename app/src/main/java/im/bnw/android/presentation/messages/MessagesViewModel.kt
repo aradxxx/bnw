@@ -1,6 +1,7 @@
 package im.bnw.android.presentation.messages
 
 import im.bnw.android.domain.auth.AuthInteractor
+import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.presentation.core.BaseViewModel
@@ -9,7 +10,6 @@ import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
 import im.bnw.android.presentation.messages.adapter.MessageItem
 import im.bnw.android.presentation.messages.adapter.MessageWithMediaItem
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -24,7 +24,8 @@ class MessagesViewModel @Inject constructor(
     restoredState: MessagesState?,
     screenParams: MessagesScreenParams,
     private val messageInteractor: MessageInteractor,
-    private val authInteractor: AuthInteractor
+    private val authInteractor: AuthInteractor,
+    private val dispatchersProvider: DispatchersProvider
 ) : BaseViewModel<MessagesState>(
     restoredState ?: MessagesState(user = screenParams.user),
     router
@@ -68,7 +69,7 @@ class MessagesViewModel @Inject constructor(
         if (state.beforeLoading || state.fullLoaded) {
             return
         }
-        vmScope.launch(Dispatchers.Default) {
+        vmScope.launch(dispatchersProvider.default) {
             updateState { it.copy(beforeLoading = true) }
             val last = if (state.messages.isNotEmpty()) {
                 state.messages.last().message().id
@@ -94,7 +95,7 @@ class MessagesViewModel @Inject constructor(
         if (state.afterLoading && state.messages.isEmpty()) {
             return
         }
-        vmScope.launch(Dispatchers.Default) {
+        vmScope.launch(dispatchersProvider.default) {
             updateState { it.copy(afterLoading = true) }
             val first = if (state.messages.isNotEmpty()) {
                 state.messages.first().message().id
@@ -135,7 +136,7 @@ class MessagesViewModel @Inject constructor(
             .map {
                 state.copy(createMessageVisible = it && state.user.isEmpty())
             }
-            .flowOn(Dispatchers.IO)
+            .flowOn(dispatchersProvider.io)
             .collect { newState ->
                 updateState { newState }
             }

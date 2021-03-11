@@ -2,18 +2,19 @@ package im.bnw.android.presentation.auth
 
 import im.bnw.android.R
 import im.bnw.android.domain.auth.AuthInteractor
+import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.DialogEvent
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.util.AuthFailedException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(
     router: AppRouter,
-    private val authInteractor: AuthInteractor
+    private val authInteractor: AuthInteractor,
+    private val dispatchersProvider: DispatchersProvider
 ) : BaseViewModel<AuthState>(
     AuthState(),
     router
@@ -37,7 +38,7 @@ class AuthViewModel @Inject constructor(
         if (state.loading) {
             return
         }
-        vmScope.launch(Dispatchers.Default) {
+        vmScope.launch(dispatchersProvider.default) {
             updateState { it.copy(loading = true) }
             try {
                 authInteractor.login(state.userName, state.password)
@@ -49,7 +50,7 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private fun authSuccess() = vmScope.launch(Dispatchers.Main) {
+    private fun authSuccess() = vmScope.launch {
         backPressed()
     }
 }

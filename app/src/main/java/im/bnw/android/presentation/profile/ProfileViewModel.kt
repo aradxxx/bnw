@@ -1,13 +1,13 @@
 package im.bnw.android.presentation.profile
 
 import im.bnw.android.domain.core.Result
+import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.profile.ProfileInteractor
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
 import im.bnw.android.presentation.util.nullOr
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -17,7 +17,8 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     router: AppRouter,
     restoredState: ProfileState?,
-    private val profileInteractor: ProfileInteractor
+    private val profileInteractor: ProfileInteractor,
+    private val dispatchersProvider: DispatchersProvider
 ) : BaseViewModel<ProfileState>(
     restoredState ?: ProfileState.Init,
     router
@@ -48,14 +49,14 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun logout() {
-        vmScope.launch(Dispatchers.Default) {
+        vmScope.launch(dispatchersProvider.default) {
             updateState { ProfileState.Loading }
             profileInteractor.logout()
         }
     }
 
     private fun retry() {
-        vmScope.launch(Dispatchers.Default) {
+        vmScope.launch(dispatchersProvider.default) {
             updateState { ProfileState.Loading }
             profileInteractor.retry()
         }
@@ -78,7 +79,7 @@ class ProfileViewModel @Inject constructor(
                     }
                 }
             }
-            .flowOn(Dispatchers.IO)
+            .flowOn(dispatchersProvider.io)
             .collect { newState ->
                 updateState { newState }
             }

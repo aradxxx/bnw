@@ -8,6 +8,8 @@ import dagger.Module
 import dagger.Provides
 import im.bnw.android.data.core.network.Api
 import im.bnw.android.data.message.MessageRepositoryImpl
+import im.bnw.android.domain.core.dispatcher.DispatchersProvider
+import im.bnw.android.domain.core.dispatcher.DispatchersProviderImpl
 import im.bnw.android.domain.message.MessageRepository
 import im.bnw.android.domain.usermanager.UserManager
 import javax.inject.Singleton
@@ -16,11 +18,19 @@ import javax.inject.Singleton
 class DataModule {
     @Provides
     @Singleton
+    fun provideDispatchers(): DispatchersProvider = DispatchersProviderImpl
+
+    @Provides
+    @Singleton
     fun provideDataStorePreferences(context: Context): DataStore<Preferences> =
         context.createDataStore("user")
 
     @Provides
     @Singleton
-    fun bindMessageRepository(api: Api, userManager: UserManager): MessageRepository =
-        MessageRepositoryImpl(api, userManager)
+    fun bindMessageRepository(
+        api: Api,
+        userManager: UserManager,
+        dispatchersProvider: DispatchersProvider
+    ): MessageRepository =
+        MessageRepositoryImpl(api, userManager, dispatchersProvider)
 }
