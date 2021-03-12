@@ -57,9 +57,7 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
         with(binding.swipeToRefresh) {
             setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.white))
             setColorSchemeResources(
-                R.color.colorPrimary,
-                R.color.colorAccent,
-                R.color.colorPrimaryDark
+                R.color.colorPrimary
             )
             setOnRefreshListener { viewModel.swipeRefresh() }
         }

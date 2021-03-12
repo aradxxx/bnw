@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        app:backgroundTint="@color/colorAccent"
+        app:backgroundTint="@color/colorPrimary"
         app:fabSize="normal"
         app:srcCompat="@drawable/ic_pencil"
         app:tint="@color/white" />
@@ -43,6 +43,7 @@
         android:layout_marginBottom="-3dp"
         android:indeterminate="true"
         android:visibility="gone"
+        app:mpb_indeterminateTint="@color/colorPrimary"
         app:mpb_progressStyle="horizontal"
         app:mpb_showProgressBackground="false" />
 </FrameLayout>

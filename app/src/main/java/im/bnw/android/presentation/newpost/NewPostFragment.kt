@@ -72,9 +72,9 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
         val icon = anonItemMenu.icon
         if (icon != null) {
             val color = if (enabled) {
-                R.color.colorAccent
+                R.color.colorPrimary
             } else {
-                R.color.colorPrimaryDark
+                R.color.colorDisabled
             }
             icon.mutate()
             icon.colorFilter =
@@ -87,7 +87,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
         val icon = doneItemMenu.icon
         if (icon != null) {
             val color = if (enabled) {
-                R.color.colorPrimaryDark
+                R.color.colorPrimary
             } else {
                 R.color.colorDisabled
             }

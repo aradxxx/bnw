@@ -3,8 +3,6 @@
 package im.bnw.android.data.core.network.httpresult
 
 import im.bnw.android.domain.core.Result
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
 
 fun <T> HttpResult<T>.isSuccess(): Boolean {
     return this is HttpResult.Success
@@ -14,11 +12,7 @@ fun <T> HttpResult<T>.asSuccess(): HttpResult.Success<T> {
     return this as HttpResult.Success<T>
 }
 
-@OptIn(ExperimentalContracts::class)
 fun <T> HttpResult<T>.isFailure(): Boolean {
-    contract {
-        returns(true) implies (this@isFailure is HttpResult.Failure<*>)
-    }
     return this is HttpResult.Failure<*>
 }
 
