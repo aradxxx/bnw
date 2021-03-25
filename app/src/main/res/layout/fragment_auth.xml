@@ -29,8 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -44,6 +43,8 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:hint="@string/user_name"
                 app:endIconMode="clear_text">
 
@@ -59,7 +60,9 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
                 android:hint="@string/password"
                 app:endIconMode="clear_text">
 
@@ -74,7 +77,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:gravity="end">
 
                 <com.google.android.material.button.MaterialButton
@@ -82,15 +84,19 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/cancel" />
+                    android:layout_margin="8dp"
+                    android:text="@string/cancel"
+                    app:cornerRadius="@dimen/button_corner_radius" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/sign_in"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_toRightOf="@+id/cancel"
-                    android:text="@string/sign_in" />
+                    android:text="@string/sign_in"
+                    app:cornerRadius="@dimen/button_corner_radius" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

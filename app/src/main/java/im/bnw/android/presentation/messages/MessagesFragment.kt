@@ -12,6 +12,10 @@ import im.bnw.android.R
 import im.bnw.android.databinding.FragmentMessagesListBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.messages.adapter.MessageAdapter
+import im.bnw.android.presentation.messages.adapter.messageItemDecorator
+import im.bnw.android.presentation.util.UI
+import im.bnw.android.presentation.util.dpToPx
+import im.bnw.android.presentation.util.dpToPxF
 import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
 
@@ -31,6 +35,9 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         messageAdapter = MessageAdapter(
+            UI.MESSAGE_CARD_RADIUS.dpToPxF,
+            UI.MESSAGE_MEDIA_HEIGHT.dpToPx,
+            { position -> viewModel.cardClicked(position) },
             { position -> viewModel.userClicked(position) },
             { messagePosition, mediaPosition ->
                 viewModel.mediaClicked(messagePosition, mediaPosition)
@@ -39,7 +46,8 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
         linearLayoutManager = LinearLayoutManager(requireContext())
         with(binding.messagesList) {
             layoutManager = linearLayoutManager
-            this.adapter = messageAdapter
+            adapter = messageAdapter
+            addItemDecoration(messageItemDecorator)
             addOnScrollListener(
                 object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

@@ -9,7 +9,9 @@ import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
 import im.bnw.android.presentation.messages.adapter.MessageItem
-import im.bnw.android.presentation.messages.adapter.MessageWithMediaItem
+import im.bnw.android.presentation.util.id
+import im.bnw.android.presentation.util.media
+import im.bnw.android.presentation.util.user
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -43,8 +45,15 @@ class MessagesViewModel @Inject constructor(
         loadBefore()
     }
 
+    fun cardClicked(position: Int) {
+        val messageId = state.messages.getOrNull(position)?.id ?: return
+        //val messageId = "59SS7L"
+        // val messageId = "6JAQGT"
+        router.navigateTo(Tab.GLOBAL, Screens.messageDetailsScreen(messageId))
+    }
+
     fun userClicked(position: Int) {
-        val userId = state.messages[position].message().user
+        val userId = state.messages[position].user
         if (state.user == userId) {
             return
         }
@@ -52,8 +61,7 @@ class MessagesViewModel @Inject constructor(
     }
 
     fun mediaClicked(messagePosition: Int, mediaPosition: Int) {
-        val message = state.messages.getOrNull(messagePosition) ?: return
-        val media = message.message().content.media.getOrNull(mediaPosition) ?: return
+        val media = state.messages.getOrNull(messagePosition)?.media?.getOrNull(mediaPosition) ?: return
         if (media.isYoutube()) {
             router.navigateTo(Tab.GLOBAL, Screens.externalHyperlinkScreen(media.fullUrl))
         } else {
@@ -72,7 +80,7 @@ class MessagesViewModel @Inject constructor(
         vmScope.launch(dispatchersProvider.default) {
             updateState { it.copy(beforeLoading = true) }
             val last = if (state.messages.isNotEmpty()) {
-                state.messages.last().message().id
+                state.messages.last().id
             } else {
                 ""
             }
@@ -98,7 +106,7 @@ class MessagesViewModel @Inject constructor(
         vmScope.launch(dispatchersProvider.default) {
             updateState { it.copy(afterLoading = true) }
             val first = if (state.messages.isNotEmpty()) {
-                state.messages.first().message().id
+                state.messages.first().id
             } else {
                 ""
             }
@@ -125,10 +133,7 @@ class MessagesViewModel @Inject constructor(
     }
 
     private fun List<Message>.toListItems() = map {
-        when {
-            it.content.media.isEmpty() -> MessageItem(it)
-            else -> MessageWithMediaItem(it)
-        }
+        MessageItem(it)
     }
 
     private fun subscribeUserAuthState() = vmScope.launch {

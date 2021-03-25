@@ -66,6 +66,9 @@ suspend fun <T> DataStore<Preferences>.setValue(key: Preferences.Key<T>, value: 
 val Int.dpToPx: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
+val Int.dpToPxF: Float
+    get() = this * Resources.getSystem().displayMetrics.density
+
 var TextView.newText: String
     get() = text.toString()
     set(newText) {

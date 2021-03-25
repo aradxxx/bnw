@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="16dp"
     app:cardElevation="@dimen/card_elevation">
 
     <LinearLayout
@@ -87,41 +88,23 @@
                 tools:text="WWWWWW" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/comments_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/replyToIcon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="16dp"
-                android:src="@drawable/ic_chat"
+                android:src="@drawable/ic_arrow_top_left"
                 app:tint="@color/text_secondary_dark" />
 
             <TextView
-                android:id="@+id/comments"
+                android:id="@+id/replyTo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:gravity="center_vertical"
-                android:minWidth="48dp"
+                android:minWidth="96dp"
                 android:singleLine="true"
                 android:textAppearance="@style/Text.Body1.Secondary"
-                tools:text="3" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/recommends_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_share"
-                app:tint="@color/text_secondary_dark" />
-
-            <TextView
-                android:id="@+id/recommends"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:minWidth="48dp"
-                android:singleLine="true"
-                android:textAppearance="@style/Text.Body1.Secondary"
-                app:drawableTint="@color/text_secondary_dark"
-                tools:text="2" />
+                tools:text="WWWWWW/WW" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

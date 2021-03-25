@@ -12,6 +12,18 @@ class MessagesResponse(
 )
 
 @JsonClass(generateAdapter = true)
+class MessageDetailsResponse(
+    @Json(name = "ok")
+    val ok: Boolean,
+    @Json(name = "msgid")
+    val messageId: String,
+    @Json(name = "message")
+    val message: MessageDto,
+    @Json(name = "replies")
+    val replies: List<ReplyDto>,
+)
+
+@JsonClass(generateAdapter = true)
 class PostResponse(
     @Json(name = "ok")
     val ok: Boolean,

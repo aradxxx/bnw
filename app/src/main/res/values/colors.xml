@@ -15,4 +15,5 @@
     <color name="text_secondary_light">#B2FFFFFF</color>
 
     <color name="color_text_hyperlink">#4078C0</color>
+    <color name="color_comments_background">#FAFAFA</color>
 </resources>
