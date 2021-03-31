@@ -8,6 +8,8 @@ import im.bnw.android.presentation.auth.AuthFragment
 import im.bnw.android.presentation.core.navigation.tab.TabsContainerFragment
 import im.bnw.android.presentation.imageview.ImageFragment
 import im.bnw.android.presentation.imageview.ImageScreenParams
+import im.bnw.android.presentation.messagedetails.MessageDetailsFragment
+import im.bnw.android.presentation.messagedetails.MessageDetailsScreenParams
 import im.bnw.android.presentation.messages.MessagesFragment
 import im.bnw.android.presentation.messages.MessagesScreenParams
 import im.bnw.android.presentation.newpost.NewPostFragment
@@ -15,35 +17,39 @@ import im.bnw.android.presentation.profile.ProfileFragment
 import im.bnw.android.presentation.splash.SplashFragment
 
 object Screens {
-    fun tabContainerScreen() = FragmentScreen() {
+    fun tabContainerScreen() = FragmentScreen {
         TabsContainerFragment()
     }
 
-    fun splashScreen() = FragmentScreen() {
+    fun splashScreen() = FragmentScreen {
         SplashFragment()
     }
 
-    fun newPostScreen() = FragmentScreen() {
+    fun newPostScreen() = FragmentScreen {
         NewPostFragment()
     }
 
-    fun messagesScreen(user: String) = FragmentScreen() {
+    fun messagesScreen(user: String) = FragmentScreen {
         MessagesFragment.newInstance(MessagesScreenParams(user))
     }
 
-    fun imageViewScreen(url: String) = FragmentScreen() {
+    fun messageDetailsScreen(messageId: String) = FragmentScreen {
+        MessageDetailsFragment.newInstance(MessageDetailsScreenParams(messageId))
+    }
+
+    fun imageViewScreen(url: String) = FragmentScreen {
         ImageFragment.newInstance(ImageScreenParams(url))
     }
 
-    fun externalHyperlinkScreen(url: String) = ActivityScreen() {
+    fun externalHyperlinkScreen(url: String) = ActivityScreen {
         Intent(Intent.ACTION_VIEW, Uri.parse(url))
     }
 
-    fun profileScreen() = FragmentScreen() {
+    fun profileScreen() = FragmentScreen {
         ProfileFragment()
     }
 
-    fun authScreen() = FragmentScreen() {
+    fun authScreen() = FragmentScreen {
         AuthFragment()
     }
 }

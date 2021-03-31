@@ -1,9 +1,13 @@
 package im.bnw.android.data.message
 
 import im.bnw.android.data.core.network.Api
+import im.bnw.android.data.core.network.httpresult.toResult
 import im.bnw.android.data.message.MessageMapper.toMessage
+import im.bnw.android.data.message.MessageMapper.toReply
+import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Message
+import im.bnw.android.domain.message.MessageDetails
 import im.bnw.android.domain.message.MessageRepository
 import im.bnw.android.domain.usermanager.UserManager
 import kotlinx.coroutines.flow.firstOrNull
@@ -34,6 +38,17 @@ class MessageRepositoryImpl @Inject constructor(
             throw IOException("Post failed")
         }
     }
+
+    override suspend fun messageDetails(messageId: String): Result<MessageDetails> =
+        withContext(dispatchersProvider.io) {
+            return@withContext api.messageDetail(messageId).toResult { messageDetailsDto ->
+                MessageDetails(
+                    messageId,
+                    messageDetailsDto.message.toMessage(),
+                    messageDetailsDto.replies.map { it.toReply() }
+                )
+            }
+        }
 
     private fun Boolean.asApiParam(): String = when (this) {
         true -> {

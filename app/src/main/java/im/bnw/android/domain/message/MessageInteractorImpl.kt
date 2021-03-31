@@ -1,5 +1,6 @@
 package im.bnw.android.domain.message
 
+import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -18,4 +19,9 @@ class MessageInteractorImpl @Inject constructor(
     override suspend fun post(text: String, anonymous: Boolean) = withContext(dispatchersProvider.default) {
         messageRepository.post(text, anonymous)
     }
+
+    override suspend fun messageDetails(messageId: String): Result<MessageDetails> =
+        withContext(dispatchersProvider.io) {
+            messageRepository.messageDetails(messageId)
+        }
 }

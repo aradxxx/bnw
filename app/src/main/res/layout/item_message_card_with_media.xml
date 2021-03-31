@@ -4,10 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
     android:orientation="vertical"
     app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="16dp"
     app:cardElevation="@dimen/card_elevation">
 
     <LinearLayout
@@ -30,6 +28,7 @@
                 android:layout_height="48dp" />
 
             <LinearLayout
+                android:id="@+id/userDate"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
@@ -75,8 +74,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/media_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
             android:overScrollMode="never"
             android:scrollbars="none" />
 
