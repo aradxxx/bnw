@@ -245,16 +245,16 @@ class ReplyAdapter(
             addDelegate(
                 messageDelegate(
                     messageCardRadius,
+                    {},
                     userNameListener,
-                    {}
                 )
             )
             addDelegate(
                 messageWithMediaDelegate(
                     messageCardRadius,
                     messageMediaHeight,
-                    userNameListener,
                     {},
+                    userNameListener,
                     mediaListener
                 )
             )
