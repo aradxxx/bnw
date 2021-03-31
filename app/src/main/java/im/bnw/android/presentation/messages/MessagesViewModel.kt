@@ -47,8 +47,6 @@ class MessagesViewModel @Inject constructor(
 
     fun cardClicked(position: Int) {
         val messageId = state.messages.getOrNull(position)?.id ?: return
-        //val messageId = "59SS7L"
-        // val messageId = "6JAQGT"
         router.navigateTo(Tab.GLOBAL, Screens.messageDetailsScreen(messageId))
     }
 

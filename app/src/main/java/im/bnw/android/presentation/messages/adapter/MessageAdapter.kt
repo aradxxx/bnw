@@ -57,6 +57,13 @@ fun messageDelegate(
         ).show()
     }
 
+    fun cardClicked() {
+        val position = adapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            cardClickListener(position)
+        }
+    }
+
     with(binding) {
         text.movementMethod = LinkMovementMethod.getInstance()
         root.radius = cardRadius
@@ -68,10 +75,10 @@ fun messageDelegate(
             true
         }
         root.setOnClickListener {
-            val position = adapterPosition
-            if (position != RecyclerView.NO_POSITION) {
-                cardClickListener(position)
-            }
+            cardClicked()
+        }
+        text.setOnClickListener {
+            cardClicked()
         }
     }
 
@@ -134,6 +141,13 @@ fun messageWithMediaDelegate(
             Toast.LENGTH_SHORT
         ).show()
     }
+
+    fun cardClicked() {
+        val position = adapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            cardClickListener(position)
+        }
+    }
     with(binding) {
         userDate.setOnClickListener {
             userClicked()
@@ -143,10 +157,10 @@ fun messageWithMediaDelegate(
             true
         }
         root.setOnClickListener {
-            val position = adapterPosition
-            if (position != RecyclerView.NO_POSITION) {
-                cardClickListener(position)
-            }
+            cardClicked()
+        }
+        text.setOnClickListener {
+            cardClicked()
         }
         root.radius = cardRadius
         mediaList.updateLayoutParams {
