@@ -204,7 +204,7 @@ val messageItemDecorator = object : RecyclerView.ItemDecoration() {
         itemPosition: Int,
         parent: RecyclerView
     ) {
-        outRect.set(half, half, half, half)
+        outRect.set(half, half, half, 0)
     }
 }
 
