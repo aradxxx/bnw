@@ -12,7 +12,8 @@ data class MessagesState(
     val beforeLoading: Boolean = false,
     val afterLoading: Boolean = false,
     val fullLoaded: Boolean = false,
-    val createMessageVisible: Boolean = false
+    val createMessageVisible: Boolean = false,
+    val error: Throwable? = null
 ) : State
 
 sealed class Event {

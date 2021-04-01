@@ -61,12 +61,14 @@ class MessageDetailsViewModel @Inject constructor(
 
     private fun getMessageDetails() = vmScope.launch(dispatchersProvider.default) {
         updateState { MessageDetailsState.Loading }
-        val result = messageInteractor.messageDetails(messageId = messageDetailsScreenParams.messageId)
-        if (result is Result.Success) {
-            val idle = result.value.toIdleState()
-            updateState { idle }
-        } else {
-            updateState { MessageDetailsState.LoadingFailed }
+        when (val result = messageInteractor.messageDetails(messageId = messageDetailsScreenParams.messageId)) {
+            is Result.Success -> {
+                val idle = result.value.toIdleState()
+                updateState { idle }
+            }
+            is Result.Failure -> {
+                updateState { MessageDetailsState.LoadingFailed(result.throwable) }
+            }
         }
     }
 

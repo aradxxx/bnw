@@ -19,6 +19,7 @@ import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.dpToPxF
 import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
+import javax.net.ssl.SSLException
 
 class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     R.layout.fragment_messages_list
@@ -70,6 +71,9 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
             )
             setOnRefreshListener { viewModel.swipeRefresh() }
         }
+        binding.failure.setActionListener {
+            viewModel.swipeRefresh()
+        }
     }
 
     override fun onEvent(event: Any?) {
@@ -89,6 +93,15 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
             val createMessageEnabled = state.createMessageVisible && state.messages.isNotEmpty()
             createMessage.isEnabled = createMessageEnabled
             createMessage.isVisible = createMessageEnabled
+            failure.isVisible = state.messages.isEmpty() && state.error != null
+            failure.message = when (state.error) {
+                is SSLException -> {
+                    getString(R.string.possibly_domain_blocked)
+                }
+                else -> {
+                    getString(R.string.check_connection)
+                }
+            }
         }
     }
 }

@@ -76,7 +76,7 @@ class MessagesViewModel @Inject constructor(
             return
         }
         vmScope.launch(dispatchersProvider.default) {
-            updateState { it.copy(beforeLoading = true) }
+            updateState { it.copy(beforeLoading = true, error = null) }
             val last = if (state.messages.isNotEmpty()) {
                 state.messages.last().id
             } else {
@@ -92,7 +92,7 @@ class MessagesViewModel @Inject constructor(
                 }
             } catch (t: IOException) {
                 handleException(t)
-                updateState { it.copy(beforeLoading = false) }
+                updateState { it.copy(beforeLoading = false, error = t) }
             }
         }
     }
@@ -102,7 +102,7 @@ class MessagesViewModel @Inject constructor(
             return
         }
         vmScope.launch(dispatchersProvider.default) {
-            updateState { it.copy(afterLoading = true) }
+            updateState { it.copy(afterLoading = true, error = null) }
             val first = if (state.messages.isNotEmpty()) {
                 state.messages.first().id
             } else {
@@ -125,7 +125,7 @@ class MessagesViewModel @Inject constructor(
                 }
             } catch (t: IOException) {
                 handleException(t)
-                updateState { it.copy(afterLoading = false) }
+                updateState { it.copy(afterLoading = false, error = t) }
             }
         }
     }

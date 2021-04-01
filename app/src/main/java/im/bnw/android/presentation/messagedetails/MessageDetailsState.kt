@@ -13,7 +13,9 @@ sealed class MessageDetailsState : State {
     object Loading : MessageDetailsState()
 
     @Parcelize
-    object LoadingFailed : MessageDetailsState()
+    data class LoadingFailed(
+        val throwable: Throwable? = null
+    ) : MessageDetailsState()
 
     @Parcelize
     data class Idle(

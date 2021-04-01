@@ -13,6 +13,7 @@ import im.bnw.android.presentation.util.UI
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
+import javax.net.ssl.SSLException
 
 class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDetailsState>(
     R.layout.fragment_message_details
@@ -55,7 +56,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
                 renderLoading()
             }
             is MessageDetailsState.LoadingFailed -> {
-                renderLoadingFailed()
+                renderLoadingFailed(state)
             }
             is MessageDetailsState.Init -> {
                 renderInit()
@@ -76,10 +77,18 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         replies.isVisible = false
     }
 
-    private fun renderLoadingFailed() = with(binding) {
+    private fun renderLoadingFailed(state: MessageDetailsState.LoadingFailed) = with(binding) {
         progressBar.isVisible = false
         failure.isVisible = true
         replies.isVisible = false
+        failure.message = when (state.throwable) {
+            is SSLException -> {
+                getString(R.string.possibly_domain_blocked)
+            }
+            else -> {
+                getString(R.string.check_connection)
+            }
+        }
     }
 
     private fun renderInit() = with(binding) {

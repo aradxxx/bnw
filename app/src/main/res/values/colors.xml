@@ -7,16 +7,8 @@
     <color name="colorDisabled">#A9A9A9</color>
 
     <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
     <color name="dark_background">#2B2B2B</color>
     <color name="dark_light">#3C3F41</color>
 
-    <!--<color name="text_primary_dark">#DE000000</color>-->
     <color name="text_secondary_dark">#8A000000</color>
-
-    <!--<color name="text_primary_light">#DEFFFFFF</color>-->
-    <color name="text_secondary_light">#B2FFFFFF</color>
-
-    <color name="color_text_hyperlink">#6fb2ff</color>
-    <color name="color_comments_background">#FAFAFA</color>
 </resources>
