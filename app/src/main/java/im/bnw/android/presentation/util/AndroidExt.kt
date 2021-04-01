@@ -3,9 +3,12 @@ package im.bnw.android.presentation.util
 import android.content.Context
 import android.content.res.Resources
 import android.os.Parcelable
+import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.core.os.bundleOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -68,6 +71,16 @@ val Int.dpToPx: Int
 
 val Int.dpToPxF: Float
     get() = this * Resources.getSystem().displayMetrics.density
+
+@ColorInt
+fun Context.attrColor(
+    @AttrRes attrColor: Int,
+    typedValue: TypedValue = TypedValue(),
+    resolveRefs: Boolean = true
+): Int {
+    theme.resolveAttribute(attrColor, typedValue, resolveRefs)
+    return typedValue.data
+}
 
 var TextView.newText: String
     get() = text.toString()

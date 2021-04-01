@@ -16,6 +16,10 @@
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="colorControlHighlight">@color/colorRipple</item>
+
+        <item name="cardColor">@color/white</item>
+        <item name="barColor">@color/white</item>
+        <item name="iconColor">?attr/colorSecondary</item>
     </style>
 
     <style name="Text" />

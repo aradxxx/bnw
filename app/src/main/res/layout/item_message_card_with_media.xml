@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="?attr/cardColor"
     app:cardElevation="@dimen/card_elevation">
 
     <LinearLayout
@@ -46,7 +46,7 @@
                     android:singleLine="true"
                     android:textAppearance="@style/Text.Body1.Secondary"
                     app:drawableStartCompat="@drawable/ic_at"
-                    app:drawableTint="@color/text_secondary_dark"
+                    app:drawableTint="?android:textColorSecondary"
                     tools:text="user" />
 
                 <TextView
@@ -98,7 +98,7 @@
                 android:minWidth="82dp"
                 android:singleLine="true"
                 android:textAppearance="@style/Text.Body1.Secondary"
-                app:drawableTint="@color/text_secondary_dark"
+                app:drawableTint="?android:textColorSecondary"
                 tools:text="WWWWWW" />
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/ic_chat"
-                app:tint="@color/text_secondary_dark" />
+                app:tint="?android:textColorSecondary" />
 
             <TextView
                 android:id="@+id/comments"
@@ -125,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_share"
-                app:tint="@color/text_secondary_dark" />
+                app:tint="?android:textColorSecondary" />
 
             <TextView
                 android:id="@+id/recommends"
@@ -135,7 +135,6 @@
                 android:minWidth="48dp"
                 android:singleLine="true"
                 android:textAppearance="@style/Text.Body1.Secondary"
-                app:drawableTint="@color/text_secondary_dark"
                 tools:text="2" />
         </LinearLayout>
     </LinearLayout>

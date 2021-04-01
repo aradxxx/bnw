@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="?attr/cardColor"
     app:cardCornerRadius="16dp"
     app:cardElevation="@dimen/card_elevation">
 
@@ -45,7 +45,7 @@
                     android:singleLine="true"
                     android:textAppearance="@style/Text.Body1.Secondary"
                     app:drawableStartCompat="@drawable/ic_at"
-                    app:drawableTint="@color/text_secondary_dark"
+                    app:drawableTint="?android:textColorSecondary"
                     tools:text="user" />
 
                 <TextView
@@ -86,7 +86,7 @@
                 android:minWidth="82dp"
                 android:singleLine="true"
                 android:textAppearance="@style/Text.Body1.Secondary"
-                app:drawableTint="@color/text_secondary_dark"
+                app:drawableTint="?android:textColorSecondary"
                 tools:text="WWWWWW" />
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -96,7 +96,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/ic_arrow_top_left"
-                app:tint="@color/text_secondary_dark" />
+                app:tint="?android:textColorSecondary" />
 
             <TextView
                 android:id="@+id/replyTo"

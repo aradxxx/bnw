@@ -18,7 +18,7 @@ class MainActivity :
     lateinit var navigator: FlowNavigator<AppRouter>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         super.onCreate(savedInstanceState)
         navigator = FlowNavigator(this, R.id.container, flowCicerone)
         if (savedInstanceState == null) {

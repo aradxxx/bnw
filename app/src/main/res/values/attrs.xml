@@ -6,4 +6,8 @@
         <attr name="message" format="string" />
         <attr name="actionText" format="string" />
     </declare-styleable>
+
+    <attr name="cardColor" format="reference" />
+    <attr name="barColor" format="reference" />
+    <attr name="iconColor" format="reference" />
 </resources>
