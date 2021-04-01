@@ -50,6 +50,9 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
                     else -> false
                 }
             }
+            post.setOnClickListener {
+                confirmSendingDialog()
+            }
             postText.doAfterTextChanged {
                 viewModel.textChanged(it.toString())
             }
@@ -83,6 +86,7 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
     }
 
     private fun sendEnabled(enabled: Boolean) {
+        binding.post.isEnabled = enabled
         doneItemMenu.isEnabled = enabled
         val icon = doneItemMenu.icon
         if (icon != null) {

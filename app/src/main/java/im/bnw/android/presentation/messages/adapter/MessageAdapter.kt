@@ -35,7 +35,7 @@ fun messageDelegate(
         ItemMessageCardBinding.inflate(layoutInflater, root, false)
     },
     on = { item, _, _ ->
-        item is MessageItem && item.message.content.media.isEmpty()
+        item is MessageItem && item.message.media.isEmpty()
     }
 ) {
     val markwon = Markwon.builder(context)
@@ -113,7 +113,7 @@ fun messageWithMediaDelegate(
         ItemMessageCardWithMediaBinding.inflate(layoutInflater, root, false)
     },
     on = { item, _, _ ->
-        item is MessageItem && item.message.content.media.isNotEmpty()
+        item is MessageItem && item.message.media.isNotEmpty()
     }
 ) {
     val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
@@ -176,7 +176,7 @@ fun messageWithMediaDelegate(
     }
     bind {
         val message = item.message
-        mediaAdapter.items = message.content.media
+        mediaAdapter.items = message.media
 
         with(binding) {
             markwon.setMarkdown(text, message.text)

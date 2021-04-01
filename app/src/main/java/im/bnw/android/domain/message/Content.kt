@@ -9,12 +9,6 @@ const val YOUTUBE_SHORT = "youtu.be"
 const val YOUTUBE_THUMB = "https://img.youtube.com/vi/%s/default.jpg"
 
 @Parcelize
-data class Content(
-    val text: String,
-    val media: List<Media>
-) : Parcelable
-
-@Parcelize
 data class Media(
     val previewUrl: String,
     val fullUrl: String

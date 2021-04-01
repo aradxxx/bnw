@@ -34,7 +34,7 @@ fun replyDelegate(
         ItemReplyCardBinding.inflate(layoutInflater, root, false)
     },
     on = { item, _, _ ->
-        item is ReplyItem && item.reply.content.media.isEmpty()
+        item is ReplyItem && item.reply.media.isEmpty()
     }
 ) {
     val markwon = Markwon.builder(context)
@@ -91,7 +91,7 @@ fun replyWithMediaDelegate(
         ItemReplyCardWithMediaBinding.inflate(layoutInflater, root, false)
     },
     on = { item, _, _ ->
-        item is ReplyItem && item.reply.content.media.isNotEmpty()
+        item is ReplyItem && item.reply.media.isNotEmpty()
     }
 ) {
     val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
@@ -159,7 +159,7 @@ fun replyWithMediaDelegate(
     }
     bind {
         val reply = item.reply
-        mediaAdapter.items = reply.content.media
+        mediaAdapter.items = reply.media
 
         with(binding) {
             markwon.setMarkdown(text, reply.text)
@@ -192,7 +192,7 @@ val replyItemDecorator = object : RecyclerView.ItemDecoration() {
         outRect.left = if (parent.adapter is ReplyAdapter) {
             val adapter = parent.adapter as ReplyAdapter
             val offset = adapter.items[itemPosition].getOffset()
-            min(normal + normal * offset, maxOffset)
+            min(normal + normal * 2 * offset, maxOffset)
         } else {
             normal
         }

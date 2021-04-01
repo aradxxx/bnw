@@ -8,10 +8,10 @@ import im.bnw.android.presentation.messages.adapter.MessageListItem
 val MessageListItem.media: List<Media>
     get() = when (this) {
         is MessageItem -> {
-            message.content.media
+            message.media
         }
         is ReplyItem -> {
-            reply.content.media
+            reply.media
         }
         else -> {
             throw IllegalArgumentException("What the messageListItem is this")
