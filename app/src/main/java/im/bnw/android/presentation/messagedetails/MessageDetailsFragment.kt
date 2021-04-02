@@ -2,11 +2,12 @@ package im.bnw.android.presentation.messagedetails
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.postDelayed
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
 import im.bnw.android.R
 import im.bnw.android.databinding.FragmentMessageDetailsBinding
 import im.bnw.android.presentation.core.BaseFragment
+import im.bnw.android.presentation.core.recyclerview.LinearLayoutManagerSmoothScroll
 import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
 import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
 import im.bnw.android.presentation.util.UI
@@ -36,7 +37,10 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding.replies) {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManagerSmoothScroll(
+                context = requireContext(),
+                smoothScrollSpeedMillisecondsPerInch = LinearLayoutManagerSmoothScroll.SCROLL_SPEED_FAST
+            )
             adapter = replyAdapter
             addItemDecoration(replyItemDecorator)
         }
@@ -68,6 +72,11 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         progressBar.isVisible = false
         failure.isVisible = false
         replies.isVisible = true
+        if (replyAdapter.items.isEmpty() && state.items.isNotEmpty()) {
+            handler.postDelayed(0) {
+                replies.smoothScrollToPosition(1)
+            }
+        }
         replyAdapter.items = state.items
     }
 
