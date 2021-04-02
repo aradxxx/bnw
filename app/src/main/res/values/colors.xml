@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--<color name="colorAccent">#6CC644</color>-->
-    <color name="colorPrimary">#6fb2ff</color>
-    <color name="colorRipple">#426fb2ff</color>
+    <color name="colorPrimary">#55b9f7</color>
+    <color name="colorRipple">#4255b9f7</color>
 
     <color name="colorDisabled">#A9A9A9</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     <color name="dark_background">#2B2B2B</color>
     <color name="dark_light">#3C3F41</color>
+    <!--<color name="dark_background">#121212</color>
+    <color name="dark_light">#222222</color>-->
 
     <color name="text_secondary_dark">#8A000000</color>
 </resources>

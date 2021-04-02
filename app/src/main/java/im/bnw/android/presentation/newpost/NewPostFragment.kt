@@ -11,6 +11,7 @@ import im.bnw.android.databinding.FragmentNewPostBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.dialog.NotificationDialog
 import im.bnw.android.presentation.util.DialogCode
+import im.bnw.android.presentation.util.attrColor
 import im.bnw.android.presentation.util.hideKeyboard
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.showKeyboard
@@ -72,33 +73,28 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
     }
 
     private fun anonEnabled(enabled: Boolean) {
-        val icon = anonItemMenu.icon
-        if (icon != null) {
-            val color = if (enabled) {
-                R.color.colorPrimary
-            } else {
-                R.color.colorDisabled
-            }
-            icon.mutate()
-            icon.colorFilter =
-                PorterDuffColorFilter(requireContext().getColor(color), PorterDuff.Mode.SRC_ATOP)
+        val icon = anonItemMenu.icon ?: return
+        val color = if (enabled) {
+            requireContext().getColor(R.color.colorPrimary)
+        } else {
+            requireContext().attrColor(R.attr.primaryIconColor)
+        }
+        icon.mutate().apply {
+            colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         }
     }
 
     private fun sendEnabled(enabled: Boolean) {
         binding.post.isEnabled = enabled
         doneItemMenu.isEnabled = enabled
-        val icon = doneItemMenu.icon
-        if (icon != null) {
-            val color = if (enabled) {
-                R.color.colorPrimary
-            } else {
-                R.color.colorDisabled
-            }
-            icon.mutate()
-            icon.colorFilter =
-                PorterDuffColorFilter(requireContext().getColor(color), PorterDuff.Mode.SRC_ATOP)
+        val icon = doneItemMenu.icon ?: return
+        val color = if (enabled) {
+            R.color.colorPrimary
+        } else {
+            R.color.colorDisabled
         }
+        icon.mutate()
+        icon.colorFilter = PorterDuffColorFilter(requireContext().getColor(color), PorterDuff.Mode.SRC_ATOP)
     }
 
     override fun updateState(state: NewPostState) {

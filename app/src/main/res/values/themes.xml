@@ -19,7 +19,8 @@
 
         <item name="cardColor">@color/white</item>
         <item name="barColor">@color/white</item>
-        <item name="iconColor">?attr/colorSecondary</item>
+        <item name="secondaryIconColor">?attr/colorSecondary</item>
+        <item name="primaryIconColor">@color/black</item>
     </style>
 
     <style name="Text" />

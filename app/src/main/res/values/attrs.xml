@@ -9,5 +9,6 @@
 
     <attr name="cardColor" format="reference" />
     <attr name="barColor" format="reference" />
-    <attr name="iconColor" format="reference" />
+    <attr name="primaryIconColor" type="reference" />
+    <attr name="secondaryIconColor" format="reference" />
 </resources>

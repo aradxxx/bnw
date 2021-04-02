@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:alpha="0.1"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorDisabled" />
 
     <include
         android:id="@+id/messagesCount"
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:alpha="0"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorDisabled" />
 
     <include
         android:id="@+id/commentsCount"
@@ -47,6 +47,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:alpha="0"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorDisabled" />
 
 </LinearLayout>
