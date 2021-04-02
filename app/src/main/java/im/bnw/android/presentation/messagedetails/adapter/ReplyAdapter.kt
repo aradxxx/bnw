@@ -202,7 +202,7 @@ val replyItemDecorator = object : RecyclerView.ItemDecoration() {
                 outRect.left = 0
                 outRect.right = 0
                 outRect.top = 0
-                outRect.bottom = small
+                outRect.bottom = normal * 2
             }
             itemPosition + 1 == parent.adapter?.itemCount -> {
                 outRect.top = small
