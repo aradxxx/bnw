@@ -1,9 +1,5 @@
 package im.bnw.android.domain.usermanager
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.preferencesKey
 import im.bnw.android.data.core.network.Api
 import im.bnw.android.data.core.network.httpresult.toResult
 import im.bnw.android.domain.core.Result
@@ -18,16 +14,14 @@ import javax.inject.Inject
 
 class UserManagerImpl @Inject constructor(
     private val api: Api,
-    private val dataStore: DataStore<Preferences>,
+    private val userDataStore: UserDataStore,
     private val dispatchersProvider: DispatchersProvider
 ) : UserManager {
     override suspend fun login(userName: String, password: String) = withContext(dispatchersProvider.io) {
         val response = api.login(userName, password)
         if (response.ok) {
-            dataStore.edit {
-                it[PreferencesKeys.USER_TOKEN] = response.token
-                it[PreferencesKeys.USER_NAME] = userName
-            }
+            userDataStore.updateUserName(userName)
+            userDataStore.updateUserToken(response.token)
             return@withContext
         } else {
             throw AuthFailedException()
@@ -35,10 +29,8 @@ class UserManagerImpl @Inject constructor(
     }
 
     override suspend fun logout(): Unit = withContext(dispatchersProvider.io) {
-        dataStore.edit {
-            it[PreferencesKeys.USER_TOKEN] = ""
-            it[PreferencesKeys.USER_NAME] = ""
-        }
+        userDataStore.updateUserToken("")
+        userDataStore.updateUserName("")
     }
 
     override fun userInfo(): Flow<Result<User?>> {
@@ -62,25 +54,16 @@ class UserManagerImpl @Inject constructor(
     }
 
     override fun isAuthenticated(): Flow<Boolean> {
-        return dataStore.data.map {
-            it[PreferencesKeys.USER_TOKEN]?.isNotEmpty() ?: false
+        return userDataStore.subscribeUserToken().map {
+            it.isNotEmpty()
         }
     }
 
     override fun getUserName(): Flow<String> {
-        return dataStore.data.map {
-            it[PreferencesKeys.USER_NAME].orEmpty()
-        }
+        return userDataStore.subscribeUserName()
     }
 
     override fun subscribeToken(): Flow<String> {
-        return dataStore.data.map {
-            it[PreferencesKeys.USER_TOKEN].orEmpty()
-        }
+        return userDataStore.subscribeUserToken()
     }
-}
-
-private object PreferencesKeys {
-    val USER_NAME = preferencesKey<String>("name")
-    val USER_TOKEN = preferencesKey<String>("token")
 }

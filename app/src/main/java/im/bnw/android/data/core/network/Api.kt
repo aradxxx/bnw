@@ -10,8 +10,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-const val QUERY_LOGIN = "login"
-
 interface Api {
     /*Посты списком постранично*/
     @GET("show")
@@ -42,7 +40,6 @@ interface Api {
     @POST("post")
     suspend fun post(
         @Query("text") text: String,
-        @Query(QUERY_LOGIN) login: String?,
         @Query("anonymous") anonymous: String
     ): PostResponse
 

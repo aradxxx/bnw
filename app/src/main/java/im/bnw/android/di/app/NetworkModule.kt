@@ -9,11 +9,13 @@ import dagger.Provides
 import im.bnw.android.BuildConfig
 import im.bnw.android.data.core.network.Api
 import im.bnw.android.data.core.network.ConnectionInterceptor
+import im.bnw.android.data.core.network.LoggingInterceptor
 import im.bnw.android.data.core.network.connectionprovider.AndroidConnectionProvider
 import im.bnw.android.data.core.network.connectionprovider.ConnectionProvider
 import im.bnw.android.data.core.network.retrofitresult.ResultAdapterFactory
 import im.bnw.android.data.message.ContentDto
 import im.bnw.android.data.message.ContentDtoDeserializer
+import im.bnw.android.domain.usermanager.UserDataStore
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,19 +32,21 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttp(connectionProvider: ConnectionProvider): OkHttpClient {
+    fun provideOkHttp(connectionProvider: ConnectionProvider, userDataStore: UserDataStore): OkHttpClient {
         val builder = OkHttpClient.Builder()
+
+        builder.addInterceptor(LoggingInterceptor(userDataStore))
+        builder.addInterceptor(ConnectionInterceptor(connectionProvider))
         if (BuildConfig.DEBUG) {
             val interceptor = HttpLoggingInterceptor()
             interceptor.level = HttpLoggingInterceptor.Level.BODY
             builder.addInterceptor(interceptor)
         }
-        builder.addInterceptor(ConnectionInterceptor(connectionProvider))
 
         return builder
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
-            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
             .build()
     }
 
