@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import im.bnw.android.R
 import im.bnw.android.presentation.core.lifecycle.LiveEvent
 import im.bnw.android.presentation.core.navigation.AppRouter
+import im.bnw.android.presentation.util.BnwApiError
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.plus
@@ -44,6 +45,9 @@ abstract class BaseViewModel<S : State>(
                     R.string.no_connection,
                     R.string.check_connection
                 )
+            )
+            is BnwApiError -> postEvent(
+                BnwApiErrorEvent(e.description)
             )
         }
         Timber.e(e)

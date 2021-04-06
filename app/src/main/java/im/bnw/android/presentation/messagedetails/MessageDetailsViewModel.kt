@@ -12,7 +12,7 @@ import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
 import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
 import im.bnw.android.presentation.messages.adapter.MessageItem
-import im.bnw.android.presentation.messages.adapter.MessageListItem
+import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
 import im.bnw.android.presentation.util.nullOr
 import im.bnw.android.presentation.util.user
@@ -32,6 +32,7 @@ class MessageDetailsViewModel @Inject constructor(
     router
 ) {
     init {
+        updateState { MessageDetailsState.Loading }
         getMessageDetails()
     }
 
@@ -48,7 +49,50 @@ class MessageDetailsViewModel @Inject constructor(
     }
 
     fun retryClicked() {
+        updateState { MessageDetailsState.Loading }
         getMessageDetails()
+    }
+
+    fun anonClicked() {
+        val current = state.nullOr<MessageDetailsState.Idle>() ?: return
+        updateState { current.copy(anon = !current.anon) }
+    }
+
+    fun replyClicked(position: Int) {
+        val current = state.nullOr<MessageDetailsState.Idle>() ?: return
+        val replyId = current.items[position].id
+        updateState { current.copy(replyMessageId = replyId) }
+    }
+
+    fun replyResetClicked() {
+        val current = state.nullOr<MessageDetailsState.Idle>() ?: return
+        updateState { current.copy(replyMessageId = "") }
+    }
+
+    fun replyTextChanged(replyText: String) {
+        val current = state.nullOr<MessageDetailsState.Idle>() ?: return
+        updateState { current.copy(replyText = replyText) }
+    }
+
+    fun sendReplyClicked() = vmScope.launch {
+        val current = state.nullOr<MessageDetailsState.Idle>() ?: return@launch
+        if (current.sendProgress) {
+            return@launch
+        }
+        updateState { current.copy(sendProgress = true) }
+        when (
+            val result =
+                messageInteractor.reply(current.replyText, current.messageId, current.replyMessageId, current.anon)
+        ) {
+            is Result.Success -> {
+                updateState { current.copy(sendProgress = false, replyText = "", replyMessageId = "") }
+                getMessageDetails()
+            }
+            is Result.Failure -> {
+                handleException(result.throwable)
+                updateState { current.copy(sendProgress = false) }
+            }
+        }
     }
 
     private fun openMedia(media: Media) {
@@ -60,13 +104,23 @@ class MessageDetailsViewModel @Inject constructor(
     }
 
     private fun getMessageDetails() = vmScope.launch(dispatchersProvider.default) {
-        updateState { MessageDetailsState.Loading }
         when (val result = messageInteractor.messageDetails(messageId = messageDetailsScreenParams.messageId)) {
             is Result.Success -> {
                 val idle = result.value.toIdleState()
-                updateState { idle }
+                updateState {
+                    if (it !is MessageDetailsState.Idle) {
+                        idle
+                    } else {
+                        it.copy(
+                            idle.messageId,
+                            idle.message,
+                            idle.items
+                        )
+                    }
+                }
             }
             is Result.Failure -> {
+                handleException(result.throwable)
                 updateState { MessageDetailsState.LoadingFailed(result.throwable) }
             }
         }
@@ -74,7 +128,7 @@ class MessageDetailsViewModel @Inject constructor(
 
     private fun MessageDetails.toIdleState(): MessageDetailsState.Idle {
         val messageItem = listOf(MessageItem(message))
-        val sortedReplies = replies.map { it.toReplyListItem(replies) }
+        val sortedReplies = replies.map { it.toReplyListItem(replies) }.sortedBy { it.sortTag }
         return MessageDetailsState.Idle(
             messageId,
             message,
@@ -82,7 +136,7 @@ class MessageDetailsViewModel @Inject constructor(
         )
     }
 
-    private fun Reply.toReplyListItem(replies: List<Reply>): MessageListItem {
+    private fun Reply.toReplyListItem(replies: List<Reply>): ReplyItem {
         val sortTag = buildSortTag(replies)
         val offset = sortTag.count { it == REPLY_ITEM_SORT_DELIMITER }
         return ReplyItem(this, sortTag, offset)

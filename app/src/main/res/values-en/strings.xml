@@ -11,6 +11,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="send">Send</string>
+    <string name="message">Message</string>
+    <string name="error">Error</string>
 
     <!--new post-->
     <string name="create_post">Write post</string>

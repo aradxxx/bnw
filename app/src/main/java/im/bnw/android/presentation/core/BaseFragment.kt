@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
+import im.bnw.android.R
 import im.bnw.android.di.core.ViewModelFactory
 import im.bnw.android.presentation.core.dialog.DialogResult
 import im.bnw.android.presentation.core.dialog.NotificationDialog
@@ -54,6 +55,9 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
                 } else {
                     NotificationDialog.newInstance(getString(event.title), getString(event.message))
                 }
+            }
+            is BnwApiErrorEvent -> showDialog {
+                NotificationDialog.newInstance(getString(R.string.error), event.description)
             }
         }
     }

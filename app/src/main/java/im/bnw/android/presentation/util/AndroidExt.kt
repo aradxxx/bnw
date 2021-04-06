@@ -102,3 +102,17 @@ fun Fragment.hideKeyboard() {
         imm?.hideSoftInputFromWindow(v.windowToken, 0)
     }
 }
+
+/*region throttled click listener*/
+private var lastClickTimestamp = 0L
+fun View.setThrottledClickListener(delay: Long = 500L, clickListener: (View) -> Unit) {
+    setOnClickListener {
+        val currentTime = System.currentTimeMillis()
+        val delta = currentTime - lastClickTimestamp
+        if (delta !in 0..delay) {
+            lastClickTimestamp = currentTime
+            clickListener(this)
+        }
+    }
+}
+/*endregion throttled click listener*/

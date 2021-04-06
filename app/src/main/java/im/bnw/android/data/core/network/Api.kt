@@ -1,6 +1,7 @@
 package im.bnw.android.data.core.network
 
 import im.bnw.android.data.auth.AuthResponse
+import im.bnw.android.data.core.BaseResponse
 import im.bnw.android.data.core.network.httpresult.HttpResult
 import im.bnw.android.data.message.MessageDetailsResponse
 import im.bnw.android.data.message.MessagesResponse
@@ -41,11 +42,18 @@ interface Api {
     suspend fun post(
         @Query("text") text: String,
         @Query("anonymous") anonymous: String
-    ): PostResponse
+    ): HttpResult<PostResponse>
 
     @GET("show")
     suspend fun messageDetail(
         @Query("message") messageId: String,
         @Query("replies") replies: String = "1",
     ): HttpResult<MessageDetailsResponse>
+
+    @POST("comment")
+    suspend fun comment(
+        @Query("message") messageId: String,
+        @Query("text") text: String,
+        @Query("anonymous") anonymous: String
+    ): HttpResult<BaseResponse>
 }

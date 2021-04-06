@@ -1,6 +1,7 @@
 package im.bnw.android.data.message
 
 import im.bnw.android.data.core.network.Api
+import im.bnw.android.data.core.network.httpresult.baseResponseToResult
 import im.bnw.android.data.core.network.httpresult.toResult
 import im.bnw.android.data.message.MessageMapper.toMessage
 import im.bnw.android.data.message.MessageMapper.toReply
@@ -28,11 +29,8 @@ class MessageRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun post(text: String, anonymous: Boolean) = withContext(dispatchersProvider.io) {
-        val response = api.post(text, anonymous.asApiParam())
-        if (!response.ok) {
-            throw IOException("Post failed")
-        }
+    override suspend fun post(text: String, anonymous: Boolean): Result<Unit> = withContext(dispatchersProvider.io) {
+        return@withContext api.post(text, anonymous.asApiParam()).toResult { }
     }
 
     override suspend fun messageDetails(messageId: String): Result<MessageDetails> =
@@ -45,6 +43,12 @@ class MessageRepositoryImpl @Inject constructor(
                 )
             }
         }
+
+    override suspend fun reply(text: String, messageId: String, anonymous: Boolean): Result<Unit> {
+        return withContext(dispatchersProvider.io) {
+            return@withContext api.comment(messageId, text, anonymous.asApiParam()).baseResponseToResult()
+        }
+    }
 
     private fun Boolean.asApiParam(): String = when (this) {
         true -> {

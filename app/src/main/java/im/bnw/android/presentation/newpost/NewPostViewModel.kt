@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.newpost
 
+import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.AppRouter
@@ -29,13 +30,15 @@ class NewPostViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     fun sendConfirmed() = vmScope.launch {
-        try {
-            updateState { it.copy(sendEnabled = false) }
-            messageInteractor.post(state.text, state.asAnon)
-            router.exit()
-        } catch (t: Throwable) {
-            updateState { it.copy(sendEnabled = true) }
-            handleException(t)
+        updateState { it.copy(sendEnabled = false) }
+        when (val result = messageInteractor.post(state.text, state.asAnon)) {
+            is Result.Success -> {
+                router.exit()
+            }
+            is Result.Failure -> {
+                updateState { it.copy(sendEnabled = true) }
+                handleException(result.throwable)
+            }
         }
     }
 }

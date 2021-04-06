@@ -8,3 +8,7 @@ data class DialogEvent(
     @StringRes
     val message: Int? = null
 )
+
+data class BnwApiErrorEvent(
+    val description: String
+)

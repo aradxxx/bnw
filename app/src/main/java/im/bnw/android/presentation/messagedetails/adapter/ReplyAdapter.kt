@@ -28,7 +28,8 @@ import io.noties.markwon.linkify.LinkifyPlugin
 import java.lang.Integer.min
 
 fun replyDelegate(
-    userNameListener: (Int) -> Unit
+    userNameListener: (Int) -> Unit,
+    replyCardClickListener: (Int) -> Unit
 ) = adapterDelegateViewBinding<ReplyItem, MessageListItem, ItemReplyCardBinding>(
     viewBinding = { layoutInflater, root ->
         ItemReplyCardBinding.inflate(layoutInflater, root, false)
@@ -55,6 +56,13 @@ fun replyDelegate(
             Toast.LENGTH_SHORT
         ).show()
     }
+
+    fun cardClicked() {
+        val position = adapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            replyCardClickListener(position)
+        }
+    }
     with(binding) {
         userDate.setOnClickListener {
             userClicked()
@@ -62,6 +70,12 @@ fun replyDelegate(
         userDate.setOnLongClickListener {
             showTime()
             true
+        }
+        root.setOnClickListener {
+            cardClicked()
+        }
+        text.setOnClickListener {
+            cardClicked()
         }
     }
     bind {
@@ -83,9 +97,11 @@ fun replyDelegate(
     }
 }
 
+@Suppress("LongMethod")
 fun replyWithMediaDelegate(
     userNameListener: (Int) -> Unit,
-    mediaListener: (Int, Int) -> Unit
+    mediaListener: (Int, Int) -> Unit,
+    replyCardClickListener: (Int) -> Unit
 ) = adapterDelegateViewBinding<ReplyItem, MessageListItem, ItemReplyCardWithMediaBinding>(
     viewBinding = { layoutInflater, root ->
         ItemReplyCardWithMediaBinding.inflate(layoutInflater, root, false)
@@ -120,6 +136,12 @@ fun replyWithMediaDelegate(
         ).show()
     }
 
+    fun cardClicked() {
+        val position = adapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            replyCardClickListener(position)
+        }
+    }
     with(binding) {
         userDate.setOnClickListener {
             userClicked()
@@ -127,6 +149,12 @@ fun replyWithMediaDelegate(
         userDate.setOnLongClickListener {
             showTime()
             true
+        }
+        root.setOnClickListener {
+            cardClicked()
+        }
+        text.setOnClickListener {
+            cardClicked()
         }
         with(mediaList) {
             layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
@@ -227,19 +255,22 @@ class ReplyAdapter(
     messageCardRadius: Float,
     messageMediaHeight: Int,
     userNameListener: (Int) -> Unit,
-    mediaListener: (Int, Int) -> Unit
+    mediaListener: (Int, Int) -> Unit,
+    replyCardClickListener: (Int) -> Unit
 ) : AsyncListDifferDelegationAdapter<MessageListItem>(messageListItemDiffCallback) {
     init {
         delegatesManager.apply {
             addDelegate(
                 replyDelegate(
-                    userNameListener
+                    userNameListener,
+                    replyCardClickListener
                 )
             )
             addDelegate(
                 replyWithMediaDelegate(
                     userNameListener,
-                    mediaListener
+                    mediaListener,
+                    replyCardClickListener
                 )
             )
             addDelegate(

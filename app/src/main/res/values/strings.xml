@@ -11,6 +11,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Отмена</string>
     <string name="send">Отправить</string>
+    <string name="message">Сообщение</string>
+    <string name="error">Ошибка</string>
 
     <!--new post-->
     <string name="create_post">Написать сообщение</string>

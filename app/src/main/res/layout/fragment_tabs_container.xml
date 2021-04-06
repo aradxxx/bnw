@@ -15,7 +15,7 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/tabs_navigation"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="56dp"
         android:layout_alignParentBottom="true"
         android:background="?attr/barColor"
         android:elevation="8dp"

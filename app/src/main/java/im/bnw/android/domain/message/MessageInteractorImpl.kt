@@ -16,12 +16,25 @@ class MessageInteractorImpl @Inject constructor(
             sorted
         }
 
-    override suspend fun post(text: String, anonymous: Boolean) = withContext(dispatchersProvider.default) {
-        messageRepository.post(text, anonymous)
+    override suspend fun post(text: String, anonymous: Boolean): Result<Unit> {
+        return withContext(dispatchersProvider.default) {
+            messageRepository.post(text, anonymous)
+        }
     }
 
     override suspend fun messageDetails(messageId: String): Result<MessageDetails> =
         withContext(dispatchersProvider.io) {
             messageRepository.messageDetails(messageId)
         }
+
+    override suspend fun reply(text: String, messageId: String, replyTo: String, anonymous: Boolean): Result<Unit> {
+        return withContext(dispatchersProvider.default) {
+            val id = if (replyTo.isEmpty()) {
+                messageId
+            } else {
+                replyTo
+            }
+            messageRepository.reply(text, id, anonymous)
+        }
+    }
 }

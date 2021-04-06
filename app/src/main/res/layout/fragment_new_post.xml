@@ -20,42 +20,27 @@
             app:title="@string/create_post" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/postText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:gravity="top|start"
+        android:hint="@string/whats_new"
+        android:importantForAutofill="no"
+        android:inputType="textMultiLine"
+        android:padding="8dp"
+        android:textSize="18sp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/postText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/post"
-                android:background="@null"
-                android:gravity="top|start"
-                android:hint="@string/whats_new"
-                android:importantForAutofill="no"
-                android:inputType="textMultiLine"
-                android:padding="16dp"
-                android:textSize="18sp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/post"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="16dp"
-                android:insetLeft="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                android:text="@string/send"
-                android:visibility="visible"
-                app:cornerRadius="0dp" />
-        </RelativeLayout>
-    </ScrollView>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/post"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:insetLeft="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/send"
+        android:visibility="visible"
+        app:cornerRadius="0dp" />
 </LinearLayout>

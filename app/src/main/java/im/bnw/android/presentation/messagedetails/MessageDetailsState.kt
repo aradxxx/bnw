@@ -21,6 +21,10 @@ sealed class MessageDetailsState : State {
     data class Idle(
         val messageId: String,
         val message: Message,
-        val items: List<MessageListItem>
+        val items: List<MessageListItem>,
+        val anon: Boolean = false,
+        val replyMessageId: String = "",
+        val sendProgress: Boolean = false,
+        val replyText: String = ""
     ) : MessageDetailsState()
 }

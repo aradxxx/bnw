@@ -30,11 +30,26 @@
         app:message="@string/check_connection_and_tap_retry"
         app:title="@string/no_connection" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/replies"
+    <RelativeLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:nestedScrollingEnabled="true"
-        android:overScrollMode="never"
-        android:scrollbars="none" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/replies"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/reply"
+            android:layout_marginBottom="-32dp"
+            android:nestedScrollingEnabled="true"
+            android:overScrollMode="never"
+            android:scrollbars="none" />
+
+        <include
+            android:id="@+id/reply"
+            layout="@layout/include_reply_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
 </FrameLayout>
