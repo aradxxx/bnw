@@ -31,7 +31,7 @@ class NewPostViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     fun sendConfirmed() = vmScope.launch {
         updateState { it.copy(sendEnabled = false) }
-        when (val result = messageInteractor.post(state.text, state.asAnon)) {
+        when (val result = messageInteractor.post(state.text.trim(), state.asAnon)) {
             is Result.Success -> {
                 router.exit()
             }

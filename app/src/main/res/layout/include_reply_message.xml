@@ -23,6 +23,7 @@
         app:chipMinHeight="16dp"
         app:chipMinTouchTargetSize="0dp"
         app:closeIconEnabled="true"
+        app:closeIconTint="@color/white"
         app:textStartPadding="0dp" />
 
     <com.google.android.material.card.MaterialCardView

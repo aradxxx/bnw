@@ -13,6 +13,7 @@ import im.bnw.android.presentation.core.recyclerview.LinearLayoutManagerSmoothSc
 import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
 import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
 import im.bnw.android.presentation.util.UI
+import im.bnw.android.presentation.util.attrColor
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.setThrottledClickListener
@@ -53,6 +54,13 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             failure.setActionListener {
                 viewModel.retryClicked()
             }
+            swipeToRefresh.setOnRefreshListener {
+                viewModel.swipeRefresh()
+            }
+            swipeToRefresh.setProgressBackgroundColorSchemeColor(requireContext().attrColor(R.attr.cardColor))
+            swipeToRefresh.setColorSchemeResources(
+                R.color.colorPrimary
+            )
         }
         with(binding.reply) {
             anon.setOnClickListener {
@@ -62,10 +70,10 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
                 viewModel.sendReplyClicked()
             }
             replyId.setOnCloseIconClickListener {
-                viewModel.replyResetClicked()
+                viewModel.replyClicked()
             }
             replyId.setOnClickListener {
-                viewModel.replyResetClicked()
+                viewModel.replyClicked()
             }
             replyText.doAfterTextChanged {
                 viewModel.replyTextChanged(it.toString())
@@ -91,10 +99,11 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
     }
 
     private fun renderIdle(state: MessageDetailsState.Idle) = with(binding) {
+        swipeToRefresh.isRefreshing = false
         progressBar.isVisible = false
         failure.isVisible = false
         content.isVisible = true
-        if (replyAdapter.items.isEmpty() && state.items.isNotEmpty()) {
+        if (replyAdapter.items.isEmpty() && state.items.size > 1) {
             handler.postDelayed(0) {
                 replies.smoothScrollToPosition(1)
             }
@@ -111,12 +120,14 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
     }
 
     private fun renderLoading() = with(binding) {
+        swipeToRefresh.isRefreshing = false
         progressBar.isVisible = true
         failure.isVisible = false
         content.isVisible = false
     }
 
     private fun renderLoadingFailed(state: MessageDetailsState.LoadingFailed) = with(binding) {
+        swipeToRefresh.isRefreshing = false
         progressBar.isVisible = false
         failure.isVisible = true
         content.isVisible = false
@@ -131,6 +142,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
     }
 
     private fun renderInit() = with(binding) {
+        swipeToRefresh.isRefreshing = false
         progressBar.isVisible = false
         failure.isVisible = false
         content.isVisible = false

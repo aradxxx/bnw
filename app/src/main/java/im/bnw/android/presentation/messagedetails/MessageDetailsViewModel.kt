@@ -53,20 +53,23 @@ class MessageDetailsViewModel @Inject constructor(
         getMessageDetails()
     }
 
+    fun swipeRefresh() {
+        getMessageDetails(state.nullOr())
+    }
+
     fun anonClicked() {
         val current = state.nullOr<MessageDetailsState.Idle>() ?: return
         updateState { current.copy(anon = !current.anon) }
     }
 
-    fun replyClicked(position: Int) {
+    fun replyClicked(position: Int? = null) {
         val current = state.nullOr<MessageDetailsState.Idle>() ?: return
-        val replyId = current.items[position].id
-        updateState { current.copy(replyMessageId = replyId) }
-    }
-
-    fun replyResetClicked() {
-        val current = state.nullOr<MessageDetailsState.Idle>() ?: return
-        updateState { current.copy(replyMessageId = "") }
+        if (position != null) {
+            val replyId = current.items[position].id
+            updateState { current.copy(replyMessageId = replyId) }
+        } else {
+            updateState { current.copy(replyMessageId = "") }
+        }
     }
 
     fun replyTextChanged(replyText: String) {
@@ -82,7 +85,12 @@ class MessageDetailsViewModel @Inject constructor(
         updateState { current.copy(sendProgress = true) }
         when (
             val result =
-                messageInteractor.reply(current.replyText, current.messageId, current.replyMessageId, current.anon)
+                messageInteractor.reply(
+                    current.replyText.trim(),
+                    current.messageId,
+                    current.replyMessageId,
+                    current.anon
+                )
         ) {
             is Result.Success -> {
                 updateState { current.copy(sendProgress = false, replyText = "", replyMessageId = "") }
@@ -103,28 +111,37 @@ class MessageDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun getMessageDetails() = vmScope.launch(dispatchersProvider.default) {
-        when (val result = messageInteractor.messageDetails(messageId = messageDetailsScreenParams.messageId)) {
-            is Result.Success -> {
-                val idle = result.value.toIdleState()
-                updateState {
-                    if (it !is MessageDetailsState.Idle) {
-                        idle
-                    } else {
-                        it.copy(
-                            idle.messageId,
-                            idle.message,
-                            idle.items
-                        )
+    private fun getMessageDetails(oldIdleState: MessageDetailsState.Idle? = null) =
+        vmScope.launch(dispatchersProvider.default) {
+            when (val result = messageInteractor.messageDetails(messageId = messageDetailsScreenParams.messageId)) {
+                is Result.Success -> {
+                    val idle = result.value.toIdleState()
+                    updateState {
+                        if (oldIdleState == null) {
+                            idle
+                        } else {
+                            idle.copy(
+                                anon = oldIdleState.anon,
+                                replyMessageId = oldIdleState.replyMessageId,
+                                replyText = oldIdleState.replyText,
+                            )
+                        }
+                    }
+                }
+                is Result.Failure -> {
+                    handleException(result.throwable)
+                    updateState {
+                        if (it is MessageDetailsState.Idle) {
+                            it.copy(
+                                sendProgress = false
+                            )
+                        } else {
+                            MessageDetailsState.LoadingFailed(result.throwable)
+                        }
                     }
                 }
             }
-            is Result.Failure -> {
-                handleException(result.throwable)
-                updateState { MessageDetailsState.LoadingFailed(result.throwable) }
-            }
         }
-    }
 
     private fun MessageDetails.toIdleState(): MessageDetailsState.Idle {
         val messageItem = listOf(MessageItem(message))

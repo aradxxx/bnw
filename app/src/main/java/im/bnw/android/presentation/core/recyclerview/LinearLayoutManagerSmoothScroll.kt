@@ -50,7 +50,7 @@ class LinearLayoutManagerSmoothScroll @JvmOverloads constructor(
     }
 
     companion object {
-        const val SCROLL_SPEED_FAST = 20f
-        private const val SCROLL_SPEED_DEFAULT = 120f
+        const val SCROLL_SPEED_FAST = 30f
+        const val SCROLL_SPEED_DEFAULT = 120f
     }
 }
