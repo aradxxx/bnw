@@ -5,26 +5,20 @@ import android.content.res.Resources
 import android.os.Parcelable
 import android.util.TypedValue
 import android.view.View
-import android.view.inputmethod.InputMethodManager
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.core.os.bundleOf
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
+import androidx.core.view.*
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.github.aradxxx.ciceroneflow.FlowCicerone
 import com.github.aradxxx.ciceroneflow.FlowNavigator
+import dev.chrisbanes.insetter.applyInsetter
 import im.bnw.android.presentation.core.FragmentViewBindingDelegate
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.main.MainActivity
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import java.io.IOException
 
 fun Fragment.tabNavigator(
     flowCicerone: FlowCicerone<AppRouter>,
@@ -46,25 +40,6 @@ fun <F : Fragment> F.withInitialArguments(params: Parcelable) = apply {
 
 fun <T : ViewBinding> Fragment.viewBinding(viewBindingFactory: (View) -> T) =
     FragmentViewBindingDelegate(this, viewBindingFactory)
-
-fun <T> DataStore<Preferences>.getValue(
-    key: Preferences.Key<T>,
-    defaultValue: T
-): Flow<T> {
-    return data.catch { exception ->
-        if (exception is IOException) {
-            emit(emptyPreferences())
-        } else {
-            throw exception
-        }
-    }.map {
-        it[key] ?: defaultValue
-    }
-}
-
-suspend fun <T> DataStore<Preferences>.setValue(key: Preferences.Key<T>, value: T) {
-    edit { it[key] = value }
-}
 
 val Int.dpToPx: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
@@ -90,18 +65,21 @@ var TextView.newText: String
         }
     }
 
-fun Fragment.showKeyboard() =
-    (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?)?.apply {
-        toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
+fun Fragment.showSystemUI(windowInsetsTypes: Int) =
+    view?.let {
+        val window = requireActivity().window
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            show(windowInsetsTypes)
+        }
     }
 
-fun Fragment.hideKeyboard() {
-    val view = this.requireActivity().currentFocus
-    view?.let { v ->
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-        imm?.hideSoftInputFromWindow(v.windowToken, 0)
+fun Fragment.hideSystemUI(windowInsetsTypes: Int) =
+    view?.let {
+        val window = requireActivity().window
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            hide(windowInsetsTypes)
+        }
     }
-}
 
 /*region throttled click listener*/
 private var lastClickTimestamp = 0L

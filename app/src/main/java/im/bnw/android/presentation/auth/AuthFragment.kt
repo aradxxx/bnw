@@ -2,13 +2,15 @@ package im.bnw.android.presentation.auth
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import im.bnw.android.R
 import im.bnw.android.databinding.FragmentAuthBinding
 import im.bnw.android.presentation.core.BaseFragment
-import im.bnw.android.presentation.util.newText
-import im.bnw.android.presentation.util.viewBinding
+import im.bnw.android.presentation.util.*
 
 class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
     R.layout.fragment_auth
@@ -23,12 +25,31 @@ class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
-            toolbar.setNavigationOnClickListener { viewModel.backPressed() }
-            loginEdit.doAfterTextChanged { viewModel.loginChanged(it.toString()) }
-            passwordEdit.doAfterTextChanged { viewModel.passwordChanged(it.toString()) }
-            cancel.setOnClickListener { viewModel.backPressed() }
-            signIn.setOnClickListener { viewModel.signInClicked() }
+            //root.handleLeftAndRightInsets()
+            //toolbar.addSystemTopPadding()
+            toolbar.setNavigationOnClickListener {
+                viewModel.backPressed()
+            }
+            loginEdit.doAfterTextChanged {
+                viewModel.loginChanged(it.toString())
+            }
+            passwordEdit.doAfterTextChanged {
+                viewModel.passwordChanged(it.toString())
+            }
+            cancel.setOnClickListener {
+                viewModel.backPressed()
+            }
+            signIn.setOnClickListener {
+                viewModel.signInClicked()
+            }
+            ViewCompat.getWindowInsetsController(loginEdit)?.show(WindowInsetsCompat.Type.ime())
+            //ViewCompat.setWindowInsetsAnimationCallback(root, root.keyboardSyncAnimationCallback())
         }
+    }
+
+    override fun onDestroyView() {
+        hideSystemUI(WindowInsetsCompat.Type.ime())
+        super.onDestroyView()
     }
 
     override fun updateState(state: AuthState) {

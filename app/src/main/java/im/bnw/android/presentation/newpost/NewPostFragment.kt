@@ -5,17 +5,18 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.View
+import android.widget.FrameLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
+import dev.chrisbanes.insetter.applyInsetter
+import dev.chrisbanes.insetter.doOnApplyWindowInsets
 import im.bnw.android.R
 import im.bnw.android.databinding.FragmentNewPostBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.dialog.NotificationDialog
-import im.bnw.android.presentation.util.DialogCode
-import im.bnw.android.presentation.util.attrColor
-import im.bnw.android.presentation.util.hideKeyboard
-import im.bnw.android.presentation.util.newText
-import im.bnw.android.presentation.util.showKeyboard
-import im.bnw.android.presentation.util.viewBinding
+import im.bnw.android.presentation.util.*
 
 class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
     R.layout.fragment_new_post
@@ -36,8 +37,32 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
         with(binding) {
-            toolbar.setNavigationOnClickListener { viewModel.backPressed() }
+            /*root.applyInsetter {
+                type(navigationBars = true, statusBars = true, ime = true) {
+                    padding()
+                }
+                type(navigationBars = true, statusBars = true, ime = true) {
+                    margin()
+                }
+            }*/
+            toolbar.applyInsetter {
+                type(statusBars = true) {
+                    padding()
+                }
+            }
+            post.applyInsetter {
+                /*type(navigationBars = true) {
+                    padding()
+                }*/
+                type(navigationBars = true, ime = true) {
+                    margin()
+                }
+            }
+            toolbar.setNavigationOnClickListener {
+                viewModel.backPressed()
+            }
             toolbar.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.item_anon -> {
@@ -57,12 +82,13 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
             postText.doAfterTextChanged {
                 viewModel.textChanged(it.toString())
             }
-            showKeyboard()
+            //ViewCompat.getWindowInsetsController(postText)?.show(WindowInsetsCompat.Type.ime())
         }
     }
 
     override fun onDestroyView() {
-        hideKeyboard()
+        //hideSystemUI(WindowInsetsCompat.Type.ime())
+        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, true)
         super.onDestroyView()
     }
 
@@ -94,7 +120,8 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
             R.color.colorDisabled
         }
         icon.mutate()
-        icon.colorFilter = PorterDuffColorFilter(requireContext().getColor(color), PorterDuff.Mode.SRC_ATOP)
+        icon.colorFilter =
+            PorterDuffColorFilter(requireContext().getColor(color), PorterDuff.Mode.SRC_ATOP)
     }
 
     override fun updateState(state: NewPostState) {
