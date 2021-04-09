@@ -28,6 +28,7 @@
         android:background="@null"
         android:gravity="top|start"
         android:hint="@string/whats_new"
+        android:imeOptions="flagNoExtractUi"
         android:importantForAutofill="no"
         android:inputType="textMultiLine"
         android:padding="8dp"

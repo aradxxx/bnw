@@ -55,6 +55,7 @@
             android:background="@null"
             android:gravity="center|start"
             android:hint="@string/message"
+            android:imeOptions="flagNoExtractUi"
             android:importantForAutofill="no"
             android:inputType="textMultiLine"
             android:maxLines="5"

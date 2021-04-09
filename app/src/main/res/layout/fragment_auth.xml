@@ -52,6 +52,7 @@
                     android:id="@+id/loginEdit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="flagNoExtractUi"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 

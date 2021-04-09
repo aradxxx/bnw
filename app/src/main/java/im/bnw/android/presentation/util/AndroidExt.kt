@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Parcelable
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -42,6 +44,12 @@ fun Fragment.tabNavigator(
 
 fun <F : Fragment> F.withInitialArguments(params: Parcelable) = apply {
     arguments = bundleOf(Const.BUNDLE_INITIAL_ARGS to params)
+}
+
+inline fun <T : ViewBinding> AppCompatActivity.viewBinding(
+    crossinline bindingInflater: (LayoutInflater) -> T
+) = lazy(LazyThreadSafetyMode.NONE) {
+    bindingInflater.invoke(layoutInflater)
 }
 
 fun <T : ViewBinding> Fragment.viewBinding(viewBindingFactory: (View) -> T) =

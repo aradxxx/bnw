@@ -6,8 +6,10 @@ import com.github.aradxxx.ciceroneflow.FlowCicerone
 import com.github.aradxxx.ciceroneflow.FlowNavigator
 import com.github.aradxxx.ciceroneflow.NavigationContainer
 import im.bnw.android.R
+import im.bnw.android.databinding.ActivityMainBinding
 import im.bnw.android.presentation.core.BaseActivity
 import im.bnw.android.presentation.core.navigation.AppRouter
+import im.bnw.android.presentation.util.viewBinding
 import javax.inject.Inject
 
 class MainActivity :
@@ -16,6 +18,7 @@ class MainActivity :
     @Inject
     lateinit var flowCicerone: FlowCicerone<AppRouter>
     lateinit var navigator: FlowNavigator<AppRouter>
+    private val binding by viewBinding(ActivityMainBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
