@@ -28,7 +28,7 @@ class UserManagerImpl @Inject constructor(
         }
     }
 
-    override suspend fun logout(): Unit = withContext(dispatchersProvider.io) {
+    override suspend fun logout() = withContext(dispatchersProvider.io) {
         userDataStore.updateUserToken("")
         userDataStore.updateUserName("")
     }

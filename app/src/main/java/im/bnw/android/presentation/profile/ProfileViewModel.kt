@@ -1,16 +1,23 @@
 package im.bnw.android.presentation.profile
 
+import im.bnw.android.R
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.profile.ProfileInteractor
+import im.bnw.android.domain.settings.LanguageSettings
+import im.bnw.android.domain.settings.Settings
+import im.bnw.android.domain.settings.SettingsInteractor
+import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
 import im.bnw.android.presentation.util.nullOr
+import im.bnw.android.presentation.util.toItem
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,7 +25,8 @@ class ProfileViewModel @Inject constructor(
     router: AppRouter,
     restoredState: ProfileState?,
     private val profileInteractor: ProfileInteractor,
-    private val dispatchersProvider: DispatchersProvider
+    private val settingsInteractor: SettingsInteractor,
+    private val dispatchersProvider: DispatchersProvider,
 ) : BaseViewModel<ProfileState>(
     restoredState ?: ProfileState.Init,
     router
@@ -43,6 +51,77 @@ class ProfileViewModel @Inject constructor(
         router.navigateTo(Tab.GLOBAL, Screens.messagesScreen(currentState.user.name))
     }
 
+    fun anonymityClicked(enabled: Boolean) {
+        val currentState = state.nullOr<ProfileState.ProfileInfo>() ?: return
+        vmScope.launch(dispatchersProvider.default) {
+            settingsInteractor.updateSettings(
+                currentState.settings.copy(
+                    incognito = enabled
+                )
+            )
+        }
+    }
+
+    fun chooseTheme() {
+        vmScope.launch(dispatchersProvider.default) {
+            settingsInteractor.subscribeSettings()
+                .first {
+                    val themeDialogEvent = SettingsDialogEvent(
+                        R.string.choose_theme,
+                        it.theme.toItem(),
+                        arrayListOf(
+                            ThemeItem.Default,
+                            ThemeItem.Light,
+                            ThemeItem.Dark,
+                        ),
+                    )
+                    postEvent(themeDialogEvent)
+                    true
+                }
+        }
+    }
+
+    fun chooseLanguage() {
+        vmScope.launch(dispatchersProvider.default) {
+            settingsInteractor.subscribeSettings()
+                .first {
+                    val languageDialogEvent = SettingsDialogEvent(
+                        R.string.choose_language,
+                        it.language.toItem(),
+                        arrayListOf(
+                            LanguageItem.Default,
+                            LanguageItem.English,
+                            LanguageItem.Russian,
+                        ),
+                    )
+                    postEvent(languageDialogEvent)
+                    true
+                }
+        }
+    }
+
+    fun themeChanged(theme: ThemeSettings) {
+        val settings = currentSettings() ?: return
+        vmScope.launch(dispatchersProvider.default) {
+            settingsInteractor.updateSettings(
+                settings.copy(
+                    theme = theme
+                )
+            )
+        }
+    }
+
+    fun languageChanged(language: LanguageSettings) {
+        val settings = currentSettings() ?: return
+        vmScope.launch(dispatchersProvider.default) {
+            settingsInteractor.updateSettings(
+                settings.copy(
+                    language = language
+                )
+            )
+        }
+    }
+
     fun retryClicked() {
         state.nullOr<ProfileState.LoadingFailed>() ?: return
         retry()
@@ -64,14 +143,14 @@ class ProfileViewModel @Inject constructor(
 
     private fun subscribeUserInfo() = vmScope.launch {
         profileInteractor.subscribeUserInfo()
-            .map { result ->
+            .combine(settingsInteractor.subscribeSettings()) { result, settings ->
                 when (result) {
                     is Result.Success -> {
                         val user = result.value
                         if (user == null) {
-                            ProfileState.Unauthorized
+                            ProfileState.Unauthorized(settings)
                         } else {
-                            ProfileState.ProfileInfo(user)
+                            ProfileState.ProfileInfo(user, settings)
                         }
                     }
                     is Result.Failure -> {
@@ -83,5 +162,17 @@ class ProfileViewModel @Inject constructor(
             .collect { newState ->
                 updateState { newState }
             }
+    }
+
+    private fun currentSettings(): Settings? = when (val current = state) {
+        is ProfileState.Unauthorized -> {
+            current.settings
+        }
+        is ProfileState.ProfileInfo -> {
+            current.settings
+        }
+        else -> {
+            null
+        }
     }
 }

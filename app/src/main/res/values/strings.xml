@@ -27,6 +27,18 @@
     <string name="log_out_confirmation">Вы действительно хотите выйти?</string>
     <string name="retry">Повторить</string>
 
+    <!--settings-->
+    <string name="language">Язык</string>
+    <string name="choose_language">Выбрать язык</string>
+    <string name="theme">Тема</string>
+    <string name="light_theme">Светлая</string>
+    <string name="dark_theme">Тёмная</string>
+    <string name="choose_theme">Выбрать тему</string>
+    <string name="system_default">По умолчанию</string>
+    <string name="anonymity">Анонимность</string>
+    <string name="english">English</string>
+    <string name="russian">Русский</string>
+
     <!--auth-->
     <string name="user_name">Имя</string>
     <string name="password">Пароль</string>

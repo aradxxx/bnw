@@ -27,7 +27,19 @@
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="retry">Retry</string>
 
-    <!--login-->
+    <!--settings-->
+    <string name="language">Language</string>
+    <string name="choose_language">Choose language</string>
+    <string name="theme">Theme</string>
+    <string name="light_theme">Light</string>
+    <string name="dark_theme">Dark</string>
+    <string name="choose_theme">Choose theme</string>
+    <string name="system_default">System default</string>
+    <string name="anonymity">Anonymity</string>
+    <string name="english">English</string>
+    <string name="russian">Русский</string>
+
+    <!--auth-->
     <string name="user_name">User name</string>
     <string name="password">Password</string>
     <string name="sign_in">Sign In</string>

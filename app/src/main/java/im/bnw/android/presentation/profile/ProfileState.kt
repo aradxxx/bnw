@@ -1,6 +1,7 @@
 package im.bnw.android.presentation.profile
 
 import im.bnw.android.domain.profile.User
+import im.bnw.android.domain.settings.Settings
 import im.bnw.android.presentation.core.State
 import kotlinx.parcelize.Parcelize
 
@@ -17,10 +18,13 @@ sealed class ProfileState : State {
     ) : ProfileState()
 
     @Parcelize
-    object Unauthorized : ProfileState()
+    data class Unauthorized(
+        val settings: Settings,
+    ) : ProfileState()
 
     @Parcelize
     data class ProfileInfo(
-        val user: User
+        val user: User,
+        val settings: Settings,
     ) : ProfileState()
 }

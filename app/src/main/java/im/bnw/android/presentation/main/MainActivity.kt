@@ -1,7 +1,6 @@
 package im.bnw.android.presentation.main
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatDelegate
 import com.github.aradxxx.ciceroneflow.FlowCicerone
 import com.github.aradxxx.ciceroneflow.FlowNavigator
 import com.github.aradxxx.ciceroneflow.NavigationContainer
@@ -21,7 +20,6 @@ class MainActivity :
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         super.onCreate(savedInstanceState)
         navigator = FlowNavigator(this, R.id.container, flowCicerone)
         if (savedInstanceState == null) {
