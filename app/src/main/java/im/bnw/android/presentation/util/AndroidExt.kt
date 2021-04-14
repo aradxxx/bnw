@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package im.bnw.android.presentation.util
 
 import android.content.Context
@@ -12,21 +14,19 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.github.aradxxx.ciceroneflow.FlowCicerone
 import com.github.aradxxx.ciceroneflow.FlowNavigator
+import com.yariksoffice.lingver.Lingver
+import im.bnw.android.domain.settings.LanguageSettings
+import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.presentation.core.FragmentViewBindingDelegate
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.main.MainActivity
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import java.io.IOException
+import im.bnw.android.presentation.profile.LanguageItem
+import im.bnw.android.presentation.profile.ThemeItem
+import java.util.Locale
 
 fun Fragment.tabNavigator(
     flowCicerone: FlowCicerone<AppRouter>,
@@ -55,23 +55,38 @@ inline fun <T : ViewBinding> AppCompatActivity.viewBinding(
 fun <T : ViewBinding> Fragment.viewBinding(viewBindingFactory: (View) -> T) =
     FragmentViewBindingDelegate(this, viewBindingFactory)
 
-fun <T> DataStore<Preferences>.getValue(
-    key: Preferences.Key<T>,
-    defaultValue: T
-): Flow<T> {
-    return data.catch { exception ->
-        if (exception is IOException) {
-            emit(emptyPreferences())
-        } else {
-            throw exception
+fun LanguageSettings.setLocale(context: Context) {
+    Lingver.getInstance().let {
+        when (this) {
+            LanguageSettings.Default -> it.setFollowSystemLocale(context)
+            LanguageSettings.English -> it.setLocale(context, Locale.ENGLISH)
+            LanguageSettings.Russian -> it.setLocale(context, Locales.RUSSIAN)
         }
-    }.map {
-        it[key] ?: defaultValue
     }
 }
 
-suspend fun <T> DataStore<Preferences>.setValue(key: Preferences.Key<T>, value: T) {
-    edit { it[key] = value }
+fun ThemeSettings.toItem(): ThemeItem = when (this) {
+    ThemeSettings.Default -> ThemeItem.Default
+    ThemeSettings.Light -> ThemeItem.Light
+    ThemeSettings.Dark -> ThemeItem.Dark
+}
+
+fun LanguageSettings.toItem(): LanguageItem = when (this) {
+    LanguageSettings.Default -> LanguageItem.Default
+    LanguageSettings.English -> LanguageItem.English
+    LanguageSettings.Russian -> LanguageItem.Russian
+}
+
+fun ThemeItem.toSetting(): ThemeSettings = when (this) {
+    ThemeItem.Default -> ThemeSettings.Default
+    ThemeItem.Light -> ThemeSettings.Light
+    ThemeItem.Dark -> ThemeSettings.Dark
+}
+
+fun LanguageItem.toSetting(): LanguageSettings = when (this) {
+    LanguageItem.Default -> LanguageSettings.Default
+    LanguageItem.English -> LanguageSettings.English
+    LanguageItem.Russian -> LanguageSettings.Russian
 }
 
 val Int.dpToPx: Int
@@ -106,7 +121,8 @@ fun Fragment.showKeyboard() =
 fun Fragment.hideKeyboard() {
     val view = this.requireActivity().currentFocus
     view?.let { v ->
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.hideSoftInputFromWindow(v.windowToken, 0)
     }
 }

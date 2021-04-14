@@ -1,7 +1,11 @@
 package im.bnw.android.presentation.util
 
+import java.util.Locale
+
 object Const {
     const val BUNDLE_INITIAL_ARGS = "INITIAL_ARGS"
+    const val SETTINGS_REQUEST_KEY = "SETTINGS"
+    const val ARGUMENT_SETTING = "ARGUMENT_SETTING"
 }
 
 object DialogCode {
@@ -13,4 +17,8 @@ object UI {
     const val MESSAGE_CARD_RADIUS = 16
     const val MESSAGE_MEDIA_HEIGHT = 120
     const val MESSAGE_DETAILS_MEDIA_HEIGHT = 220
+}
+
+object Locales {
+    val RUSSIAN = Locale("ru", "RU")
 }
