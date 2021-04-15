@@ -113,6 +113,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             login.isVisible = false
             failure.isVisible = false
             progressBar.isVisible = false
+            anonImage.isVisible = false
         }
     }
 
@@ -125,6 +126,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             login.isVisible = false
             failure.isVisible = false
             progressBar.isVisible = true
+            anonImage.isVisible = false
         }
     }
 
@@ -142,6 +144,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             login.isVisible = false
             failure.showFailure(R.string.no_connection, messageResId)
             progressBar.isVisible = false
+            anonImage.isVisible = false
         }
     }
 
@@ -154,6 +157,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             login.isVisible = true
             failure.isVisible = false
             progressBar.isVisible = false
+            anonImage.isVisible = true
         }
     }
 
@@ -167,6 +171,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             login.isVisible = false
             failure.isVisible = false
             progressBar.isVisible = false
+            anonImage.isVisible = false
         }
     }
 
