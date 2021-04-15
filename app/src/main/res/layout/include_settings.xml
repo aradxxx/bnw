@@ -23,8 +23,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:alpha="0"
-            android:background="@color/colorPrimary" />
+            android:alpha="0.1"
+            android:background="@color/colorDisabled" />
 
         <include
             android:id="@+id/language"

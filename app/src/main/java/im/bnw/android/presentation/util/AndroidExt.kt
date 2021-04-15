@@ -8,7 +8,6 @@ import android.os.Parcelable
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt

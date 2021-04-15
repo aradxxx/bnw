@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/detail_card"
     android:layout_width="match_parent"
@@ -23,30 +24,31 @@
         android:textAlignment="center"
         tools:text="На bnw уже 100 лет" />
 
-    <View
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:alpha="0.1"
-        android:background="@color/colorDisabled" />
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardBackgroundColor="?attr/barColor"
+        app:cardCornerRadius="16dp">
 
-    <include
-        android:id="@+id/messagesCount"
-        layout="@layout/item_profile_detail_card" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:alpha="0"
-        android:background="@color/colorDisabled" />
+            <include
+                android:id="@+id/messagesCount"
+                layout="@layout/item_profile_detail_card" />
 
-    <include
-        android:id="@+id/commentsCount"
-        layout="@layout/item_profile_detail_card" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.1"
+                android:background="@color/colorDisabled" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:alpha="0"
-        android:background="@color/colorDisabled" />
-
+            <include
+                android:id="@+id/commentsCount"
+                layout="@layout/item_profile_detail_card" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>
