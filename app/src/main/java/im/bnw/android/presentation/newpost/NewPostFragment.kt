@@ -5,6 +5,8 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
 import im.bnw.android.R
 import im.bnw.android.databinding.FragmentNewPostBinding
@@ -12,9 +14,8 @@ import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.dialog.NotificationDialog
 import im.bnw.android.presentation.util.DialogCode
 import im.bnw.android.presentation.util.attrColor
-import im.bnw.android.presentation.util.hideKeyboard
+import im.bnw.android.presentation.util.hideSystemUI
 import im.bnw.android.presentation.util.newText
-import im.bnw.android.presentation.util.showKeyboard
 import im.bnw.android.presentation.util.viewBinding
 
 class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
@@ -57,12 +58,12 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
             postText.doAfterTextChanged {
                 viewModel.textChanged(it.toString())
             }
-            showKeyboard()
+            ViewCompat.getWindowInsetsController(postText)?.show(WindowInsetsCompat.Type.ime())
         }
     }
 
     override fun onDestroyView() {
-        hideKeyboard()
+        hideSystemUI(WindowInsetsCompat.Type.ime())
         super.onDestroyView()
     }
 
@@ -89,12 +90,13 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
         doneItemMenu.isEnabled = enabled
         val icon = doneItemMenu.icon ?: return
         val color = if (enabled) {
-            R.color.colorPrimary
+            requireContext().getColor(R.color.colorPrimary)
         } else {
-            R.color.colorDisabled
+            requireContext().getColor(R.color.colorDisabled)
         }
-        icon.mutate()
-        icon.colorFilter = PorterDuffColorFilter(requireContext().getColor(color), PorterDuff.Mode.SRC_ATOP)
+        icon.mutate().apply {
+            colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+        }
     }
 
     override fun updateState(state: NewPostState) {

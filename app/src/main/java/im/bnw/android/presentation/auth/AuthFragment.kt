@@ -2,11 +2,14 @@ package im.bnw.android.presentation.auth
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import im.bnw.android.R
 import im.bnw.android.databinding.FragmentAuthBinding
 import im.bnw.android.presentation.core.BaseFragment
+import im.bnw.android.presentation.util.hideSystemUI
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.viewBinding
 
@@ -28,7 +31,13 @@ class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
             passwordEdit.doAfterTextChanged { viewModel.passwordChanged(it.toString()) }
             cancel.setOnClickListener { viewModel.backPressed() }
             signIn.setOnClickListener { viewModel.signInClicked() }
+            ViewCompat.getWindowInsetsController(loginEdit)?.show(WindowInsetsCompat.Type.ime())
         }
+    }
+
+    override fun onDestroyView() {
+        hideSystemUI(WindowInsetsCompat.Type.ime())
+        super.onDestroyView()
     }
 
     override fun updateState(state: AuthState) {

@@ -14,6 +14,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.github.aradxxx.ciceroneflow.FlowCicerone
@@ -113,19 +114,21 @@ var TextView.newText: String
         }
     }
 
-fun Fragment.showKeyboard() =
-    (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?)?.apply {
-        toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
+fun Fragment.showSystemUI(windowInsetsTypes: Int) =
+    view?.let {
+        val window = requireActivity().window
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            show(windowInsetsTypes)
+        }
     }
 
-fun Fragment.hideKeyboard() {
-    val view = this.requireActivity().currentFocus
-    view?.let { v ->
-        val imm =
-            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-        imm?.hideSoftInputFromWindow(v.windowToken, 0)
+fun Fragment.hideSystemUI(windowInsetsTypes: Int) =
+    view?.let {
+        val window = requireActivity().window
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            hide(windowInsetsTypes)
+        }
     }
-}
 
 /*region throttled click listener*/
 private var lastClickTimestamp = 0L
