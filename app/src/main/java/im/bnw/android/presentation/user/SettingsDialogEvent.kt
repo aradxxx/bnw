@@ -1,6 +1,6 @@
-package im.bnw.android.presentation.profile
+package im.bnw.android.presentation.user
 
-import im.bnw.android.presentation.profile.adapter.SettingsItem
+import im.bnw.android.presentation.user.adapter.SettingsItem
 
 data class SettingsDialogEvent(
     val title: Int,

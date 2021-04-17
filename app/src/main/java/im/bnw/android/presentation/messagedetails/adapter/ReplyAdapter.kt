@@ -29,7 +29,7 @@ import io.noties.markwon.linkify.LinkifyPlugin
 import java.lang.Integer.min
 
 fun replyDelegate(
-    userNameListener: (Int) -> Unit,
+    userClickListener: (Int) -> Unit,
     replyCardClickListener: (Int) -> Unit
 ) = adapterDelegateViewBinding<ReplyItem, MessageListItem, ItemReplyCardBinding>(
     viewBinding = { layoutInflater, root ->
@@ -47,7 +47,7 @@ fun replyDelegate(
     fun userClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            userNameListener(position)
+            userClickListener(position)
         }
     }
 
@@ -65,11 +65,12 @@ fun replyDelegate(
             replyCardClickListener(position)
         }
     }
+
     with(binding) {
-        userDate.setOnClickListener {
+        userProfile.setOnClickListener {
             userClicked()
         }
-        userDate.setOnLongClickListener {
+        userProfile.setOnLongClickListener {
             showTime()
             true
         }
@@ -101,7 +102,7 @@ fun replyDelegate(
 
 @Suppress("LongMethod")
 fun replyWithMediaDelegate(
-    userNameListener: (Int) -> Unit,
+    userClickListener: (Int) -> Unit,
     mediaListener: (Int, Int) -> Unit,
     replyCardClickListener: (Int) -> Unit
 ) = adapterDelegateViewBinding<ReplyItem, MessageListItem, ItemReplyCardWithMediaBinding>(
@@ -127,7 +128,7 @@ fun replyWithMediaDelegate(
     fun userClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            userNameListener(position)
+            userClickListener(position)
         }
     }
 
@@ -146,10 +147,10 @@ fun replyWithMediaDelegate(
         }
     }
     with(binding) {
-        userDate.setOnClickListener {
+        userProfile.setOnClickListener {
             userClicked()
         }
-        userDate.setOnLongClickListener {
+        userProfile.setOnLongClickListener {
             showTime()
             true
         }

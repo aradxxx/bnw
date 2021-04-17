@@ -1,4 +1,4 @@
-package im.bnw.android.presentation.profile.adapter
+package im.bnw.android.presentation.user.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView

@@ -1,4 +1,4 @@
-package im.bnw.android.domain.profile
+package im.bnw.android.domain.user
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
