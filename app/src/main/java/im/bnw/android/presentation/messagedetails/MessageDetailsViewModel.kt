@@ -6,6 +6,7 @@ import im.bnw.android.domain.message.Media
 import im.bnw.android.domain.message.MessageDetails
 import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.domain.message.Reply
+import im.bnw.android.domain.settings.SettingsInteractor
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
@@ -16,17 +17,21 @@ import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
 import im.bnw.android.presentation.util.nullOr
 import im.bnw.android.presentation.util.user
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val REPLY_ITEM_SORT_DELIMITER = '_'
 
+@SuppressWarnings("TooManyFunctions")
 class MessageDetailsViewModel @Inject constructor(
     router: AppRouter,
     restoredState: MessageDetailsState?,
     private val messageInteractor: MessageInteractor,
     private val messageDetailsScreenParams: MessageDetailsScreenParams,
-    private val dispatchersProvider: DispatchersProvider
+    private val dispatchersProvider: DispatchersProvider,
+    private val settingsInteractor: SettingsInteractor,
 ) : BaseViewModel<MessageDetailsState>(
     restoredState ?: MessageDetailsState.Init,
     router
@@ -84,13 +89,12 @@ class MessageDetailsViewModel @Inject constructor(
         }
         updateState { current.copy(sendProgress = true) }
         when (
-            val result =
-                messageInteractor.reply(
-                    current.replyText.trim(),
-                    current.messageId,
-                    current.replyMessageId,
-                    current.anon
-                )
+            val result = messageInteractor.reply(
+                current.replyText.trim(),
+                current.messageId,
+                current.replyMessageId,
+                current.anon
+            )
         ) {
             is Result.Success -> {
                 updateState { current.copy(sendProgress = false, replyText = "", replyMessageId = "") }
@@ -115,7 +119,8 @@ class MessageDetailsViewModel @Inject constructor(
         vmScope.launch(dispatchersProvider.default) {
             when (val result = messageInteractor.messageDetails(messageId = messageDetailsScreenParams.messageId)) {
                 is Result.Success -> {
-                    val idle = result.value.toIdleState()
+                    val incognito = incognito()
+                    val idle = result.value.toIdleState(incognito)
                     updateState {
                         if (oldIdleState == null) {
                             idle
@@ -143,13 +148,14 @@ class MessageDetailsViewModel @Inject constructor(
             }
         }
 
-    private fun MessageDetails.toIdleState(): MessageDetailsState.Idle {
+    private fun MessageDetails.toIdleState(incognito: Boolean): MessageDetailsState.Idle {
         val messageItem = listOf(MessageItem(message))
         val sortedReplies = replies.map { it.toReplyListItem(replies) }.sortedBy { it.sortTag }
         return MessageDetailsState.Idle(
-            messageId,
-            message,
-            messageItem + sortedReplies
+            messageId = messageId,
+            message = message,
+            items = messageItem + sortedReplies,
+            anon = incognito
         )
     }
 
@@ -165,5 +171,13 @@ class MessageDetailsViewModel @Inject constructor(
         }
         val parent = replies.first { it.id == replyTo }
         return "${parent.buildSortTag(replies)}$REPLY_ITEM_SORT_DELIMITER$timestamp"
+    }
+
+    private suspend fun incognito(): Boolean {
+        return settingsInteractor.subscribeSettings()
+            .map {
+                it.incognito
+            }
+            .first()
     }
 }
