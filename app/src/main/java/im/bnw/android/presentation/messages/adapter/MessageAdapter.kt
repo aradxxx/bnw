@@ -4,7 +4,6 @@ package im.bnw.android.presentation.messages.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Rect
-import android.text.method.LinkMovementMethod
 import android.widget.Toast
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.DiffUtil
@@ -17,6 +16,7 @@ import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import im.bnw.android.BuildConfig
 import im.bnw.android.databinding.ItemMessageCardBinding
 import im.bnw.android.databinding.ItemMessageCardWithMediaBinding
+import im.bnw.android.presentation.core.markwon.BnwLinkifyPlugin
 import im.bnw.android.presentation.medialist.MediaAdapter
 import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
 import im.bnw.android.presentation.util.dpToPx
@@ -40,6 +40,7 @@ fun messageDelegate(
 ) {
     val markwon = Markwon.builder(context)
         .usePlugin(LinkifyPlugin.create())
+        .usePlugin(BnwLinkifyPlugin)
         .build()
 
     fun userClicked() {
@@ -65,7 +66,6 @@ fun messageDelegate(
     }
 
     with(binding) {
-        text.movementMethod = LinkMovementMethod.getInstance()
         root.radius = cardRadius
         userDate.setOnClickListener {
             userClicked()
@@ -86,6 +86,7 @@ fun messageDelegate(
         val message = item.message
         with(binding) {
             markwon.setMarkdown(text, message.text)
+
             user.newText = message.user
             date.newText = item.message.timestamp.formatDateTime()
             id.newText = message.id
@@ -125,6 +126,7 @@ fun messageWithMediaDelegate(
     }
     val markwon = Markwon.builder(context)
         .usePlugin(LinkifyPlugin.create())
+        .usePlugin(BnwLinkifyPlugin)
         .build()
 
     fun userClicked() {

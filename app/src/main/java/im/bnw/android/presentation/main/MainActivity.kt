@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.main
 
+import android.content.Intent
 import android.os.Bundle
 import com.github.aradxxx.ciceroneflow.FlowCicerone
 import com.github.aradxxx.ciceroneflow.FlowNavigator
@@ -25,6 +26,12 @@ class MainActivity :
         if (savedInstanceState == null) {
             viewModel.startNavigation()
         }
+        viewModel.checkDeepLink(intent)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        viewModel.checkDeepLink(intent)
     }
 
     override fun onResumeFragments() {

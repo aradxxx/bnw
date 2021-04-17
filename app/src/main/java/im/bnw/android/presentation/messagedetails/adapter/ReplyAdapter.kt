@@ -14,6 +14,7 @@ import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import im.bnw.android.BuildConfig
 import im.bnw.android.databinding.ItemReplyCardBinding
 import im.bnw.android.databinding.ItemReplyCardWithMediaBinding
+import im.bnw.android.presentation.core.markwon.BnwLinkifyPlugin
 import im.bnw.android.presentation.medialist.MediaAdapter
 import im.bnw.android.presentation.messages.adapter.MessageListItem
 import im.bnw.android.presentation.messages.adapter.messageDelegate
@@ -40,6 +41,7 @@ fun replyDelegate(
 ) {
     val markwon = Markwon.builder(context)
         .usePlugin(LinkifyPlugin.create())
+        .usePlugin(BnwLinkifyPlugin)
         .build()
 
     fun userClicked() {
@@ -119,6 +121,7 @@ fun replyWithMediaDelegate(
     }
     val markwon = Markwon.builder(context)
         .usePlugin(LinkifyPlugin.create())
+        .usePlugin(BnwLinkifyPlugin)
         .build()
 
     fun userClicked() {

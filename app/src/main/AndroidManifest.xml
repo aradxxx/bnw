@@ -14,12 +14,33 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".presentation.main.MainActivity">
+
+        <activity
+            android:name=".presentation.main.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
+                <data
+                    android:host="www.bnw.im"
+                    android:scheme="https" />
+                <data
+                    android:host="bnw.im"
+                    android:scheme="https" />
+                <data
+                    android:host="im.bnw.android"
+                    android:scheme="app" />
+                <data android:pathPattern="/u/.*" />
+                <data android:pathPattern="/p/.*" />
+                <!-- note that the leading "/" is required for pathPrefix-->
+            </intent-filter>
         </activity>
     </application>
-
 </manifest>
