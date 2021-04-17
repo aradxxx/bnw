@@ -31,6 +31,7 @@ class MainActivity :
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        checkDeepLink(intent)
     }
 
     override fun onResumeFragments() {
