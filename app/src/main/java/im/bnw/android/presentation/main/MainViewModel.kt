@@ -55,8 +55,8 @@ class MainViewModel @Inject constructor(
         ThemeSettings.Dark -> AppCompatDelegate.MODE_NIGHT_YES
     }
 
-    fun checkDeepLink(intent: Intent?) {
-        val segment = intent?.data?.pathSegments?.getOrNull(0) ?: return
+    fun checkDeepLink(intent: Intent) {
+        val segment = intent.data?.pathSegments?.getOrNull(0) ?: return
         val id = intent.data?.pathSegments?.getOrNull(1) ?: return
         when (segment) {
             BuildConfig.POST_PATH_SEGMENT -> {

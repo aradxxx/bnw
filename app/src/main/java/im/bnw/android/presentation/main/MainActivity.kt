@@ -26,12 +26,11 @@ class MainActivity :
         if (savedInstanceState == null) {
             viewModel.startNavigation()
         }
-        viewModel.checkDeepLink(intent)
+        checkDeepLink(intent)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        viewModel.checkDeepLink(intent)
     }
 
     override fun onResumeFragments() {
@@ -46,5 +45,11 @@ class MainActivity :
 
     override fun router(): AppRouter {
         return flowCicerone.mainRouter()
+    }
+
+    private fun checkDeepLink(intent: Intent?) {
+        intent ?: return
+        viewModel.checkDeepLink(intent)
+        setIntent(intent.setData(null))
     }
 }
