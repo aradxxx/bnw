@@ -1,4 +1,4 @@
-package im.bnw.android.di.profile
+package im.bnw.android.di.user
 
 import dagger.Binds
 import dagger.Module
@@ -6,7 +6,7 @@ import im.bnw.android.domain.user.ProfileInteractor
 import im.bnw.android.domain.user.ProfileInteractorImpl
 
 @Module
-interface ProfileModule {
+interface UserModule {
     @Binds
     fun provideProfileInteractor(profileSource: ProfileInteractorImpl): ProfileInteractor
 }

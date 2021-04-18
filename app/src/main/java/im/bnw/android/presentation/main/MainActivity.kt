@@ -13,7 +13,10 @@ import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.BnwMultiStackFragment
 import im.bnw.android.presentation.util.viewBinding
 
-class MainActivity : BaseActivity<MainViewModel, MainState>(R.layout.activity_main, MainViewModel::class.java) {
+class MainActivity : BaseActivity<MainViewModel, MainState>(
+    R.layout.activity_main,
+    MainViewModel::class.java,
+) {
     private val binding by viewBinding(ActivityMainBinding::inflate)
     private val modo = App.modo
     private val modoRender by lazy {

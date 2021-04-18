@@ -15,7 +15,9 @@ import im.bnw.android.presentation.messages.MessagesFragment
 import im.bnw.android.presentation.messages.MessagesScreenParams
 import im.bnw.android.presentation.newpost.NewPostFragment
 import im.bnw.android.presentation.profile.ProfileFragment
+import im.bnw.android.presentation.profile.ProfileScreenParams
 import im.bnw.android.presentation.splash.SplashFragment
+import im.bnw.android.presentation.user.UserFragment
 import kotlinx.parcelize.Parcelize
 
 object Screens {
@@ -40,7 +42,8 @@ object Screens {
     class MessageDetails(
         val messageId: String
     ) : AppScreen("MessageDetails_$messageId") {
-        override fun create(): Fragment = MessageDetailsFragment.newInstance(MessageDetailsScreenParams(messageId))
+        override fun create(): Fragment =
+            MessageDetailsFragment.newInstance(MessageDetailsScreenParams(messageId))
     }
 
     @Parcelize
@@ -55,8 +58,8 @@ object Screens {
     }
 
     @Parcelize
-    object Profile : AppScreen("Profile") {
-        override fun create(): Fragment = ProfileFragment.newInstance()
+    object User : AppScreen("User") {
+        override fun create(): Fragment = UserFragment.newInstance()
     }
 
     @Parcelize
@@ -64,9 +67,16 @@ object Screens {
         override fun create(): Fragment = AuthFragment.newInstance()
     }
 
+    @Parcelize
+    class Profile(
+        val user: String
+    ) : AppScreen("Profile_$user") {
+        override fun create(): Fragment = ProfileFragment.newInstance(ProfileScreenParams(user))
+    }
+
     fun tabs() = MultiAppScreen(
         "Tabs",
-        listOf(Messages(), Profile),
+        listOf(Messages(), User),
         0
     )
 }

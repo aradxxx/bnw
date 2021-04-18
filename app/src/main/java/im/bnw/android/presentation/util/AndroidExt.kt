@@ -20,8 +20,8 @@ import com.yariksoffice.lingver.Lingver
 import im.bnw.android.domain.settings.LanguageSettings
 import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.presentation.core.FragmentViewBindingDelegate
-import im.bnw.android.presentation.profile.LanguageItem
-import im.bnw.android.presentation.profile.ThemeItem
+import im.bnw.android.presentation.user.LanguageItem
+import im.bnw.android.presentation.user.ThemeItem
 import java.util.Locale
 
 fun <F : Fragment> F.withInitialArguments(params: Parcelable) = apply {

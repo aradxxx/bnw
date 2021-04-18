@@ -1,4 +1,4 @@
-package im.bnw.android.domain.profile
+package im.bnw.android.domain.user
 
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
@@ -22,6 +22,10 @@ class ProfileInteractorImpl @Inject constructor(
 
     override suspend fun retry() = withContext(dispatchersProvider.io) {
         retry.value = !retry.value
+    }
+
+    override suspend fun userInfo(userName: String): Result<User> {
+        return userManager.getUserInfo(userName)
     }
 
     @ExperimentalCoroutinesApi

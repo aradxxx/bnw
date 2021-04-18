@@ -29,7 +29,7 @@ import io.noties.markwon.linkify.LinkifyPlugin
 fun messageDelegate(
     cardRadius: Float,
     cardClickListener: (Int) -> Unit,
-    userNameListener: (Int) -> Unit
+    userClickListener: (Int) -> Unit,
 ) = adapterDelegateViewBinding<MessageItem, MessageListItem, ItemMessageCardBinding>(
     viewBinding = { layoutInflater, root ->
         ItemMessageCardBinding.inflate(layoutInflater, root, false)
@@ -46,7 +46,7 @@ fun messageDelegate(
     fun userClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            userNameListener(position)
+            userClickListener(position)
         }
     }
 
@@ -67,10 +67,10 @@ fun messageDelegate(
 
     with(binding) {
         root.radius = cardRadius
-        userDate.setOnClickListener {
+        userProfile.setOnClickListener {
             userClicked()
         }
-        userDate.setOnLongClickListener {
+        userProfile.setOnLongClickListener {
             showTime()
             true
         }
@@ -107,8 +107,8 @@ fun messageWithMediaDelegate(
     cardRadius: Float,
     mediaHeight: Int,
     cardClickListener: (Int) -> Unit,
-    userNameListener: (Int) -> Unit,
-    mediaListener: (Int, Int) -> Unit
+    userClickListener: (Int) -> Unit,
+    mediaListener: (Int, Int) -> Unit,
 ) = adapterDelegateViewBinding<MessageItem, MessageListItem, ItemMessageCardWithMediaBinding>(
     viewBinding = { layoutInflater, root ->
         ItemMessageCardWithMediaBinding.inflate(layoutInflater, root, false)
@@ -132,7 +132,7 @@ fun messageWithMediaDelegate(
     fun userClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            userNameListener(position)
+            userClickListener(position)
         }
     }
 
@@ -151,10 +151,10 @@ fun messageWithMediaDelegate(
         }
     }
     with(binding) {
-        userDate.setOnClickListener {
+        userProfile.setOnClickListener {
             userClicked()
         }
-        userDate.setOnLongClickListener {
+        userProfile.setOnLongClickListener {
             showTime()
             true
         }
@@ -272,8 +272,8 @@ class MessageAdapter(
     cardRadius: Float,
     mediaHeight: Int,
     cardClickListener: (Int) -> Unit,
-    userNameListener: (Int) -> Unit,
-    mediaListener: (Int, Int) -> Unit
+    userClickListener: (Int) -> Unit,
+    mediaListener: (Int, Int) -> Unit,
 ) : AsyncListDifferDelegationAdapter<MessageListItem>(messageListItemDiffCallback) {
     init {
         delegatesManager.apply {
@@ -281,7 +281,7 @@ class MessageAdapter(
                 messageDelegate(
                     cardRadius,
                     cardClickListener,
-                    userNameListener
+                    userClickListener,
                 )
             )
             addDelegate(
@@ -289,8 +289,8 @@ class MessageAdapter(
                     cardRadius,
                     mediaHeight,
                     cardClickListener,
-                    userNameListener,
-                    mediaListener
+                    userClickListener,
+                    mediaListener,
                 )
             )
         }

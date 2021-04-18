@@ -1,4 +1,4 @@
-package im.bnw.android.presentation.profile.adapter
+package im.bnw.android.presentation.user.adapter
 
 import android.os.Bundle
 import android.view.LayoutInflater
