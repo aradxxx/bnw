@@ -1,14 +1,14 @@
 package im.bnw.android.presentation.messages
 
+import com.github.terrakok.modo.android.launch
 import im.bnw.android.domain.auth.AuthInteractor
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.presentation.core.BaseViewModel
-import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
-import im.bnw.android.presentation.core.navigation.tab.Tab
 import im.bnw.android.presentation.messages.adapter.MessageItem
+import im.bnw.android.presentation.util.extForward
 import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
 import im.bnw.android.presentation.util.user
@@ -22,15 +22,13 @@ import javax.inject.Inject
 private const val PAGE_SIZE = 20
 
 class MessagesViewModel @Inject constructor(
-    router: AppRouter,
     restoredState: MessagesState?,
     screenParams: MessagesScreenParams,
     private val messageInteractor: MessageInteractor,
     private val authInteractor: AuthInteractor,
     private val dispatchersProvider: DispatchersProvider
 ) : BaseViewModel<MessagesState>(
-    restoredState ?: MessagesState(user = screenParams.user),
-    router
+    restoredState ?: MessagesState(user = screenParams.user)
 ) {
     init {
         loadBefore()
@@ -47,7 +45,7 @@ class MessagesViewModel @Inject constructor(
 
     fun cardClicked(position: Int) {
         val messageId = state.messages.getOrNull(position)?.id ?: return
-        router.navigateTo(Tab.GLOBAL, Screens.messageDetailsScreen(messageId))
+        modo.extForward(Screens.MessageDetails(messageId))
     }
 
     fun userClicked(position: Int) {
@@ -55,20 +53,20 @@ class MessagesViewModel @Inject constructor(
         if (state.user == userId) {
             return
         }
-        router.navigateTo(Tab.GLOBAL, Screens.messagesScreen(userId))
+        modo.extForward(Screens.Messages(userId))
     }
 
     fun mediaClicked(messagePosition: Int, mediaPosition: Int) {
         val media = state.messages.getOrNull(messagePosition)?.media?.getOrNull(mediaPosition) ?: return
         if (media.isYoutube()) {
-            router.navigateTo(Tab.GLOBAL, Screens.externalHyperlinkScreen(media.fullUrl))
+            modo.launch(Screens.externalHyperlink(media.fullUrl))
         } else {
-            router.navigateTo(Tab.GLOBAL, Screens.imageViewScreen(media.fullUrl))
+            modo.extForward(Screens.ImageView(media.fullUrl))
         }
     }
 
     fun createPostClicked() {
-        router.navigateTo(Tab.GLOBAL, Screens.newPostScreen())
+        modo.extForward(Screens.NewPost)
     }
 
     private fun loadBefore() {

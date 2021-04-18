@@ -4,9 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.terrakok.modo.back
+import im.bnw.android.App
 import im.bnw.android.R
 import im.bnw.android.presentation.core.lifecycle.LiveEvent
-import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.util.BnwApiError
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -17,9 +18,9 @@ import java.util.concurrent.atomic.AtomicReference
 import javax.net.ssl.SSLException
 
 abstract class BaseViewModel<S : State>(
-    initialState: S,
-    protected val router: AppRouter
+    initialState: S
 ) : ViewModel() {
+    val modo = App.modo
     private val stateLiveData = MutableLiveData(initialState)
     private val eventLiveData = LiveEvent<Any?>()
     private val atomicState = AtomicReference<S>(initialState)
@@ -71,6 +72,6 @@ abstract class BaseViewModel<S : State>(
     }
 
     open fun backPressed() {
-        router.exit()
+        modo.back()
     }
 }

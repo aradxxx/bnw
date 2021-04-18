@@ -1,23 +1,21 @@
 package im.bnw.android.presentation.newpost
 
+import com.github.terrakok.modo.exit
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.domain.settings.SettingsInteractor
 import im.bnw.android.presentation.core.BaseViewModel
-import im.bnw.android.presentation.core.navigation.AppRouter
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class NewPostViewModel @Inject constructor(
-    router: AppRouter,
     restoredState: NewPostState?,
     private val messageInteractor: MessageInteractor,
     private val settingsInteractor: SettingsInteractor
 ) : BaseViewModel<NewPostState>(
-    restoredState ?: NewPostState(),
-    router
+    restoredState ?: NewPostState()
 ) {
     init {
         subscribeSettings()
@@ -41,7 +39,7 @@ class NewPostViewModel @Inject constructor(
         updateState { it.copy(sendEnabled = false) }
         when (val result = messageInteractor.post(state.text.trim(), state.asAnon)) {
             is Result.Success -> {
-                router.exit()
+                modo.exit()
             }
             is Result.Failure -> {
                 updateState { it.copy(sendEnabled = true) }

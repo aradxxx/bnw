@@ -5,19 +5,16 @@ import im.bnw.android.domain.auth.AuthInteractor
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.DialogEvent
-import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.util.AuthFailedException
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(
-    router: AppRouter,
     private val authInteractor: AuthInteractor,
     private val dispatchersProvider: DispatchersProvider
 ) : BaseViewModel<AuthState>(
-    AuthState(),
-    router
+    AuthState()
 ) {
     override fun handleException(e: Throwable) {
         when (e) {

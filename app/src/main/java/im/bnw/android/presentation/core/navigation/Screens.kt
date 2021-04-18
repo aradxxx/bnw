@@ -2,10 +2,11 @@ package im.bnw.android.presentation.core.navigation
 
 import android.content.Intent
 import android.net.Uri
-import com.github.terrakok.cicerone.androidx.ActivityScreen
-import com.github.terrakok.cicerone.androidx.FragmentScreen
+import androidx.fragment.app.Fragment
+import com.github.terrakok.modo.android.AppScreen
+import com.github.terrakok.modo.android.ExternalScreen
+import com.github.terrakok.modo.android.MultiAppScreen
 import im.bnw.android.presentation.auth.AuthFragment
-import im.bnw.android.presentation.core.navigation.tab.TabsContainerFragment
 import im.bnw.android.presentation.imageview.ImageFragment
 import im.bnw.android.presentation.imageview.ImageScreenParams
 import im.bnw.android.presentation.messagedetails.MessageDetailsFragment
@@ -15,41 +16,57 @@ import im.bnw.android.presentation.messages.MessagesScreenParams
 import im.bnw.android.presentation.newpost.NewPostFragment
 import im.bnw.android.presentation.profile.ProfileFragment
 import im.bnw.android.presentation.splash.SplashFragment
+import kotlinx.parcelize.Parcelize
 
 object Screens {
-    fun tabContainerScreen() = FragmentScreen {
-        TabsContainerFragment()
+    @Parcelize
+    object Splash : AppScreen("Splash") {
+        override fun create(): Fragment = SplashFragment()
     }
 
-    fun splashScreen() = FragmentScreen {
-        SplashFragment()
+    @Parcelize
+    object NewPost : AppScreen("NewPost") {
+        override fun create(): Fragment = NewPostFragment.newInstance()
     }
 
-    fun newPostScreen() = FragmentScreen {
-        NewPostFragment()
+    @Parcelize
+    class Messages(
+        val user: String = ""
+    ) : AppScreen("Messages_$user") {
+        override fun create(): Fragment = MessagesFragment.newInstance((MessagesScreenParams(user)))
     }
 
-    fun messagesScreen(user: String) = FragmentScreen {
-        MessagesFragment.newInstance(MessagesScreenParams(user))
+    @Parcelize
+    class MessageDetails(
+        val messageId: String
+    ) : AppScreen("MessageDetails_$messageId") {
+        override fun create(): Fragment = MessageDetailsFragment.newInstance(MessageDetailsScreenParams(messageId))
     }
 
-    fun messageDetailsScreen(messageId: String) = FragmentScreen {
-        MessageDetailsFragment.newInstance(MessageDetailsScreenParams(messageId))
+    @Parcelize
+    class ImageView(
+        val url: String
+    ) : AppScreen("ImageView_$url") {
+        override fun create(): Fragment = ImageFragment.newInstance(ImageScreenParams(url))
     }
 
-    fun imageViewScreen(url: String) = FragmentScreen {
-        ImageFragment.newInstance(ImageScreenParams(url))
-    }
-
-    fun externalHyperlinkScreen(url: String) = ActivityScreen {
+    fun externalHyperlink(url: String) = ExternalScreen {
         Intent(Intent.ACTION_VIEW, Uri.parse(url))
     }
 
-    fun profileScreen() = FragmentScreen {
-        ProfileFragment()
+    @Parcelize
+    object Profile : AppScreen("Profile") {
+        override fun create(): Fragment = ProfileFragment.newInstance()
     }
 
-    fun authScreen() = FragmentScreen {
-        AuthFragment()
+    @Parcelize
+    object Auth : AppScreen("Auth") {
+        override fun create(): Fragment = AuthFragment.newInstance()
     }
+
+    fun tabs() = MultiAppScreen(
+        "Tabs",
+        listOf(Messages(), Profile),
+        0
+    )
 }

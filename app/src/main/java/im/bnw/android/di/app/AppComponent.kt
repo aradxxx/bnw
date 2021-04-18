@@ -20,7 +20,6 @@ import javax.inject.Singleton
         ActivityBindingModule::class,
         ViewModelFactoryModule::class,
         NetworkModule::class,
-        NavigationModule::class,
         DataModule::class,
         UserManagerModule::class,
         SettingsModule::class,

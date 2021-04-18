@@ -2,31 +2,40 @@ package im.bnw.android.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
-import com.github.aradxxx.ciceroneflow.FlowCicerone
-import com.github.aradxxx.ciceroneflow.FlowNavigator
-import com.github.aradxxx.ciceroneflow.NavigationContainer
+import com.github.terrakok.modo.android.ModoRender
+import com.github.terrakok.modo.android.init
+import com.github.terrakok.modo.android.saveState
+import im.bnw.android.App
 import im.bnw.android.R
 import im.bnw.android.databinding.ActivityMainBinding
 import im.bnw.android.presentation.core.BaseActivity
-import im.bnw.android.presentation.core.navigation.AppRouter
+import im.bnw.android.presentation.core.navigation.Screens
+import im.bnw.android.presentation.core.navigation.tab.BnwMultiStackFragment
 import im.bnw.android.presentation.util.viewBinding
-import javax.inject.Inject
 
-class MainActivity :
-    BaseActivity<MainViewModel, MainState>(R.layout.activity_main, MainViewModel::class.java),
-    NavigationContainer<AppRouter> {
-    @Inject
-    lateinit var flowCicerone: FlowCicerone<AppRouter>
-    lateinit var navigator: FlowNavigator<AppRouter>
+class MainActivity : BaseActivity<MainViewModel, MainState>(R.layout.activity_main, MainViewModel::class.java) {
     private val binding by viewBinding(ActivityMainBinding::inflate)
+    private val modo = App.modo
+    private val modoRender by lazy {
+        object : ModoRender(this@MainActivity, R.id.container) {
+            override fun createMultiStackFragment() = BnwMultiStackFragment()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        navigator = FlowNavigator(this, R.id.container, flowCicerone)
-        if (savedInstanceState == null) {
-            viewModel.startNavigation()
-        }
+        modo.init(savedInstanceState, Screens.tabs())
         checkDeepLink(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        modo.render = modoRender
+    }
+
+    override fun onPause() {
+        modo.render = null
+        super.onPause()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -34,23 +43,14 @@ class MainActivity :
         checkDeepLink(intent)
     }
 
-    override fun onResumeFragments() {
-        super.onResumeFragments()
-        flowCicerone.mainCicerone().getNavigatorHolder().setNavigator(navigator)
-    }
-
-    override fun onPause() {
-        flowCicerone.mainCicerone().getNavigatorHolder().removeNavigator()
-        super.onPause()
-    }
-
-    override fun router(): AppRouter {
-        return flowCicerone.mainRouter()
-    }
-
     private fun checkDeepLink(intent: Intent?) {
         intent ?: return
         viewModel.checkDeepLink(intent)
         setIntent(intent.setData(null))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        modo.saveState(outState)
     }
 }

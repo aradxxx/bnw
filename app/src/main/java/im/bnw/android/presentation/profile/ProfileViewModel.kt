@@ -9,9 +9,8 @@ import im.bnw.android.domain.settings.Settings
 import im.bnw.android.domain.settings.SettingsInteractor
 import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.presentation.core.BaseViewModel
-import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
-import im.bnw.android.presentation.core.navigation.tab.Tab
+import im.bnw.android.presentation.util.extForward
 import im.bnw.android.presentation.util.nullOr
 import im.bnw.android.presentation.util.toItem
 import kotlinx.coroutines.flow.collect
@@ -22,14 +21,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
-    router: AppRouter,
     restoredState: ProfileState?,
     private val profileInteractor: ProfileInteractor,
     private val settingsInteractor: SettingsInteractor,
     private val dispatchersProvider: DispatchersProvider,
 ) : BaseViewModel<ProfileState>(
-    restoredState ?: ProfileState.Init,
-    router
+    restoredState ?: ProfileState.Init
 ) {
     init {
         updateState { ProfileState.Loading }
@@ -38,7 +35,7 @@ class ProfileViewModel @Inject constructor(
 
     fun loginClicked() {
         state.nullOr<ProfileState.Unauthorized>() ?: return
-        router.navigateTo(Tab.GLOBAL, Screens.authScreen())
+        modo.extForward(Screens.Auth)
     }
 
     fun logoutConfirmed() {
@@ -48,7 +45,7 @@ class ProfileViewModel @Inject constructor(
 
     fun messagesClicked() {
         val currentState = state.nullOr<ProfileState.ProfileInfo>() ?: return
-        router.navigateTo(Tab.GLOBAL, Screens.messagesScreen(currentState.user.name))
+        modo.extForward(Screens.Messages(currentState.user.name))
     }
 
     fun anonymityClicked(enabled: Boolean) {

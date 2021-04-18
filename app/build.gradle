@@ -79,8 +79,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
 
-    def ciceroneFlowsVersion = "0.6.63"
-    implementation "com.github.aradxxx:ciceroneflows:$ciceroneFlowsVersion"
+    def modoVersion = "0.6.1"
+    //modo core
+    implementation("com.github.terrakok:modo:$modoVersion")
+    //for navigation based on FragmentManager
+    implementation("com.github.terrakok:modo-render-android-fm:$modoVersion")
 
     def adaptDelVersion = "4.3.0"
     implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:$adaptDelVersion"

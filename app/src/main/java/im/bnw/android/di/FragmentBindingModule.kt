@@ -10,8 +10,6 @@ import im.bnw.android.di.newpost.NewPostFragmentModule
 import im.bnw.android.di.profile.ProfileFragmentModule
 import im.bnw.android.di.splash.SplashFragmentModule
 import im.bnw.android.presentation.auth.AuthFragment
-import im.bnw.android.presentation.core.navigation.tab.TabFragment
-import im.bnw.android.presentation.core.navigation.tab.TabsContainerFragment
 import im.bnw.android.presentation.imageview.ImageFragment
 import im.bnw.android.presentation.messagedetails.MessageDetailsFragment
 import im.bnw.android.presentation.messages.MessagesFragment
@@ -21,12 +19,6 @@ import im.bnw.android.presentation.splash.SplashFragment
 
 @Module
 interface FragmentBindingModule {
-    @ContributesAndroidInjector
-    fun bindTabsContainerFragment(): TabsContainerFragment
-
-    @ContributesAndroidInjector
-    fun bindTabFragment(): TabFragment
-
     @ContributesAndroidInjector(modules = [NewPostFragmentModule::class])
     fun bindNewPostFragment(): NewPostFragment
 

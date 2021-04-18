@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.messagedetails
 
+import com.github.terrakok.modo.android.launch
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Media
@@ -8,11 +9,10 @@ import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.domain.message.Reply
 import im.bnw.android.domain.settings.SettingsInteractor
 import im.bnw.android.presentation.core.BaseViewModel
-import im.bnw.android.presentation.core.navigation.AppRouter
 import im.bnw.android.presentation.core.navigation.Screens
-import im.bnw.android.presentation.core.navigation.tab.Tab
 import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
 import im.bnw.android.presentation.messages.adapter.MessageItem
+import im.bnw.android.presentation.util.extForward
 import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
 import im.bnw.android.presentation.util.nullOr
@@ -26,15 +26,13 @@ private const val REPLY_ITEM_SORT_DELIMITER = '_'
 
 @SuppressWarnings("TooManyFunctions")
 class MessageDetailsViewModel @Inject constructor(
-    router: AppRouter,
     restoredState: MessageDetailsState?,
     private val messageInteractor: MessageInteractor,
     private val messageDetailsScreenParams: MessageDetailsScreenParams,
     private val dispatchersProvider: DispatchersProvider,
     private val settingsInteractor: SettingsInteractor,
 ) : BaseViewModel<MessageDetailsState>(
-    restoredState ?: MessageDetailsState.Init,
-    router
+    restoredState ?: MessageDetailsState.Init
 ) {
     init {
         updateState { MessageDetailsState.Loading }
@@ -50,7 +48,7 @@ class MessageDetailsViewModel @Inject constructor(
     fun userClicked(position: Int) {
         val current = state.nullOr<MessageDetailsState.Idle>() ?: return
         val userId = current.items[position].user
-        router.navigateTo(Tab.GLOBAL, Screens.messagesScreen(userId))
+        modo.extForward(Screens.Messages(userId))
     }
 
     fun retryClicked() {
@@ -109,9 +107,9 @@ class MessageDetailsViewModel @Inject constructor(
 
     private fun openMedia(media: Media) {
         if (media.isYoutube()) {
-            router.navigateTo(Tab.GLOBAL, Screens.externalHyperlinkScreen(media.fullUrl))
+            modo.launch(Screens.externalHyperlink(media.fullUrl))
         } else {
-            router.navigateTo(Tab.GLOBAL, Screens.imageViewScreen(media.fullUrl))
+            modo.extForward(Screens.ImageView(media.fullUrl))
         }
     }
 
