@@ -36,8 +36,7 @@
             android:id="@+id/swipeToRefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/reply"
-            android:layout_marginBottom="-32dp">
+            android:layout_above="@id/reply">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/replies"

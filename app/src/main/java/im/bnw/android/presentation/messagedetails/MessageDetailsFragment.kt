@@ -3,7 +3,6 @@ package im.bnw.android.presentation.messagedetails
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.postDelayed
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import im.bnw.android.R
@@ -69,10 +68,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             send.setThrottledClickListener {
                 viewModel.sendReplyClicked()
             }
-            replyId.setOnCloseIconClickListener {
-                viewModel.replyClicked()
-            }
-            replyId.setOnClickListener {
+            replyToClose.setOnClickListener {
                 viewModel.replyClicked()
             }
             replyText.doAfterTextChanged {
@@ -111,8 +107,11 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         replyAdapter.items = state.items
         with(reply) {
             anon.isActivated = state.anon
-            replyId.isInvisible = state.replyMessageId.isEmpty()
-            replyId.text = state.replyMessageId
+            replyTo.isVisible = state.replyTo != null
+            state.replyTo?.let {
+                replyToUserName.newText = it.user
+                replyToText.newText = it.text
+            }
             sendProgress.isVisible = state.sendProgress
             replyText.newText = state.replyText
             send.isVisible = state.replyText.trim().isNotEmpty()

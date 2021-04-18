@@ -1,6 +1,7 @@
 package im.bnw.android.presentation.messagedetails
 
 import im.bnw.android.domain.message.Message
+import im.bnw.android.domain.message.Reply
 import im.bnw.android.presentation.core.State
 import im.bnw.android.presentation.messages.adapter.MessageListItem
 import kotlinx.parcelize.Parcelize
@@ -23,7 +24,7 @@ sealed class MessageDetailsState : State {
         val message: Message,
         val items: List<MessageListItem>,
         val anon: Boolean = false,
-        val replyMessageId: String = "",
+        val replyTo: Reply? = null,
         val sendProgress: Boolean = false,
         val replyText: String = ""
     ) : MessageDetailsState()

@@ -13,7 +13,6 @@ import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
 import im.bnw.android.presentation.messages.adapter.MessageItem
-import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
 import im.bnw.android.presentation.util.nullOr
 import im.bnw.android.presentation.util.user
@@ -68,10 +67,15 @@ class MessageDetailsViewModel @Inject constructor(
     fun replyClicked(position: Int? = null) {
         val current = state.nullOr<MessageDetailsState.Idle>() ?: return
         if (position != null) {
-            val replyId = current.items[position].id
-            updateState { current.copy(replyMessageId = replyId) }
+            val item = current.items.getOrNull(position)
+            val replyTo = if (item is ReplyItem) {
+                item.reply
+            } else {
+                null
+            }
+            updateState { current.copy(replyTo = replyTo) }
         } else {
-            updateState { current.copy(replyMessageId = "") }
+            updateState { current.copy(replyTo = null) }
         }
     }
 
@@ -90,12 +94,12 @@ class MessageDetailsViewModel @Inject constructor(
             val result = messageInteractor.reply(
                 current.replyText.trim(),
                 current.messageId,
-                current.replyMessageId,
+                current.replyTo?.id ?: "",
                 current.anon
             )
         ) {
             is Result.Success -> {
-                updateState { current.copy(sendProgress = false, replyText = "", replyMessageId = "") }
+                updateState { current.copy(sendProgress = false, replyText = "", replyTo = null) }
                 getMessageDetails()
             }
             is Result.Failure -> {
@@ -125,7 +129,7 @@ class MessageDetailsViewModel @Inject constructor(
                         } else {
                             idle.copy(
                                 anon = oldIdleState.anon,
-                                replyMessageId = oldIdleState.replyMessageId,
+                                replyTo = oldIdleState.replyTo,
                                 replyText = oldIdleState.replyText,
                             )
                         }
