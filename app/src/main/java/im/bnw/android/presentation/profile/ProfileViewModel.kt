@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.profile
 
+import com.github.terrakok.modo.externalForward
 import im.bnw.android.R
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
@@ -10,7 +11,6 @@ import im.bnw.android.domain.settings.SettingsInteractor
 import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.Screens
-import im.bnw.android.presentation.util.extForward
 import im.bnw.android.presentation.util.nullOr
 import im.bnw.android.presentation.util.toItem
 import kotlinx.coroutines.flow.collect
@@ -35,7 +35,7 @@ class ProfileViewModel @Inject constructor(
 
     fun loginClicked() {
         state.nullOr<ProfileState.Unauthorized>() ?: return
-        modo.extForward(Screens.Auth)
+        modo.externalForward(Screens.Auth)
     }
 
     fun logoutConfirmed() {
@@ -45,7 +45,7 @@ class ProfileViewModel @Inject constructor(
 
     fun messagesClicked() {
         val currentState = state.nullOr<ProfileState.ProfileInfo>() ?: return
-        modo.extForward(Screens.Messages(currentState.user.name))
+        modo.externalForward(Screens.Messages(currentState.user.name))
     }
 
     fun anonymityClicked(enabled: Boolean) {

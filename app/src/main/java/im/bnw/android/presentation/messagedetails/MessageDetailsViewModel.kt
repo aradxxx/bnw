@@ -1,6 +1,7 @@
 package im.bnw.android.presentation.messagedetails
 
 import com.github.terrakok.modo.android.launch
+import com.github.terrakok.modo.externalForward
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Media
@@ -12,7 +13,6 @@ import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
 import im.bnw.android.presentation.messages.adapter.MessageItem
-import im.bnw.android.presentation.util.extForward
 import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
 import im.bnw.android.presentation.util.nullOr
@@ -48,7 +48,7 @@ class MessageDetailsViewModel @Inject constructor(
     fun userClicked(position: Int) {
         val current = state.nullOr<MessageDetailsState.Idle>() ?: return
         val userId = current.items[position].user
-        modo.extForward(Screens.Messages(userId))
+        modo.externalForward(Screens.Messages(userId))
     }
 
     fun retryClicked() {
@@ -109,7 +109,7 @@ class MessageDetailsViewModel @Inject constructor(
         if (media.isYoutube()) {
             modo.launch(Screens.externalHyperlink(media.fullUrl))
         } else {
-            modo.extForward(Screens.ImageView(media.fullUrl))
+            modo.externalForward(Screens.ImageView(media.fullUrl))
         }
     }
 

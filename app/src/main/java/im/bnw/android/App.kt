@@ -11,6 +11,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import im.bnw.android.di.app.AppComponent
 import im.bnw.android.di.app.DaggerAppComponent
+import im.bnw.android.presentation.core.navigation.BnwModoReducer
 import im.bnw.android.presentation.util.DebugTree
 import timber.log.Timber
 import javax.inject.Inject
@@ -43,9 +44,9 @@ class App : DaggerApplication() {
 
     private fun buildReducer(): NavigationReducer {
         return if (BuildConfig.DEBUG) {
-            LogReducer(AppReducer(this@App, MultiReducer()))
+            LogReducer(BnwModoReducer(AppReducer(this@App, MultiReducer())))
         } else {
-            AppReducer(this@App, MultiReducer())
+            BnwModoReducer(AppReducer(this@App, MultiReducer()))
         }
     }
 }

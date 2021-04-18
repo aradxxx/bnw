@@ -1,6 +1,7 @@
 package im.bnw.android.presentation.messages
 
 import com.github.terrakok.modo.android.launch
+import com.github.terrakok.modo.externalForward
 import im.bnw.android.domain.auth.AuthInteractor
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Message
@@ -8,7 +9,6 @@ import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.messages.adapter.MessageItem
-import im.bnw.android.presentation.util.extForward
 import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
 import im.bnw.android.presentation.util.user
@@ -45,7 +45,7 @@ class MessagesViewModel @Inject constructor(
 
     fun cardClicked(position: Int) {
         val messageId = state.messages.getOrNull(position)?.id ?: return
-        modo.extForward(Screens.MessageDetails(messageId))
+        modo.externalForward(Screens.MessageDetails(messageId))
     }
 
     fun userClicked(position: Int) {
@@ -53,7 +53,7 @@ class MessagesViewModel @Inject constructor(
         if (state.user == userId) {
             return
         }
-        modo.extForward(Screens.Messages(userId))
+        modo.externalForward(Screens.Messages(userId))
     }
 
     fun mediaClicked(messagePosition: Int, mediaPosition: Int) {
@@ -61,12 +61,12 @@ class MessagesViewModel @Inject constructor(
         if (media.isYoutube()) {
             modo.launch(Screens.externalHyperlink(media.fullUrl))
         } else {
-            modo.extForward(Screens.ImageView(media.fullUrl))
+            modo.externalForward(Screens.ImageView(media.fullUrl))
         }
     }
 
     fun createPostClicked() {
-        modo.extForward(Screens.NewPost)
+        modo.externalForward(Screens.NewPost)
     }
 
     private fun loadBefore() {
