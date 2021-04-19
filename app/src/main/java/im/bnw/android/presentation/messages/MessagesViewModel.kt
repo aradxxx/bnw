@@ -78,7 +78,7 @@ class MessagesViewModel @Inject constructor(
         if (media.isYoutube()) {
             modo.launch(Screens.externalHyperlink(media.fullUrl))
         } else {
-            postEvent(OpenMediaEvent(message.media.filter { !it.isYoutube() }, media))
+            postEvent(OpenMediaEvent(message.media.filter { !it.isYoutube() }.map { it.fullUrl }, media.fullUrl))
         }
     }
 

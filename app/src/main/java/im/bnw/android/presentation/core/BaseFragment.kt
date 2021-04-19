@@ -61,7 +61,7 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
                 NotificationDialog.newInstance(getString(R.string.error), event.description)
             }
             is OpenMediaEvent -> {
-                openMedia(event)
+                openMedia(event.urls, event.selectedItem)
             }
         }
     }

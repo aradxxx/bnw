@@ -1,10 +1,12 @@
 package im.bnw.android.presentation.profile
 
 import com.github.terrakok.modo.externalForward
+import im.bnw.android.BuildConfig
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.user.ProfileInteractor
 import im.bnw.android.presentation.core.BaseViewModel
+import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.util.nullOr
 import kotlinx.coroutines.launch
@@ -50,5 +52,11 @@ class ProfileViewModel @Inject constructor(
                 updateState { ProfileState.LoadingFailed(t) }
             }
         }
+    }
+
+    fun avatarClicked() {
+        val current = state.nullOr<ProfileState.ProfileInfo>() ?: return
+        val imageUrl = String.format(BuildConfig.USER_AVA_URL, current.user.name)
+        postEvent(OpenMediaEvent(listOf(imageUrl), imageUrl))
     }
 }

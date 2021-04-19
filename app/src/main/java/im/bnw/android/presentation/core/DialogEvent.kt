@@ -1,7 +1,6 @@
 package im.bnw.android.presentation.core
 
 import androidx.annotation.StringRes
-import im.bnw.android.domain.message.Media
 
 data class DialogEvent(
     @StringRes
@@ -15,6 +14,6 @@ data class BnwApiErrorEvent(
 )
 
 data class OpenMediaEvent(
-    val items: List<Media>,
-    val selectedItem: Media
+    val urls: List<String>,
+    val selectedItem: String
 )

@@ -38,6 +38,9 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             toolbar.setNavigationOnClickListener { viewModel.backPressed() }
             failure.setActionListener { viewModel.retryClicked() }
             details.messagesCount.detail.setOnClickListener { viewModel.messagesClicked() }
+            details.avatar.setOnClickListener {
+                viewModel.avatarClicked()
+            }
         }
     }
 
