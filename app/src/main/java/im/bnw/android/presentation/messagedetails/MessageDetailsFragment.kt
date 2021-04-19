@@ -20,6 +20,8 @@ import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
 import javax.net.ssl.SSLException
 
+private const val DECORATIONS_INVALIDATE_DELAY = 200L
+
 class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDetailsState>(
     R.layout.fragment_message_details
 ) {
@@ -105,6 +107,13 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             }
         }
         replyAdapter.items = state.items
+
+        @Suppress("ForbiddenComment")
+        // todo: remove this hotfix
+        handler.postDelayed(DECORATIONS_INVALIDATE_DELAY) {
+            binding.replies.invalidateItemDecorations()
+        }
+
         with(reply) {
             anon.isActivated = state.anon
             replyTo.isVisible = state.replyTo != null

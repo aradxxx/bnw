@@ -223,7 +223,7 @@ val replyItemDecorator = object : RecyclerView.ItemDecoration() {
         outRect.right = normal
         outRect.left = if (parent.adapter is ReplyAdapter) {
             val adapter = parent.adapter as ReplyAdapter
-            val offset = adapter.items[itemPosition].getOffset()
+            val offset = adapter.items.getOrNull(itemPosition)?.getOffset() ?: 0
             min(normal + normal * 2 * offset, maxOffset)
         } else {
             normal
@@ -248,7 +248,7 @@ val replyItemDecorator = object : RecyclerView.ItemDecoration() {
     }
 }
 
-private fun MessageListItem.getOffset(): Int {
+private fun MessageListItem?.getOffset(): Int {
     return when (this) {
         is ReplyItem -> offset
         else -> 0

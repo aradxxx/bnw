@@ -2,7 +2,6 @@
 
 package im.bnw.android.presentation.messages.adapter
 
-import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.widget.Toast
 import androidx.core.view.updateLayoutParams
@@ -18,9 +17,10 @@ import im.bnw.android.databinding.ItemMessageCardBinding
 import im.bnw.android.databinding.ItemMessageCardWithMediaBinding
 import im.bnw.android.presentation.core.markwon.BnwLinkifyPlugin
 import im.bnw.android.presentation.medialist.MediaAdapter
-import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.formatDateTime
+import im.bnw.android.presentation.util.id
+import im.bnw.android.presentation.util.itemCallback
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.timeAgoString
 import io.noties.markwon.Markwon
@@ -243,30 +243,14 @@ val mediaItemDecorator = object : RecyclerView.ItemDecoration() {
     }
 }
 
-val messageListItemDiffCallback: DiffUtil.ItemCallback<MessageListItem> =
-    object : DiffUtil.ItemCallback<MessageListItem>() {
-        override fun areItemsTheSame(oldItem: MessageListItem, newItem: MessageListItem): Boolean {
-            return when {
-                oldItem is MessageItem && newItem is MessageItem -> {
-                    oldItem.message.id == newItem.message.id
-                }
-                oldItem is ReplyItem && newItem is ReplyItem -> {
-                    oldItem.reply.id == newItem.reply.id
-                }
-                else -> {
-                    false
-                }
-            }
-        }
-
-        @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(
-            oldItem: MessageListItem,
-            newItem: MessageListItem
-        ): Boolean {
-            return oldItem == newItem
-        }
+val messageListItemDiffCallback: DiffUtil.ItemCallback<MessageListItem> = itemCallback(
+    areItemsTheSame = { oldItem, newItem ->
+        oldItem.id == newItem.id
+    },
+    areContentsTheSame = { oldItem, newItem ->
+        oldItem == newItem
     }
+)
 
 class MessageAdapter(
     cardRadius: Float,
