@@ -56,9 +56,17 @@
                 android:id="@+id/anonymity"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="16dp"
                 android:text="@string/anonymity" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/scrollToReplies"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="16dp"
+                android:text="@string/scroll_to_replies" />
 
             <ImageView
                 android:id="@+id/anonImage"

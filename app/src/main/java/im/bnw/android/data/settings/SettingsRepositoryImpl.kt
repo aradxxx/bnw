@@ -19,6 +19,7 @@ class SettingsRepositoryImpl @Inject constructor(
         val INCOGNITO = preferencesKey<Boolean>("incognito")
         val THEME = preferencesKey<String>("theme")
         val LANGUAGE = preferencesKey<String>("language")
+        val SCROLL_TO_REPLIES = preferencesKey<Boolean>("scrollToReplies")
     }
 
     override suspend fun updateSettings(settings: Settings) {
@@ -26,6 +27,7 @@ class SettingsRepositoryImpl @Inject constructor(
             it[PreferencesKeys.INCOGNITO] = settings.incognito
             it[PreferencesKeys.THEME] = settings.theme.value
             it[PreferencesKeys.LANGUAGE] = settings.language.value
+            it[PreferencesKeys.SCROLL_TO_REPLIES] = settings.scrollToReplies
         }
     }
 
@@ -33,6 +35,7 @@ class SettingsRepositoryImpl @Inject constructor(
         return dataStore.data.map {
             Settings(
                 it[PreferencesKeys.INCOGNITO] ?: true,
+                it[PreferencesKeys.SCROLL_TO_REPLIES] ?: true,
                 themeMap(it[PreferencesKeys.THEME].orEmpty()),
                 languageMap(it[PreferencesKeys.LANGUAGE].orEmpty()),
             )

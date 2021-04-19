@@ -101,7 +101,10 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         progressBar.isVisible = false
         failure.isVisible = false
         content.isVisible = true
-        if (replyAdapter.items.isEmpty() && state.items.size > 1) {
+        if (replyAdapter.items.isEmpty() &&
+            state.items.size > 1 &&
+            state.needScrollToReplies
+        ) {
             handler.postDelayed(0) {
                 replies.smoothScrollToPosition(1)
             }

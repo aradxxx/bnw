@@ -56,6 +56,9 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
             anonymity.setOnCheckedChangeListener { _, checked ->
                 viewModel.anonymityClicked(checked)
             }
+            scrollToReplies.setOnCheckedChangeListener { _, isChecked ->
+                viewModel.scrollToRepliesChanged(isChecked)
+            }
             settings.theme.setting.setOnClickListener { viewModel.chooseTheme() }
             settings.language.setting.setOnClickListener { viewModel.chooseLanguage() }
             toolbar.setOnMenuItemClickListener { item -> menuItemClicked(item) }
@@ -107,6 +110,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         details.drawDetails(null)
         anonymity.drawIncognito(null)
         settings.drawSettings(null)
+        scrollToReplies.isVisible = false
         login.isVisible = false
         failure.isVisible = false
         progressBar.isVisible = false
@@ -117,6 +121,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         appBar.isVisible = false
         details.drawDetails(null)
         anonymity.drawIncognito(null)
+        scrollToReplies.isVisible = false
         settings.drawSettings(null)
         login.isVisible = false
         failure.isVisible = false
@@ -133,6 +138,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         appBar.isVisible = false
         details.drawDetails(null)
         anonymity.drawIncognito(null)
+        scrollToReplies.isVisible = false
         settings.drawSettings(null)
         login.isVisible = false
         failure.showFailure(R.string.no_connection, messageResId)
@@ -144,6 +150,8 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         appBar.isVisible = false
         details.drawDetails(null)
         anonymity.drawIncognito(null)
+        scrollToReplies.isChecked = state.settings.scrollToReplies
+        scrollToReplies.isVisible = true
         settings.drawSettings(state.settings)
         login.isVisible = true
         failure.isVisible = false
@@ -156,6 +164,8 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         toolbar.title = state.user.name
         details.drawDetails(state.user)
         anonymity.drawIncognito(state.settings.incognito)
+        scrollToReplies.isChecked = state.settings.scrollToReplies
+        scrollToReplies.isVisible = true
         settings.drawSettings(state.settings)
         login.isVisible = false
         failure.isVisible = false

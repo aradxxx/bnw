@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Settings(
     val incognito: Boolean,
+    val scrollToReplies: Boolean,
     val theme: ThemeSettings,
     val language: LanguageSettings,
 ) : Parcelable

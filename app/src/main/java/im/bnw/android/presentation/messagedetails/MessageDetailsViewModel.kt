@@ -8,6 +8,7 @@ import im.bnw.android.domain.message.Media
 import im.bnw.android.domain.message.MessageDetails
 import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.domain.message.Reply
+import im.bnw.android.domain.settings.Settings
 import im.bnw.android.domain.settings.SettingsInteractor
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.OpenMediaEvent
@@ -18,7 +19,6 @@ import im.bnw.android.presentation.util.media
 import im.bnw.android.presentation.util.nullOr
 import im.bnw.android.presentation.util.user
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -122,8 +122,8 @@ class MessageDetailsViewModel @Inject constructor(
         vmScope.launch(dispatchersProvider.default) {
             when (val result = messageInteractor.messageDetails(messageId = messageDetailsScreenParams.messageId)) {
                 is Result.Success -> {
-                    val incognito = incognito()
-                    val idle = result.value.toIdleState(incognito)
+                    val settings = settings()
+                    val idle = result.value.toIdleState(settings)
                     updateState {
                         if (oldIdleState == null) {
                             idle
@@ -151,14 +151,15 @@ class MessageDetailsViewModel @Inject constructor(
             }
         }
 
-    private fun MessageDetails.toIdleState(incognito: Boolean): MessageDetailsState.Idle {
+    private fun MessageDetails.toIdleState(settings: Settings): MessageDetailsState.Idle {
         val messageItem = listOf(MessageItem(message))
         val sortedReplies = replies.map { it.toReplyListItem(replies) }.sortedBy { it.sortTag }
         return MessageDetailsState.Idle(
             messageId = messageId,
             message = message,
             items = messageItem + sortedReplies,
-            anon = incognito
+            anon = settings.incognito,
+            needScrollToReplies = settings.scrollToReplies
         )
     }
 
@@ -176,11 +177,8 @@ class MessageDetailsViewModel @Inject constructor(
         return "${parent.buildSortTag(replies)}$REPLY_ITEM_SORT_DELIMITER$timestamp"
     }
 
-    private suspend fun incognito(): Boolean {
+    private suspend fun settings(): Settings {
         return settingsInteractor.subscribeSettings()
-            .map {
-                it.incognito
-            }
             .first()
     }
 }
