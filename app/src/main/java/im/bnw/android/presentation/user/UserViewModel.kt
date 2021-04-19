@@ -2,6 +2,7 @@ package im.bnw.android.presentation.user
 
 import com.github.terrakok.modo.externalForward
 import com.github.terrakok.modo.forward
+import im.bnw.android.BuildConfig
 import im.bnw.android.R
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
@@ -11,6 +12,7 @@ import im.bnw.android.domain.settings.SettingsInteractor
 import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.domain.user.ProfileInteractor
 import im.bnw.android.presentation.core.BaseViewModel
+import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.util.nullOr
 import im.bnw.android.presentation.util.toItem
@@ -135,6 +137,12 @@ class UserViewModel @Inject constructor(
     fun retryClicked() {
         state.nullOr<UserState.LoadingFailed>() ?: return
         retry()
+    }
+
+    fun avatarClicked() {
+        val current = state.nullOr<UserState.UserInfo>() ?: return
+        val imageUrl = String.format(BuildConfig.USER_AVA_URL, current.user.name)
+        postEvent(OpenMediaEvent(listOf(imageUrl)))
     }
 
     private fun logout() {

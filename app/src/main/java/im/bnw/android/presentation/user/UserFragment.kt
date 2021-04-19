@@ -53,12 +53,16 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
             login.setOnClickListener { viewModel.loginClicked() }
             failure.setActionListener { viewModel.retryClicked() }
             details.messagesCount.detail.setOnClickListener { viewModel.messagesClicked() }
+            details.avatar.setOnClickListener {
+                viewModel.avatarClicked()
+            }
             anonymity.setOnCheckedChangeListener { _, checked ->
                 viewModel.anonymityClicked(checked)
             }
             scrollToReplies.setOnCheckedChangeListener { _, isChecked ->
                 viewModel.scrollToRepliesChanged(isChecked)
             }
+
             settings.theme.setting.setOnClickListener { viewModel.chooseTheme() }
             settings.language.setting.setOnClickListener { viewModel.chooseLanguage() }
             toolbar.setOnMenuItemClickListener { item -> menuItemClicked(item) }

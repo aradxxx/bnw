@@ -15,5 +15,5 @@ data class BnwApiErrorEvent(
 
 data class OpenMediaEvent(
     val urls: List<String>,
-    val selectedItem: String
+    val selectedItem: String = urls.first()
 )

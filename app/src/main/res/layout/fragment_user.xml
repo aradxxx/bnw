@@ -52,22 +52,6 @@
                 android:id="@+id/details"
                 layout="@layout/include_profile_details" />
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/anonymity"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:paddingStart="32dp"
-                android:paddingEnd="16dp"
-                android:text="@string/anonymity" />
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/scrollToReplies"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:paddingStart="32dp"
-                android:paddingEnd="16dp"
-                android:text="@string/scroll_to_replies" />
-
             <ImageView
                 android:id="@+id/anonImage"
                 android:layout_width="match_parent"
@@ -77,8 +61,24 @@
                 android:padding="32dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_anon"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:tint="?attr/primaryIconColor" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/anonymity"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="16dp"
+                android:text="@string/anonymity" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/scrollToReplies"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="16dp"
+                android:text="@string/scroll_to_replies" />
 
             <include
                 android:id="@+id/settings"

@@ -57,6 +57,6 @@ class ProfileViewModel @Inject constructor(
     fun avatarClicked() {
         val current = state.nullOr<ProfileState.ProfileInfo>() ?: return
         val imageUrl = String.format(BuildConfig.USER_AVA_URL, current.user.name)
-        postEvent(OpenMediaEvent(listOf(imageUrl), imageUrl))
+        postEvent(OpenMediaEvent(listOf(imageUrl)))
     }
 }
