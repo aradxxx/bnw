@@ -28,5 +28,6 @@ sealed class MessageDetailsState : State {
         val sendProgress: Boolean = false,
         val replyText: String = "",
         val needScrollToReplies: Boolean = false,
+        val allowReply: Boolean = false
     ) : MessageDetailsState()
 }

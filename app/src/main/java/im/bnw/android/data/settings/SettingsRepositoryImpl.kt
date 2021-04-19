@@ -34,7 +34,7 @@ class SettingsRepositoryImpl @Inject constructor(
     override fun subscribeSettings(): Flow<Settings> {
         return dataStore.data.map {
             Settings(
-                it[PreferencesKeys.INCOGNITO] ?: true,
+                it[PreferencesKeys.INCOGNITO] ?: false,
                 it[PreferencesKeys.SCROLL_TO_REPLIES] ?: true,
                 themeMap(it[PreferencesKeys.THEME].orEmpty()),
                 languageMap(it[PreferencesKeys.LANGUAGE].orEmpty()),

@@ -117,6 +117,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             binding.replies.invalidateItemDecorations()
         }
 
+        reply.root.isVisible = state.allowReply
         with(reply) {
             anon.isActivated = state.anon
             replyTo.isVisible = state.replyTo != null

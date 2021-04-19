@@ -10,6 +10,7 @@ import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.domain.message.Reply
 import im.bnw.android.domain.settings.Settings
 import im.bnw.android.domain.settings.SettingsInteractor
+import im.bnw.android.domain.usermanager.UserManager
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.navigation.Screens
@@ -31,6 +32,7 @@ class MessageDetailsViewModel @Inject constructor(
     private val messageDetailsScreenParams: MessageDetailsScreenParams,
     private val dispatchersProvider: DispatchersProvider,
     private val settingsInteractor: SettingsInteractor,
+    private val userManager: UserManager
 ) : BaseViewModel<MessageDetailsState>(
     restoredState ?: MessageDetailsState.Init
 ) {
@@ -123,7 +125,8 @@ class MessageDetailsViewModel @Inject constructor(
             when (val result = messageInteractor.messageDetails(messageId = messageDetailsScreenParams.messageId)) {
                 is Result.Success -> {
                     val settings = settings()
-                    val idle = result.value.toIdleState(settings)
+                    val isAuthenticated = userManager.isAuthenticated().first()
+                    val idle = result.value.toIdleState(settings, isAuthenticated)
                     updateState {
                         if (oldIdleState == null) {
                             idle
@@ -151,7 +154,7 @@ class MessageDetailsViewModel @Inject constructor(
             }
         }
 
-    private fun MessageDetails.toIdleState(settings: Settings): MessageDetailsState.Idle {
+    private fun MessageDetails.toIdleState(settings: Settings, isAuthenticated: Boolean): MessageDetailsState.Idle {
         val messageItem = listOf(MessageItem(message))
         val sortedReplies = replies.map { it.toReplyListItem(replies) }.sortedBy { it.sortTag }
         return MessageDetailsState.Idle(
@@ -159,7 +162,8 @@ class MessageDetailsViewModel @Inject constructor(
             message = message,
             items = messageItem + sortedReplies,
             anon = settings.incognito,
-            needScrollToReplies = settings.scrollToReplies
+            needScrollToReplies = settings.scrollToReplies,
+            allowReply = isAuthenticated
         )
     }
 
