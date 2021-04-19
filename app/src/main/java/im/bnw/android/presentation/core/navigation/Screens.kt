@@ -7,8 +7,6 @@ import com.github.terrakok.modo.android.AppScreen
 import com.github.terrakok.modo.android.ExternalScreen
 import com.github.terrakok.modo.android.MultiAppScreen
 import im.bnw.android.presentation.auth.AuthFragment
-import im.bnw.android.presentation.imageview.ImageFragment
-import im.bnw.android.presentation.imageview.ImageScreenParams
 import im.bnw.android.presentation.messagedetails.MessageDetailsFragment
 import im.bnw.android.presentation.messagedetails.MessageDetailsScreenParams
 import im.bnw.android.presentation.messages.MessagesFragment
@@ -44,13 +42,6 @@ object Screens {
     ) : AppScreen("MessageDetails_$messageId") {
         override fun create(): Fragment =
             MessageDetailsFragment.newInstance(MessageDetailsScreenParams(messageId))
-    }
-
-    @Parcelize
-    class ImageView(
-        val url: String
-    ) : AppScreen("ImageView_$url") {
-        override fun create(): Fragment = ImageFragment.newInstance(ImageScreenParams(url))
     }
 
     fun externalHyperlink(url: String) = ExternalScreen {

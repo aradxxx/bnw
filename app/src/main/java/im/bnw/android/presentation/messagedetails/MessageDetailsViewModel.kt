@@ -10,6 +10,7 @@ import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.domain.message.Reply
 import im.bnw.android.domain.settings.SettingsInteractor
 import im.bnw.android.presentation.core.BaseViewModel
+import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
 import im.bnw.android.presentation.messages.adapter.MessageItem
@@ -41,7 +42,7 @@ class MessageDetailsViewModel @Inject constructor(
     fun mediaClicked(replyPosition: Int, mediaPosition: Int) {
         val item = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(replyPosition) ?: return
         val media = item.media.getOrNull(mediaPosition) ?: return
-        openMedia(media)
+        openMedia(item.media, media)
     }
 
     fun userClicked(position: Int) {
@@ -109,11 +110,11 @@ class MessageDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun openMedia(media: Media) {
+    private fun openMedia(mediaList: List<Media>, media: Media) {
         if (media.isYoutube()) {
             modo.launch(Screens.externalHyperlink(media.fullUrl))
         } else {
-            modo.externalForward(Screens.ImageView(media.fullUrl))
+            postEvent(OpenMediaEvent(mediaList.filter { !it.isYoutube() }, media))
         }
     }
 

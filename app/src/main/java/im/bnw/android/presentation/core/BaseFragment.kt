@@ -16,6 +16,7 @@ import im.bnw.android.presentation.core.dialog.DialogResult
 import im.bnw.android.presentation.core.dialog.NotificationDialog
 import im.bnw.android.presentation.core.lifecycle.LCHandler
 import im.bnw.android.presentation.util.Const
+import im.bnw.android.presentation.util.openMedia
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -58,6 +59,9 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
             }
             is BnwApiErrorEvent -> showDialog {
                 NotificationDialog.newInstance(getString(R.string.error), event.description)
+            }
+            is OpenMediaEvent -> {
+                openMedia(event)
             }
         }
     }
