@@ -3,6 +3,7 @@
 package im.bnw.android.presentation.messages.adapter
 
 import android.graphics.Rect
+import android.os.Parcelable
 import android.widget.Toast
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.DiffUtil
@@ -102,13 +103,14 @@ fun messageDelegate(
     }
 }
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "ComplexMethod")
 fun messageWithMediaDelegate(
     cardRadius: Float,
     mediaHeight: Int,
     cardClickListener: (Int) -> Unit,
     userClickListener: (Int) -> Unit,
     mediaListener: (Int, Int) -> Unit,
+    savedInstanceStates: MutableMap<String, Parcelable?>,
 ) = adapterDelegateViewBinding<MessageItem, MessageListItem, ItemMessageCardWithMediaBinding>(
     viewBinding = { layoutInflater, root ->
         ItemMessageCardWithMediaBinding.inflate(layoutInflater, root, false)
@@ -150,6 +152,20 @@ fun messageWithMediaDelegate(
             cardClickListener(position)
         }
     }
+
+    fun saveInstanceState(messageId: String) {
+        savedInstanceStates[messageId] = linearLayoutManager.onSaveInstanceState()
+    }
+
+    fun restoreInstanceState(messageId: String) {
+        val savedState = savedInstanceStates[messageId]
+        if (savedState != null) {
+            linearLayoutManager.onRestoreInstanceState(savedState)
+        } else {
+            linearLayoutManager.scrollToPosition(0)
+        }
+    }
+
     with(binding) {
         userProfile.setOnClickListener {
             userClicked()
@@ -158,20 +174,20 @@ fun messageWithMediaDelegate(
             showTime()
             true
         }
-        root.setOnClickListener {
-            cardClicked()
+        root.apply {
+            radius = cardRadius
+            setOnClickListener {
+                cardClicked()
+            }
         }
         text.setOnClickListener {
             cardClicked()
         }
-        root.radius = cardRadius
-        mediaList.updateLayoutParams {
-            height = mediaHeight
-        }
-    }
-    with(binding) {
         with(mediaList) {
-            layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
+            updateLayoutParams {
+                height = mediaHeight
+            }
+            layoutManager = linearLayoutManager
             adapter = mediaAdapter
             addItemDecoration(mediaItemDecorator)
         }
@@ -195,6 +211,10 @@ fun messageWithMediaDelegate(
                 .transform(CircleCrop())
                 .into(ava)
         }
+        restoreInstanceState(item.message.id)
+    }
+    onViewRecycled {
+        saveInstanceState(item.message.id)
     }
 }
 
@@ -259,6 +279,7 @@ class MessageAdapter(
     userClickListener: (Int) -> Unit,
     mediaListener: (Int, Int) -> Unit,
 ) : AsyncListDifferDelegationAdapter<MessageListItem>(messageListItemDiffCallback) {
+    private val savedInstanceStates: MutableMap<String, Parcelable?> = mutableMapOf()
     init {
         delegatesManager.apply {
             addDelegate(
@@ -275,6 +296,7 @@ class MessageAdapter(
                     cardClickListener,
                     userClickListener,
                     mediaListener,
+                    savedInstanceStates,
                 )
             )
         }
