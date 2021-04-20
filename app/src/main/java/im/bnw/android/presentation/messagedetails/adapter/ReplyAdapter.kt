@@ -3,6 +3,7 @@
 package im.bnw.android.presentation.messagedetails.adapter
 
 import android.graphics.Rect
+import android.os.Parcelable
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -260,8 +261,9 @@ class ReplyAdapter(
     messageMediaHeight: Int,
     userNameListener: (Int) -> Unit,
     mediaListener: (Int, Int) -> Unit,
-    replyCardClickListener: (Int) -> Unit
+    replyCardClickListener: (Int) -> Unit,
 ) : AsyncListDifferDelegationAdapter<MessageListItem>(messageListItemDiffCallback) {
+    private val savedInstanceStates: MutableMap<String, Parcelable?> = mutableMapOf()
     init {
         delegatesManager.apply {
             addDelegate(
@@ -290,7 +292,8 @@ class ReplyAdapter(
                     messageMediaHeight,
                     {},
                     userNameListener,
-                    mediaListener
+                    mediaListener,
+                    savedInstanceStates,
                 )
             )
         }
