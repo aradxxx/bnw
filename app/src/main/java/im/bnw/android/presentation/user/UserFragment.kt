@@ -112,9 +112,9 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
     private fun renderInitState() = with(binding) {
         appBar.isVisible = false
         details.drawDetails(null)
-        anonymity.drawIncognito(null)
-        settings.drawSettings(null)
+        anonymity.isVisible = false
         scrollToReplies.isVisible = false
+        settings.drawSettings(null)
         login.isVisible = false
         failure.isVisible = false
         progressBar.isVisible = false
@@ -124,7 +124,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
     private fun renderLoadingState() = with(binding) {
         appBar.isVisible = false
         details.drawDetails(null)
-        anonymity.drawIncognito(null)
+        anonymity.isVisible = false
         scrollToReplies.isVisible = false
         settings.drawSettings(null)
         login.isVisible = false
@@ -141,7 +141,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         }
         appBar.isVisible = false
         details.drawDetails(null)
-        anonymity.drawIncognito(null)
+        anonymity.isVisible = false
         scrollToReplies.isVisible = false
         settings.drawSettings(null)
         login.isVisible = false
@@ -153,9 +153,8 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
     private fun renderUnauthorizedState(state: UserState.Unauthorized) = with(binding) {
         appBar.isVisible = false
         details.drawDetails(null)
-        anonymity.drawIncognito(null)
-        scrollToReplies.isChecked = state.settings.scrollToReplies
-        scrollToReplies.isVisible = true
+        anonymity.isVisible = false
+        scrollToReplies.drawSwitcher(state.settings.scrollToReplies, R.string.scroll_to_replies)
         settings.drawSettings(state.settings)
         login.isVisible = true
         failure.isVisible = false
@@ -167,9 +166,8 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         appBar.isVisible = true
         toolbar.title = state.user.name
         details.drawDetails(state.user)
-        anonymity.drawIncognito(state.settings.incognito)
-        scrollToReplies.isChecked = state.settings.scrollToReplies
-        scrollToReplies.isVisible = true
+        anonymity.drawSwitcher(state.settings.incognito, R.string.anonymity)
+        scrollToReplies.drawSwitcher(state.settings.scrollToReplies, R.string.scroll_to_replies)
         settings.drawSettings(state.settings)
         login.isVisible = false
         failure.isVisible = false
@@ -200,13 +198,13 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
             .into(avatar)
     }
 
-    private fun SwitchMaterial.drawIncognito(enabled: Boolean?) {
-        if (enabled == null) {
-            isVisible = false
-            return
-        }
+    private fun SwitchMaterial.drawSwitcher(
+        checked: Boolean,
+        @StringRes nameResId: Int
+    ) {
         isVisible = true
-        isChecked = enabled
+        isChecked = checked
+        newText = getString(nameResId)
     }
 
     private fun IncludeSettingsBinding.drawSettings(settings: Settings?) {

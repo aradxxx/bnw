@@ -70,7 +70,7 @@
                 android:layout_height="56dp"
                 android:paddingStart="24dp"
                 android:paddingEnd="16dp"
-                android:text="@string/anonymity" />
+                tools:text="@string/anonymity" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/scrollToReplies"
@@ -78,7 +78,7 @@
                 android:layout_height="56dp"
                 android:paddingStart="24dp"
                 android:paddingEnd="16dp"
-                android:text="@string/scroll_to_replies" />
+                tools:text="@string/scroll_to_replies" />
 
             <include
                 android:id="@+id/settings"
