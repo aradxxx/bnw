@@ -2,8 +2,9 @@ package im.bnw.android.data.settings
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.preferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import im.bnw.android.domain.settings.LanguageSettings
 import im.bnw.android.domain.settings.Settings
 import im.bnw.android.domain.settings.SettingsRepository
@@ -16,10 +17,10 @@ class SettingsRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
 ) : SettingsRepository {
     private object PreferencesKeys {
-        val INCOGNITO = preferencesKey<Boolean>("incognito")
-        val THEME = preferencesKey<String>("theme")
-        val LANGUAGE = preferencesKey<String>("language")
-        val SCROLL_TO_REPLIES = preferencesKey<Boolean>("scrollToReplies")
+        val INCOGNITO = booleanPreferencesKey("incognito")
+        val THEME = stringPreferencesKey("theme")
+        val LANGUAGE = stringPreferencesKey("language")
+        val SCROLL_TO_REPLIES = booleanPreferencesKey("scrollToReplies")
     }
 
     override suspend fun updateSettings(settings: Settings) {

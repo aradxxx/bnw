@@ -3,7 +3,7 @@ package im.bnw.android.data.user
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.preferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import im.bnw.android.domain.usermanager.UserDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -11,8 +11,8 @@ import javax.inject.Inject
 
 class UserDataStoreImpl @Inject constructor(private val dataStore: DataStore<Preferences>) : UserDataStore {
     private object PreferencesKeys {
-        val USER_NAME = preferencesKey<String>("name")
-        val USER_TOKEN = preferencesKey<String>("token")
+        val USER_NAME = stringPreferencesKey("name")
+        val USER_TOKEN = stringPreferencesKey("token")
     }
 
     override suspend fun updateUserToken(token: String) {

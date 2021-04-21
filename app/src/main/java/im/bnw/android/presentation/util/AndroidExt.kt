@@ -14,6 +14,7 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
@@ -25,6 +26,8 @@ import im.bnw.android.presentation.core.FragmentViewBindingDelegate
 import im.bnw.android.presentation.user.LanguageItem
 import im.bnw.android.presentation.user.ThemeItem
 import java.util.Locale
+
+val Context.dataStore by preferencesDataStore("user")
 
 fun <F : Fragment> F.withInitialArguments(params: Parcelable) = apply {
     arguments = bundleOf(Const.BUNDLE_INITIAL_ARGS to params)

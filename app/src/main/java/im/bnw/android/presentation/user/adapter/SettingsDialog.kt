@@ -82,7 +82,7 @@ class SettingsDialog : BottomSheetDialogFragment() {
         }
         settingsAdapter.items = items
         view.findViewById<RecyclerView>(R.id.items_list).apply {
-            layoutManager = LinearLayoutManager(context).apply { recycleChildrenOnDetach = true }
+            layoutManager = LinearLayoutManager(context)
             adapter = settingsAdapter
         }
     }

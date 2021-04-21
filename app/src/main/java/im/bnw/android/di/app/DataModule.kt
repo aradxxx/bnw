@@ -3,7 +3,6 @@ package im.bnw.android.di.app
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.createDataStore
 import com.yariksoffice.lingver.Lingver
 import com.yariksoffice.lingver.store.LocaleStore
 import com.yariksoffice.lingver.store.PreferenceLocaleStore
@@ -18,6 +17,7 @@ import im.bnw.android.domain.core.dispatcher.DispatchersProviderImpl
 import im.bnw.android.domain.message.MessageRepository
 import im.bnw.android.domain.settings.SettingsRepository
 import im.bnw.android.domain.usermanager.UserDataStore
+import im.bnw.android.presentation.util.dataStore
 import javax.inject.Singleton
 
 @Module
@@ -28,8 +28,7 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideDataStorePreferences(context: Context): DataStore<Preferences> =
-        context.createDataStore("user")
+    fun provideDataStorePreferences(context: Context): DataStore<Preferences> = context.dataStore
 
     @Provides
     @Singleton

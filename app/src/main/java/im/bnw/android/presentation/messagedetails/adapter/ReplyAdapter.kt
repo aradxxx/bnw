@@ -162,7 +162,7 @@ fun replyWithMediaDelegate(
             cardClicked()
         }
         with(mediaList) {
-            layoutManager = linearLayoutManager.apply { recycleChildrenOnDetach = true }
+            layoutManager = linearLayoutManager
             adapter = mediaAdapter
             addItemDecoration(
                 object : RecyclerView.ItemDecoration() {
