@@ -86,7 +86,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/media_list"
             android:layout_width="wrap_content"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
             android:overScrollMode="never"
             android:scrollbars="none" />
 

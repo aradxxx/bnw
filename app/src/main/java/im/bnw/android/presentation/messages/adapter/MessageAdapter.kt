@@ -3,11 +3,8 @@
 package im.bnw.android.presentation.messages.adapter
 
 import android.graphics.Rect
-import android.os.Handler
-import android.os.Looper
 import android.os.Parcelable
 import android.widget.Toast
-import androidx.core.os.postDelayed
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +27,6 @@ import im.bnw.android.presentation.util.timeAgoString
 import io.noties.markwon.Markwon
 import io.noties.markwon.linkify.LinkifyPlugin
 
-private const val STATE_RESTORE_DELAY = 500L
 fun messageDelegate(
     cardRadius: Float,
     cardClickListener: (Int) -> Unit,
@@ -123,7 +119,6 @@ fun messageWithMediaDelegate(
         item is MessageItem && item.message.media.isNotEmpty()
     }
 ) {
-    val handler = Handler(Looper.getMainLooper())
     val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
     val mediaAdapter = MediaAdapter() { mediaPosition ->
         val position = adapterPosition
@@ -165,9 +160,7 @@ fun messageWithMediaDelegate(
     fun restoreInstanceState(messageId: String) {
         val savedState = savedInstanceStates[messageId]
         if (savedState != null) {
-            handler.postDelayed(STATE_RESTORE_DELAY) {
-                linearLayoutManager.onRestoreInstanceState(savedState)
-            }
+            linearLayoutManager.onRestoreInstanceState(savedState)
         } else {
             linearLayoutManager.scrollToPosition(0)
         }
