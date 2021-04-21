@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
+import im.bnw.android.R
 import im.bnw.android.databinding.ItemMediaBinding
 import im.bnw.android.domain.message.Media
 import im.bnw.android.presentation.util.itemCallback
@@ -25,13 +26,19 @@ fun mediaDelegate(listener: (Int) -> Unit) =
                 val image = if (item.isYoutube()) {
                     item.youtubePreviewLink()
                 } else {
-                    item.fullUrl
+                    item.fullUrl + "sdfjk"
                 }
                 playButton.isVisible = item.isYoutube()
                 Glide.with(context)
                     .load(image)
+                    .placeholder(R.drawable.ic_media_placeholder)
+                    .error(R.drawable.ic_media_load_error)
                     .into(media)
             }
+        }
+
+        onViewRecycled {
+            binding.media.setImageResource(R.drawable.ic_media_placeholder)
         }
     }
 
