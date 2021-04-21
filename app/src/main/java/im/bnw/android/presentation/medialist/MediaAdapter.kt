@@ -26,7 +26,7 @@ fun mediaDelegate(listener: (Int) -> Unit) =
                 val image = if (item.isYoutube()) {
                     item.youtubePreviewLink()
                 } else {
-                    item.fullUrl + "sdfjk"
+                    item.previewUrl
                 }
                 playButton.isVisible = item.isYoutube()
                 Glide.with(context)
