@@ -1,6 +1,6 @@
 package im.bnw.android.presentation.newpost
 
-import com.github.terrakok.modo.exit
+import com.github.terrakok.modo.back
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.domain.settings.SettingsInteractor
@@ -39,7 +39,7 @@ class NewPostViewModel @Inject constructor(
         updateState { it.copy(sendEnabled = false) }
         when (val result = messageInteractor.post(state.text.trim(), state.asAnon)) {
             is Result.Success -> {
-                modo.exit()
+                modo.back()
             }
             is Result.Failure -> {
                 updateState { it.copy(sendEnabled = true) }
