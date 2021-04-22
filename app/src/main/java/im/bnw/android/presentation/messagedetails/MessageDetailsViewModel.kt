@@ -16,10 +16,15 @@ import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
 import im.bnw.android.presentation.messages.adapter.MessageItem
+import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
 import im.bnw.android.presentation.util.nullOr
 import im.bnw.android.presentation.util.user
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,9 +41,12 @@ class MessageDetailsViewModel @Inject constructor(
 ) : BaseViewModel<MessageDetailsState>(
     restoredState ?: MessageDetailsState.Init
 ) {
+    private val initiator = MutableStateFlow(false)
+
     init {
         updateState { MessageDetailsState.Loading }
         getMessageDetails()
+        subscribeSavedMessage()
     }
 
     fun mediaClicked(replyPosition: Int, mediaPosition: Int) {
@@ -112,6 +120,44 @@ class MessageDetailsViewModel @Inject constructor(
         }
     }
 
+    fun saveMessageClicked(position: Int) = vmScope.launch {
+        val message = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position) ?: return@launch
+        if (message is MessageItem) {
+            if (!message.saved) {
+                messageInteractor.save(message.message)
+            } else {
+                messageInteractor.remove(message.message)
+            }
+        }
+    }
+
+    private fun subscribeSavedMessage() = vmScope.launch {
+        combine(
+            messageInteractor.observeSavedMessages(listOf(messageDetailsScreenParams.messageId)),
+            initiator
+        ) { savedMessages, _ ->
+            updateState { currentState ->
+                if (currentState is MessageDetailsState.Idle) {
+                    currentState.copy(
+                        items = currentState.items.map { item ->
+                            if (item is MessageItem) {
+                                item.copy(
+                                    saved = savedMessages.any { item.id == it.id }
+                                )
+                            } else {
+                                item
+                            }
+                        }
+                    )
+                } else {
+                    currentState
+                }
+            }
+        }
+            .flowOn(dispatchersProvider.io)
+            .collect()
+    }
+
     private fun openMedia(mediaList: List<Media>, media: Media) {
         if (media.isYoutube()) {
             modo.launch(Screens.externalHyperlink(media.fullUrl))
@@ -138,6 +184,7 @@ class MessageDetailsViewModel @Inject constructor(
                             )
                         }
                     }
+                    initiator.value = !initiator.value
                 }
                 is Result.Failure -> {
                     handleException(result.throwable)

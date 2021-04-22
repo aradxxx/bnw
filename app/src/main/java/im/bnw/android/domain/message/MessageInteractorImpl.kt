@@ -2,6 +2,7 @@ package im.bnw.android.domain.message
 
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -35,6 +36,22 @@ class MessageInteractorImpl @Inject constructor(
                 replyTo
             }
             messageRepository.reply(text, id, anonymous)
+        }
+    }
+
+    override fun observeSavedMessages(filter: List<String>?): Flow<List<Message>> {
+        return messageRepository.observeSavedMessages(filter)
+    }
+
+    override suspend fun save(message: Message) {
+        return withContext(dispatchersProvider.default) {
+            messageRepository.save(message)
+        }
+    }
+
+    override suspend fun remove(message: Message) {
+        return withContext(dispatchersProvider.default) {
+            messageRepository.remove(message)
         }
     }
 }

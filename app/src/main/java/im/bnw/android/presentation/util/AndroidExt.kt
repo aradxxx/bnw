@@ -16,6 +16,8 @@ import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.stfalcon.imageviewer.StfalconImageViewer
@@ -142,3 +144,10 @@ fun Fragment.openMedia(urls: List<String>, selected: String) {
         .show()
 }
 /*endregion open media */
+
+fun RecyclerView.disableItemChangedAnimation() {
+    val animator = itemAnimator
+    if (animator is SimpleItemAnimator) {
+        animator.supportsChangeAnimations = false
+    }
+}

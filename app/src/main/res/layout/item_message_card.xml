@@ -136,4 +136,15 @@
                 tools:text="2" />
         </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/save"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="2dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:padding="16dp"
+        android:src="@drawable/ic_save"
+        app:tint="@color/primary_icon_color" />
 </androidx.cardview.widget.CardView>

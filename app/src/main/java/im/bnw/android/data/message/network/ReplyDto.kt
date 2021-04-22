@@ -1,8 +1,9 @@
-package im.bnw.android.data.message
+package im.bnw.android.data.message.network
 
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import im.bnw.android.data.message.ContentDto
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

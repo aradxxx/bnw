@@ -15,6 +15,7 @@ import im.bnw.android.presentation.messages.adapter.MessageAdapter
 import im.bnw.android.presentation.messages.adapter.messageItemDecorator
 import im.bnw.android.presentation.util.UI
 import im.bnw.android.presentation.util.attrColor
+import im.bnw.android.presentation.util.disableItemChangedAnimation
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.dpToPxF
 import im.bnw.android.presentation.util.viewBinding
@@ -43,13 +44,15 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
             { position -> viewModel.userClicked(position) },
             { messagePosition, mediaPosition ->
                 viewModel.mediaClicked(messagePosition, mediaPosition)
-            }
+            },
+            { position -> viewModel.saveMessageClicked(position) }
         )
         linearLayoutManager = LinearLayoutManager(requireContext())
         with(binding.messagesList) {
             layoutManager = linearLayoutManager
             adapter = messageAdapter
             addItemDecoration(messageItemDecorator)
+            disableItemChangedAnimation()
             addOnScrollListener(
                 object : RecyclerView.OnScrollListener() {
                     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

@@ -262,8 +262,10 @@ class ReplyAdapter(
     userNameListener: (Int) -> Unit,
     mediaListener: (Int, Int) -> Unit,
     replyCardClickListener: (Int) -> Unit,
+    saveMessageListener: (Int) -> Unit
 ) : AsyncListDifferDelegationAdapter<MessageListItem>(messageListItemDiffCallback) {
     private val savedInstanceStates: MutableMap<String, Parcelable?> = mutableMapOf()
+
     init {
         delegatesManager.apply {
             addDelegate(
@@ -284,6 +286,7 @@ class ReplyAdapter(
                     messageCardRadius,
                     {},
                     userNameListener,
+                    saveMessageListener,
                 )
             )
             addDelegate(
@@ -293,6 +296,7 @@ class ReplyAdapter(
                     {},
                     userNameListener,
                     mediaListener,
+                    saveMessageListener,
                     savedInstanceStates,
                 )
             )

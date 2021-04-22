@@ -16,7 +16,9 @@ import im.bnw.android.presentation.messages.adapter.MessageItem
 import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
 import im.bnw.android.presentation.util.user
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -36,9 +38,12 @@ class MessagesViewModel @Inject constructor(
 ) : BaseViewModel<MessagesState>(
     restoredState ?: MessagesState(user = screenParams.user)
 ) {
+    private val initiator = MutableStateFlow(false)
+
     init {
         loadBefore()
         subscribeUserAuthState()
+        subscribeSavedMessages()
     }
 
     fun swipeRefresh() {
@@ -93,6 +98,17 @@ class MessagesViewModel @Inject constructor(
         modo.externalForward(Screens.NewPost)
     }
 
+    fun saveMessageClicked(position: Int) = vmScope.launch {
+        val message = state.messages.getOrNull(position) ?: return@launch
+        if (message is MessageItem) {
+            if (!message.saved) {
+                messageInteractor.save(message.message)
+            } else {
+                messageInteractor.remove(message.message)
+            }
+        }
+    }
+
     private fun loadBefore() {
         if (state.beforeLoading || state.fullLoaded) {
             return
@@ -112,6 +128,7 @@ class MessagesViewModel @Inject constructor(
                         messages = it.messages + newPage
                     )
                 }
+                initiator.value = !initiator.value
             } catch (t: IOException) {
                 handleException(t)
                 updateState { it.copy(beforeLoading = false, error = t) }
@@ -140,6 +157,7 @@ class MessagesViewModel @Inject constructor(
                         messages = newPage + it.messages
                     )
                 }
+                initiator.value = !initiator.value
                 if (needLoadMore) {
                     loadAfter()
                 } else if (newPage.isNotEmpty()) {
@@ -165,5 +183,24 @@ class MessagesViewModel @Inject constructor(
             .collect { newState ->
                 updateState { newState }
             }
+    }
+
+    private fun subscribeSavedMessages() = vmScope.launch {
+        combine(messageInteractor.observeSavedMessages(), initiator) { savedMessages, _ ->
+            val modified = state.copy(
+                messages = state.messages.map { item ->
+                    if (item is MessageItem) {
+                        item.copy(
+                            saved = savedMessages.any { item.id == it.id }
+                        )
+                    } else {
+                        item
+                    }
+                }
+            )
+            updateState { modified }
+        }
+            .flowOn(dispatchersProvider.default)
+            .collect()
     }
 }

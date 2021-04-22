@@ -3,9 +3,9 @@ package im.bnw.android.data.core.network
 import im.bnw.android.data.auth.AuthResponse
 import im.bnw.android.data.core.BaseResponse
 import im.bnw.android.data.core.network.httpresult.HttpResult
-import im.bnw.android.data.message.MessageDetailsResponse
-import im.bnw.android.data.message.MessagesResponse
-import im.bnw.android.data.message.PostResponse
+import im.bnw.android.data.message.network.MessageDetailsResponse
+import im.bnw.android.data.message.network.MessagesResponse
+import im.bnw.android.data.message.network.PostResponse
 import im.bnw.android.data.profile.ProfileResponse
 import retrofit2.http.GET
 import retrofit2.http.POST

@@ -8,5 +8,6 @@ interface MessageListItem : Parcelable
 
 @Parcelize
 data class MessageItem(
-    val message: Message
+    val message: Message,
+    val saved: Boolean = false
 ) : MessageListItem

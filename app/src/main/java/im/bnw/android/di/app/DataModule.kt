@@ -3,13 +3,16 @@ package im.bnw.android.di.app
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.room.Room
 import com.yariksoffice.lingver.Lingver
 import com.yariksoffice.lingver.store.LocaleStore
 import com.yariksoffice.lingver.store.PreferenceLocaleStore
 import dagger.Module
 import dagger.Provides
+import im.bnw.android.BuildConfig
+import im.bnw.android.data.core.db.AppDb
 import im.bnw.android.data.core.network.Api
-import im.bnw.android.data.message.MessageRepositoryImpl
+import im.bnw.android.data.message.network.MessageRepositoryImpl
 import im.bnw.android.data.settings.SettingsRepositoryImpl
 import im.bnw.android.data.user.UserDataStoreImpl
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
@@ -48,9 +51,10 @@ class DataModule {
     @Singleton
     fun bindMessageRepository(
         api: Api,
+        appDb: AppDb,
         dispatchersProvider: DispatchersProvider
     ): MessageRepository =
-        MessageRepositoryImpl(api, dispatchersProvider)
+        MessageRepositoryImpl(api, appDb, dispatchersProvider)
 
     @Provides
     @Singleton
@@ -58,4 +62,10 @@ class DataModule {
         dataStore: DataStore<Preferences>,
     ): SettingsRepository =
         SettingsRepositoryImpl(dataStore)
+
+    @Provides
+    @Singleton
+    fun provideAppDb(context: Context) =
+        Room.databaseBuilder(context, AppDb::class.java, BuildConfig.DB_NAME)
+            .build()
 }

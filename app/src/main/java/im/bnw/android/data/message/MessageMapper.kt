@@ -1,5 +1,8 @@
 package im.bnw.android.data.message
 
+import im.bnw.android.data.message.db.MessageEntity
+import im.bnw.android.data.message.network.MessageDto
+import im.bnw.android.data.message.network.ReplyDto
 import im.bnw.android.domain.message.Media
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.Reply
@@ -37,6 +40,42 @@ object MessageMapper {
             text = text,
             id = id,
             messageId = messageId
+        )
+    }
+
+    fun Message.toMessageEntity(): MessageEntity {
+        return MessageEntity(
+            id = id,
+            tags = tags,
+            text = text,
+            user = user,
+            htmlText = text,
+            media = media,
+            timestamp = timestamp,
+            anonymous = anonymous,
+            anonComments = anonComments,
+            replyCount = replyCount,
+            recommendations = recommendations,
+            format = format,
+            clubs = clubs,
+        )
+    }
+
+    fun MessageEntity.toMessage(): Message {
+        return Message(
+            id = id,
+            tags = tags,
+            text = text,
+            user = user,
+            htmlText = text,
+            media = media,
+            timestamp = timestamp,
+            anonymous = anonymous,
+            anonComments = anonComments,
+            replyCount = replyCount,
+            recommendations = recommendations,
+            format = format,
+            clubs = clubs,
         )
     }
 

@@ -31,6 +31,7 @@ fun messageDelegate(
     cardRadius: Float,
     cardClickListener: (Int) -> Unit,
     userClickListener: (Int) -> Unit,
+    saveMessageListener: (Int) -> Unit,
 ) = adapterDelegateViewBinding<MessageItem, MessageListItem, ItemMessageCardBinding>(
     viewBinding = { layoutInflater, root ->
         ItemMessageCardBinding.inflate(layoutInflater, root, false)
@@ -66,6 +67,13 @@ fun messageDelegate(
         }
     }
 
+    fun saveMessageClicked() {
+        val position = adapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            saveMessageListener(position)
+        }
+    }
+
     with(binding) {
         root.radius = cardRadius
         userProfile.setOnClickListener {
@@ -81,6 +89,9 @@ fun messageDelegate(
         text.setOnClickListener {
             cardClicked()
         }
+        save.setOnClickListener {
+            saveMessageClicked()
+        }
     }
 
     bind {
@@ -91,6 +102,7 @@ fun messageDelegate(
             user.newText = message.user
             date.newText = item.message.timestamp.formatDateTime()
             id.newText = message.id
+            save.isActivated = item.saved
 
             comments.newText = message.replyCount.toString()
             recommends.newText = message.recommendations.size.toString()
@@ -110,6 +122,7 @@ fun messageWithMediaDelegate(
     cardClickListener: (Int) -> Unit,
     userClickListener: (Int) -> Unit,
     mediaListener: (Int, Int) -> Unit,
+    saveMessageListener: (Int) -> Unit,
     savedInstanceStates: MutableMap<String, Parcelable?>,
 ) = adapterDelegateViewBinding<MessageItem, MessageListItem, ItemMessageCardWithMediaBinding>(
     viewBinding = { layoutInflater, root ->
@@ -153,6 +166,13 @@ fun messageWithMediaDelegate(
         }
     }
 
+    fun saveMessageClicked() {
+        val position = adapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            saveMessageListener(position)
+        }
+    }
+
     fun saveInstanceState(messageId: String) {
         savedInstanceStates[messageId] = linearLayoutManager.onSaveInstanceState()
     }
@@ -183,6 +203,9 @@ fun messageWithMediaDelegate(
         text.setOnClickListener {
             cardClicked()
         }
+        save.setOnClickListener {
+            saveMessageClicked()
+        }
         with(mediaList) {
             updateLayoutParams {
                 height = mediaHeight
@@ -202,6 +225,7 @@ fun messageWithMediaDelegate(
             user.newText = message.user
             date.newText = item.message.timestamp.formatDateTime()
             id.newText = message.id
+            save.isActivated = item.saved
 
             comments.newText = message.replyCount.toString()
             recommends.newText = message.recommendations.size.toString()
@@ -278,6 +302,7 @@ class MessageAdapter(
     cardClickListener: (Int) -> Unit,
     userClickListener: (Int) -> Unit,
     mediaListener: (Int, Int) -> Unit,
+    saveMessageListener: (Int) -> Unit
 ) : AsyncListDifferDelegationAdapter<MessageListItem>(messageListItemDiffCallback) {
     private val savedInstanceStates: MutableMap<String, Parcelable?> = mutableMapOf()
 
@@ -288,6 +313,7 @@ class MessageAdapter(
                     cardRadius,
                     cardClickListener,
                     userClickListener,
+                    saveMessageListener
                 )
             )
             addDelegate(
@@ -297,6 +323,7 @@ class MessageAdapter(
                     cardClickListener,
                     userClickListener,
                     mediaListener,
+                    saveMessageListener,
                     savedInstanceStates,
                 )
             )

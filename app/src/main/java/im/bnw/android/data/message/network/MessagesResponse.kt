@@ -1,4 +1,4 @@
-package im.bnw.android.data.message
+package im.bnw.android.data.message.network
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

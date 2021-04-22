@@ -13,6 +13,7 @@ import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
 import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
 import im.bnw.android.presentation.util.UI
 import im.bnw.android.presentation.util.attrColor
+import im.bnw.android.presentation.util.disableItemChangedAnimation
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.setThrottledClickListener
@@ -33,7 +34,8 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             UI.MESSAGE_DETAILS_MEDIA_HEIGHT.dpToPx,
             { position -> viewModel.userClicked(position) },
             { position, mediaPosition -> viewModel.mediaClicked(position, mediaPosition) },
-            { position -> viewModel.replyClicked(position) }
+            { position -> viewModel.replyClicked(position) },
+            { position -> viewModel.saveMessageClicked(position) }
         )
     }
 
@@ -50,6 +52,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             )
             adapter = replyAdapter
             addItemDecoration(replyItemDecorator)
+            disableItemChangedAnimation()
         }
         with(binding) {
             failure.setActionListener {
