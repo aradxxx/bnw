@@ -18,6 +18,7 @@ import im.bnw.android.databinding.ItemMessageCardBinding
 import im.bnw.android.databinding.ItemMessageCardWithMediaBinding
 import im.bnw.android.presentation.core.markwon.BnwLinkifyPlugin
 import im.bnw.android.presentation.medialist.MediaAdapter
+import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.formatDateTime
 import im.bnw.android.presentation.util.id
@@ -292,9 +293,38 @@ val messageListItemDiffCallback: DiffUtil.ItemCallback<MessageListItem> = itemCa
         oldItem.id == newItem.id
     },
     areContentsTheSame = { oldItem, newItem ->
-        oldItem == newItem
+        oldItem.areContentsTheSame(newItem)
     }
 )
+
+fun MessageListItem.areContentsTheSame(other: MessageListItem): Boolean {
+    return when {
+        this is MessageItem && other is MessageItem -> {
+            this.areContentsTheSame(other)
+        }
+        this is ReplyItem && other is ReplyItem -> {
+            this.areContentsTheSame(other)
+        }
+        else -> false
+    }
+}
+
+fun MessageItem.areContentsTheSame(other: MessageItem): Boolean {
+    return saved == other.saved &&
+        message.id == other.message.id &&
+        message.text == other.message.text &&
+        message.user == other.message.user &&
+        message.timestamp == other.message.timestamp &&
+        message.replyCount == other.message.replyCount &&
+        message.recommendations == other.message.recommendations
+}
+
+fun ReplyItem.areContentsTheSame(other: ReplyItem): Boolean {
+    return reply.id == other.reply.id &&
+        reply.text == other.reply.text &&
+        reply.user == other.reply.user &&
+        reply.timestamp == other.reply.timestamp
+}
 
 class MessageAdapter(
     cardRadius: Float,

@@ -142,27 +142,15 @@ class MessagesViewModel @Inject constructor(
         }
         vmScope.launch(dispatchersProvider.default) {
             updateState { it.copy(afterLoading = true, error = null) }
-            val first = if (state.messages.isNotEmpty()) {
-                state.messages.first().id
-            } else {
-                ""
-            }
-
             try {
-                val newPage = messageInteractor.messages(first, "", state.user).toListItems()
-                val needLoadMore = newPage.size == PAGE_SIZE
+                val newPage = messageInteractor.messages("", "", state.user).toListItems()
                 updateState {
                     it.copy(
-                        afterLoading = needLoadMore,
-                        messages = newPage + it.messages
+                        afterLoading = false,
+                        messages = newPage
                     )
                 }
                 initiator.value = !initiator.value
-                if (needLoadMore) {
-                    loadAfter()
-                } else if (newPage.isNotEmpty()) {
-                    postEvent(Event.ScrollToTop)
-                }
             } catch (t: IOException) {
                 handleException(t)
                 updateState { it.copy(afterLoading = false, error = t) }
