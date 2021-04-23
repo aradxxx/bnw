@@ -26,6 +26,7 @@
     <string name="log_out">Выйти</string>
     <string name="log_out_confirmation">Вы действительно хотите выйти?</string>
     <string name="retry">Повторить</string>
+    <string name="saved_messages">Сохраненные сообщения</string>
 
     <!--settings-->
     <string name="language">Язык</string>
@@ -45,6 +46,11 @@
     <string name="password">Пароль</string>
     <string name="sign_in">Войти</string>
     <string name="auth_failed">Неверный логин или пароль</string>
+
+    <!--saved messages-->
+    <string name="saved_empty_title">Пока пусто</string>
+    <string name="saved_empty_message">Сохраненные сообщения будут здесь</string>
+    <string name="remove_saved_message_confirm">Вы уверены что хотите удалить сообщение из локального хранилища?</string>
 
     <plurals name="minutes">
         <item quantity="zero">%1$d минут назад</item>

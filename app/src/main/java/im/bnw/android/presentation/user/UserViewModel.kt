@@ -6,6 +6,7 @@ import im.bnw.android.BuildConfig
 import im.bnw.android.R
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
+import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.domain.settings.LanguageSettings
 import im.bnw.android.domain.settings.Settings
 import im.bnw.android.domain.settings.SettingsInteractor
@@ -26,6 +27,7 @@ import javax.inject.Inject
 @Suppress("TooManyFunctions")
 class UserViewModel @Inject constructor(
     restoredState: UserState?,
+    private val messageInteractor: MessageInteractor,
     private val profileInteractor: ProfileInteractor,
     private val settingsInteractor: SettingsInteractor,
     private val dispatchersProvider: DispatchersProvider,
@@ -135,7 +137,6 @@ class UserViewModel @Inject constructor(
     }
 
     fun retryClicked() {
-        state.nullOr<UserState.LoadingFailed>() ?: return
         retry()
     }
 
@@ -143,6 +144,10 @@ class UserViewModel @Inject constructor(
         val current = state.nullOr<UserState.UserInfo>() ?: return
         val imageUrl = String.format(BuildConfig.USER_AVA_URL, current.user.name)
         postEvent(OpenMediaEvent(listOf(imageUrl)))
+    }
+
+    fun savedMessagesClicked() {
+        modo.externalForward(Screens.SavedMessages)
     }
 
     private fun logout() {
@@ -160,22 +165,25 @@ class UserViewModel @Inject constructor(
     }
 
     private fun subscribeUserInfo() = vmScope.launch {
-        profileInteractor.subscribeUserInfo()
-            .combine(settingsInteractor.subscribeSettings()) { result, settings ->
-                when (result) {
-                    is Result.Success -> {
-                        val user = result.value
-                        if (user == null) {
-                            UserState.Unauthorized(settings)
-                        } else {
-                            UserState.UserInfo(user, settings)
-                        }
-                    }
-                    is Result.Failure -> {
-                        UserState.LoadingFailed(result.throwable)
+        combine(
+            profileInteractor.subscribeUserInfo(),
+            settingsInteractor.subscribeSettings(),
+            messageInteractor.observeSavedMessages()
+        ) { result, settings, savedMessages ->
+            when (result) {
+                is Result.Success -> {
+                    val user = result.value
+                    if (user == null) {
+                        UserState.Unauthorized(savedMessages.count(), settings)
+                    } else {
+                        UserState.UserInfo(user, savedMessages.count(), settings)
                     }
                 }
+                is Result.Failure -> {
+                    UserState.LoadingFailed(result.throwable)
+                }
             }
+        }
             .flowOn(dispatchersProvider.io)
             .collect { newState ->
                 updateState { newState }

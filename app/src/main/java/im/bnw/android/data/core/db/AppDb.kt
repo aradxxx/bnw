@@ -11,6 +11,7 @@ import im.bnw.android.data.message.db.MessageEntity
     entities = [
         MessageEntity::class,
     ],
+    exportSchema = false,
     version = BuildConfig.DB_VERSION
 )
 @TypeConverters(

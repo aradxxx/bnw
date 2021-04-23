@@ -26,6 +26,7 @@
     <string name="log_out">Log Out</string>
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="retry">Retry</string>
+    <string name="saved_messages">Saved messages</string>
 
     <!--settings-->
     <string name="language">Language</string>
@@ -39,6 +40,11 @@
     <string name="english">English</string>
     <string name="russian">Русский</string>
     <string name="scroll_to_replies">Scroll to replies</string>
+
+    <!--saved messages-->
+    <string name="saved_empty_title">Such empty</string>
+    <string name="saved_empty_message">Saved messages will be here</string>
+    <string name="remove_saved_message_confirm">Are you sure you want remove message from local storage?</string>
 
     <!--auth-->
     <string name="user_name">User name</string>

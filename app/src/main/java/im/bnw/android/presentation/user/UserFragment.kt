@@ -77,6 +77,12 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
                     null -> throw IllegalArgumentException("Unknown setting class")
                 }
             }
+            swipeToRefresh.setOnRefreshListener {
+                viewModel.retryClicked()
+            }
+            savedMessagesCount.detail.setOnClickListener {
+                viewModel.savedMessagesClicked()
+            }
         }
     }
 
@@ -111,6 +117,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
 
     private fun renderInitState() = with(binding) {
         appBar.isVisible = false
+        swipeToRefresh.isEnabled = false
         details.drawDetails(null)
         anonymity.isVisible = false
         scrollToReplies.isVisible = false
@@ -119,9 +126,11 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         failure.isVisible = false
         progressBar.isVisible = false
         anonImage.isVisible = false
+        savedMessagesCard.isVisible = false
     }
 
     private fun renderLoadingState() = with(binding) {
+        swipeToRefresh.isEnabled = false
         appBar.isVisible = false
         details.drawDetails(null)
         anonymity.isVisible = false
@@ -131,6 +140,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         failure.isVisible = false
         progressBar.isVisible = true
         anonImage.isVisible = false
+        savedMessagesCard.isVisible = false
     }
 
     private fun renderLoadingFailedState(state: UserState.LoadingFailed) = with(binding) {
@@ -139,6 +149,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         } else {
             R.string.check_connection_and_tap_retry
         }
+        swipeToRefresh.isEnabled = false
         appBar.isVisible = false
         details.drawDetails(null)
         anonymity.isVisible = false
@@ -148,10 +159,12 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         failure.showFailure(R.string.no_connection, messageResId)
         progressBar.isVisible = false
         anonImage.isVisible = false
+        savedMessagesCard.isVisible = false
     }
 
     private fun renderUnauthorizedState(state: UserState.Unauthorized) = with(binding) {
         appBar.isVisible = false
+        swipeToRefresh.isEnabled = false
         details.drawDetails(null)
         anonymity.isVisible = false
         scrollToReplies.drawSwitcher(state.settings.scrollToReplies, R.string.scroll_to_replies)
@@ -160,10 +173,18 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         failure.isVisible = false
         progressBar.isVisible = false
         anonImage.isVisible = true
+        savedMessagesCard.isVisible = true
+        savedMessagesCount.fillDetail(
+            R.drawable.ic_save,
+            R.string.saved_messages,
+            state.savedMessagesCount,
+        )
     }
 
     private fun renderProfileInfo(state: UserState.UserInfo) = with(binding) {
         appBar.isVisible = true
+        swipeToRefresh.isEnabled = true
+        swipeToRefresh.isRefreshing = false
         toolbar.title = state.user.name
         details.drawDetails(state.user)
         anonymity.drawSwitcher(state.settings.incognito, R.string.anonymity)
@@ -173,6 +194,12 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         failure.isVisible = false
         progressBar.isVisible = false
         anonImage.isVisible = false
+        savedMessagesCard.isVisible = true
+        savedMessagesCount.fillDetail(
+            R.drawable.ic_save,
+            R.string.saved_messages,
+            state.savedMessagesCount,
+        )
     }
 
     private fun IncludeProfileDetailsBinding.drawDetails(user: User?) {

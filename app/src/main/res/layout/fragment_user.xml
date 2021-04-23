@@ -1,102 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:overScrollMode="never"
-    android:scrollbars="none">
+    android:orientation="vertical"
+    tools:context=".presentation.main.MainActivity">
 
-    <FrameLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?attr/barColor"
+        android:visibility="gone">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+            app:menu="@menu/profile"
+            app:title="user_name" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <im.bnw.android.presentation.core.view.FailureView
-            android:id="@+id/failure"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_to_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:gravity="center"
-            android:visibility="gone" />
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:scrollbars="none">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/appBar"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/barColor"
-                android:visibility="gone">
+                android:layout_height="wrap_content">
 
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:menu="@menu/profile"
-                    app:title="user_name" />
-            </com.google.android.material.appbar.AppBarLayout>
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
 
-            <include
-                android:id="@+id/details"
-                layout="@layout/include_profile_details" />
+                <im.bnw.android.presentation.core.view.FailureView
+                    android:id="@+id/failure"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="16dp"
+                    android:gravity="center"
+                    android:visibility="gone" />
 
-            <ImageView
-                android:id="@+id/anonImage"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:alpha="0.1"
-                android:padding="32dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_anon"
-                android:visibility="gone"
-                app:tint="?attr/primaryIconColor" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/anonymity"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:paddingStart="24dp"
-                android:paddingEnd="16dp"
-                tools:text="@string/anonymity" />
+                    <include
+                        android:id="@+id/details"
+                        layout="@layout/include_profile_details" />
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/scrollToReplies"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:paddingStart="24dp"
-                android:paddingEnd="16dp"
-                tools:text="@string/scroll_to_replies" />
+                    <ImageView
+                        android:id="@+id/anonImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:alpha="0.1"
+                        android:padding="32dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_anon"
+                        android:visibility="gone"
+                        app:tint="?attr/primaryIconColor" />
 
-            <include
-                android:id="@+id/settings"
-                layout="@layout/include_settings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp" />
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/savedMessagesCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="?attr/barColor"
+                        app:cardCornerRadius="16dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/login"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:layout_gravity="bottom"
-                android:layout_margin="16dp"
-                android:text="@string/log_in"
-                android:visibility="visible"
-                app:cornerRadius="@dimen/button_corner_radius"
-                tools:visibility="gone" />
-        </LinearLayout>
-    </FrameLayout>
-</ScrollView>
+                        <include
+                            android:id="@+id/savedMessagesCount"
+                            layout="@layout/item_profile_detail_card" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/anonymity"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="16dp"
+                        tools:text="@string/anonymity" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/scrollToReplies"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="16dp"
+                        tools:text="@string/scroll_to_replies" />
+
+                    <include
+                        android:id="@+id/settings"
+                        layout="@layout/include_settings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/login"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="16dp"
+                        android:text="@string/log_in"
+                        android:visibility="visible"
+                        app:cornerRadius="@dimen/button_corner_radius"
+                        tools:visibility="gone" />
+                </LinearLayout>
+            </FrameLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>

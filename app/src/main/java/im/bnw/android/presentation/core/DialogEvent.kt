@@ -17,3 +17,5 @@ data class OpenMediaEvent(
     val urls: List<String>,
     val selectedItem: String = urls.first()
 )
+
+class RemoveMessageFromLocalStorage

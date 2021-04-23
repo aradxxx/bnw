@@ -11,6 +11,7 @@ object Const {
 object DialogCode {
     const val LOGOUT_CONFIRM_DIALOG_REQUEST_CODE = 100
     const val CONFIRM_SENDING_DIALOG_REQUEST_CODE = 101
+    const val CONFIRM_MESSAGE_REMOVE_FROM_SAVED = 102
 }
 
 object UI {

@@ -19,12 +19,14 @@ sealed class UserState : State {
 
     @Parcelize
     data class Unauthorized(
+        val savedMessagesCount: Int,
         val settings: Settings,
     ) : UserState()
 
     @Parcelize
     data class UserInfo(
         val user: User,
+        val savedMessagesCount: Int,
         val settings: Settings,
     ) : UserState()
 }
