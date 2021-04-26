@@ -14,7 +14,6 @@ import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.messages.adapter.MessageAdapter
 import im.bnw.android.presentation.messages.adapter.messageItemDecorator
 import im.bnw.android.presentation.util.UI
-import im.bnw.android.presentation.util.attrColor
 import im.bnw.android.presentation.util.disableItemChangedAnimation
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.dpToPxF
@@ -68,11 +67,12 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
             }
         }
         with(binding.swipeToRefresh) {
-            setProgressBackgroundColorSchemeColor(requireContext().attrColor(R.attr.cardColor))
             setColorSchemeResources(
                 R.color.colorPrimary
             )
-            setOnRefreshListener { viewModel.swipeRefresh() }
+            setOnRefreshListener {
+                viewModel.swipeRefresh()
+            }
         }
         binding.failure.setActionListener {
             viewModel.swipeRefresh()
