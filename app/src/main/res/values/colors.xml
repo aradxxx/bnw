@@ -10,6 +10,7 @@
     <color name="black">#000000</color>
     <color name="dark_background">#2B2B2B</color>
     <color name="dark_light">#3C3F41</color>
+    <color name="alpha_transparent">#66000000</color>
     <!--<color name="dark_background">#121212</color>
     <color name="dark_light">#222222</color>-->
 

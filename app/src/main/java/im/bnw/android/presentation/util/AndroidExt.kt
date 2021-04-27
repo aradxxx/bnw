@@ -21,10 +21,12 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.stfalcon.imageviewer.StfalconImageViewer
+import com.stfalcon.imageviewer.loader.ImageLoader
 import com.yariksoffice.lingver.Lingver
 import im.bnw.android.domain.settings.LanguageSettings
 import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.presentation.core.FragmentViewBindingDelegate
+import im.bnw.android.presentation.core.view.MediaOverlayView
 import im.bnw.android.presentation.user.LanguageItem
 import im.bnw.android.presentation.user.ThemeItem
 import java.util.Locale
@@ -134,14 +136,25 @@ fun View.setThrottledClickListener(delay: Long = 500L, clickListener: (View) -> 
 
 /*region open media */
 fun Fragment.openMedia(urls: List<String>, selected: String) {
-    StfalconImageViewer.Builder(requireContext(), urls) { view, image ->
-        Glide.with(requireContext())
-            .load(image)
-            .into(view)
+    requireContext().apply {
+        val startPosition = urls.indexOf(selected)
+        val overlay = MediaOverlayView(this)
+        val imageLoader = ImageLoader<String> { view, image ->
+            Glide.with(this)
+                .load(image)
+                .into(view)
+        }
+        val viewer = StfalconImageViewer.Builder(this, urls, imageLoader)
+            .withStartPosition(startPosition)
+            .withOverlayView(overlay)
+            .withImageChangeListener {
+                overlay.updatePosition(it + 1, urls.size)
+            }
+            .withHiddenStatusBar(false)
+            .show()
+        overlay.setNavigationOnClickListener { viewer.dismiss() }
+        overlay.updatePosition(startPosition + 1, urls.size)
     }
-        .withStartPosition(urls.indexOf(selected))
-        .withHiddenStatusBar(false)
-        .show()
 }
 /*endregion open media */
 
