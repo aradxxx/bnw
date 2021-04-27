@@ -14,8 +14,7 @@ class FailureView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : RelativeLayout(context, attrs, defStyleAttr) {
-    private var binding: ViewFailureBinding =
-        ViewFailureBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = ViewFailureBinding.inflate(LayoutInflater.from(context), this)
 
     @DrawableRes
     var imageResId: Int = 0
