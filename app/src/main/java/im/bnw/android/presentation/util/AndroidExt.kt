@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide
 import com.stfalcon.imageviewer.StfalconImageViewer
 import com.stfalcon.imageviewer.loader.ImageLoader
 import com.yariksoffice.lingver.Lingver
+import im.bnw.android.R
 import im.bnw.android.domain.settings.LanguageSettings
 import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.presentation.core.FragmentViewBindingDelegate
@@ -142,6 +143,8 @@ fun Fragment.openMedia(urls: List<String>, selected: String) {
         val imageLoader = ImageLoader<String> { view, image ->
             Glide.with(this)
                 .load(image)
+                .error(R.drawable.ic_media_load_error)
+                .placeholder(R.drawable.ic_media_placeholder)
                 .into(view)
         }
         val viewer = StfalconImageViewer.Builder(this, urls, imageLoader)
