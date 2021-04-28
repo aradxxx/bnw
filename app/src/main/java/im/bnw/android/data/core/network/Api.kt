@@ -15,10 +15,12 @@ interface Api {
     /*Посты списком постранично*/
     @GET("show")
     suspend fun messages(
-        @Query("after") after: String,
         @Query("before") before: String,
         @Query("user") user: String?
-    ): MessagesResponse
+    ): HttpResult<MessagesResponse>
+
+    @GET("today")
+    suspend fun today(): HttpResult<MessagesResponse>
 
     @GET("passlogin")
     suspend fun login(

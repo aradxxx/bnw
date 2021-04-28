@@ -2,6 +2,7 @@ package im.bnw.android.domain.message
 
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
+import im.bnw.android.domain.core.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -10,11 +11,11 @@ class MessageInteractorImpl @Inject constructor(
     private val messageRepository: MessageRepository,
     private val dispatchersProvider: DispatchersProvider
 ) : MessageInteractor {
-    override suspend fun messages(after: String, before: String, user: String): List<Message> =
+    override suspend fun messages(before: String, user: String, today: Boolean): Result<List<Message>> =
         withContext(dispatchersProvider.default) {
-            val messages = messageRepository.messages(after, before, user)
-            val sorted = messages.sortedByDescending { message -> message.timestamp }
-            sorted
+            return@withContext messageRepository.messages(before, user, today).map { messages ->
+                messages.sortedByDescending { message -> message.timestamp }
+            }
         }
 
     override suspend fun post(text: String, anonymous: Boolean): Result<Unit> {

@@ -32,9 +32,10 @@ object Screens {
 
     @Parcelize
     class Messages(
-        val user: String = ""
-    ) : AppScreen("Messages_$user") {
-        override fun create(): Fragment = MessagesFragment.newInstance((MessagesScreenParams(user)))
+        val user: String = "",
+        val today: Boolean = false
+    ) : AppScreen("Messages_${user}_$today") {
+        override fun create(): Fragment = MessagesFragment.newInstance((MessagesScreenParams(user, today)))
     }
 
     @Parcelize
@@ -73,7 +74,7 @@ object Screens {
 
     fun tabs() = MultiAppScreen(
         "Tabs",
-        listOf(Messages(), User),
+        listOf(Messages(), Messages(today = true), User),
         0
     )
 }

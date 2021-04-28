@@ -15,7 +15,6 @@ import im.bnw.android.domain.message.MessageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import javax.inject.Inject
 
 class MessageRepositoryImpl @Inject constructor(
@@ -23,16 +22,16 @@ class MessageRepositoryImpl @Inject constructor(
     private val appDb: AppDb,
     private val dispatchersProvider: DispatchersProvider
 ) : MessageRepository {
-    override suspend fun messages(after: String, before: String, user: String): List<Message> =
-        withContext(dispatchersProvider.io) {
-            val response = api.messages(after, before, user)
-            if (response.ok) {
-                response.messages.map { it.toMessage() }
-            } else {
-                // not io
-                throw IOException("Get messages failed")
+    override suspend fun messages(before: String, user: String, today: Boolean): Result<List<Message>> {
+        return when {
+            today && before.isEmpty() -> {
+                todayMessages()
+            }
+            else -> {
+                messages(before, user)
             }
         }
+    }
 
     override suspend fun post(text: String, anonymous: Boolean): Result<Unit> = withContext(dispatchersProvider.io) {
         return@withContext api.post(text, anonymous.asApiParam()).toResult { }
@@ -74,6 +73,20 @@ class MessageRepositoryImpl @Inject constructor(
             appDb.messageDao().delete(message.id)
         }
     }
+
+    private suspend fun messages(before: String, user: String): Result<List<Message>> =
+        withContext(dispatchersProvider.io) {
+            return@withContext api.messages(before, user).toResult { response ->
+                response.messages.map { it.toMessage() }
+            }
+        }
+
+    private suspend fun todayMessages(): Result<List<Message>> =
+        withContext(dispatchersProvider.io) {
+            return@withContext api.today().toResult { response ->
+                response.messages.map { it.toMessage() }
+            }
+        }
 
     private fun Boolean.asApiParam(): String = when (this) {
         true -> {

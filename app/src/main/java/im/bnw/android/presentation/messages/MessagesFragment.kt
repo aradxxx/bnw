@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import im.bnw.android.R
+import im.bnw.android.data.core.network.httpresult.HttpException
 import im.bnw.android.databinding.FragmentMessagesListBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.messages.adapter.MessageAdapter
@@ -100,6 +101,9 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
             failure.message = when (state.error) {
                 is SSLException -> {
                     getString(R.string.possibly_domain_blocked)
+                }
+                is HttpException -> {
+                    state.error.statusMessage ?: ""
                 }
                 else -> {
                     getString(R.string.check_connection)

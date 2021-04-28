@@ -9,7 +9,6 @@ import retrofit2.Response
 import java.io.IOException
 
 internal class ResultCall<T>(proxy: Call<T>) : CallDelegate<T, HttpResult<T>>(proxy) {
-
     override fun enqueueImpl(callback: Callback<HttpResult<T>>) {
         proxy.enqueue(ResultCallback(this, callback))
     }

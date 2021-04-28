@@ -4,6 +4,7 @@ import com.github.terrakok.modo.android.launch
 import com.github.terrakok.modo.externalForward
 import com.github.terrakok.modo.selectStack
 import im.bnw.android.domain.auth.AuthInteractor
+import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageInteractor
@@ -23,14 +24,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.io.IOException
+import timber.log.Timber
 import javax.inject.Inject
 
 private const val PAGE_SIZE = 20
 
 class MessagesViewModel @Inject constructor(
     restoredState: MessagesState?,
-    screenParams: MessagesScreenParams,
+    private val screenParams: MessagesScreenParams,
     private val messageInteractor: MessageInteractor,
     private val authInteractor: AuthInteractor,
     private val userManager: UserManager,
@@ -120,18 +121,26 @@ class MessagesViewModel @Inject constructor(
             } else {
                 ""
             }
-            try {
-                val newPage = messageInteractor.messages("", last, state.user).toListItems()
-                updateState {
-                    it.copy(
-                        beforeLoading = false,
-                        messages = it.messages + newPage
-                    )
+            when (val newPageResult = messageInteractor.messages(last, state.user, screenParams.today)) {
+                is Result.Success -> {
+                    val newPage = newPageResult.value.toListItems()
+                    updateState {
+                        it.copy(
+                            beforeLoading = false,
+                            messages = it.messages + newPage
+                        )
+                    }
+                    initiator.value = !initiator.value
                 }
-                initiator.value = !initiator.value
-            } catch (t: IOException) {
-                handleException(t)
-                updateState { it.copy(beforeLoading = false, error = t) }
+                is Result.Failure -> {
+                    Timber.e(newPageResult.throwable)
+                    updateState {
+                        it.copy(
+                            beforeLoading = false,
+                            error = newPageResult.throwable
+                        )
+                    }
+                }
             }
         }
     }
@@ -142,18 +151,26 @@ class MessagesViewModel @Inject constructor(
         }
         vmScope.launch(dispatchersProvider.default) {
             updateState { it.copy(afterLoading = true, error = null) }
-            try {
-                val newPage = messageInteractor.messages("", "", state.user).toListItems()
-                updateState {
-                    it.copy(
-                        afterLoading = false,
-                        messages = newPage
-                    )
+            when (val newPageResult = messageInteractor.messages("", state.user, screenParams.today)) {
+                is Result.Success -> {
+                    val newPage = newPageResult.value.toListItems()
+                    updateState {
+                        it.copy(
+                            afterLoading = false,
+                            messages = newPage
+                        )
+                    }
+                    initiator.value = !initiator.value
                 }
-                initiator.value = !initiator.value
-            } catch (t: IOException) {
-                handleException(t)
-                updateState { it.copy(afterLoading = false, error = t) }
+                is Result.Failure -> {
+                    Timber.e(newPageResult.throwable)
+                    updateState {
+                        it.copy(
+                            afterLoading = false,
+                            error = newPageResult.throwable
+                        )
+                    }
+                }
             }
         }
     }
