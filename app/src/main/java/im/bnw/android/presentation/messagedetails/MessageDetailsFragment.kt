@@ -12,7 +12,6 @@ import im.bnw.android.presentation.core.recyclerview.LinearLayoutManagerSmoothSc
 import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
 import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
 import im.bnw.android.presentation.util.UI
-import im.bnw.android.presentation.util.attrColor
 import im.bnw.android.presentation.util.disableItemChangedAnimation
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.newText
@@ -61,7 +60,6 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             swipeToRefresh.setOnRefreshListener {
                 viewModel.swipeRefresh()
             }
-            swipeToRefresh.setProgressBackgroundColorSchemeColor(requireContext().attrColor(R.attr.cardColor))
             swipeToRefresh.setColorSchemeResources(
                 R.color.colorPrimary
             )

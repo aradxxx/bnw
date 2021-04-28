@@ -7,10 +7,11 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
         android:layout_centerHorizontal="true"
-        tools:src="@drawable/ic_launcher_foreground" />
+        android:src="@drawable/ic_google_downasaur"
+        app:tint="?android:textColorSecondary" />
 
     <TextView
         android:id="@+id/title"
@@ -21,7 +22,7 @@
         android:layout_marginTop="32dp"
         android:textAlignment="center"
         android:textAppearance="@style/Text.Body1.Primary"
-        android:textSize="20sp"
+        android:textSize="22sp"
         tools:text="@string/no_connection" />
 
     <TextView
