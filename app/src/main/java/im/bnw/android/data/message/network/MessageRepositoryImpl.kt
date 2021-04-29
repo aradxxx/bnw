@@ -24,11 +24,14 @@ class MessageRepositoryImpl @Inject constructor(
 ) : MessageRepository {
     override suspend fun messages(before: String, user: String, today: Boolean): Result<List<Message>> {
         return when {
+            !today -> {
+                messages(before, user)
+            }
             today && before.isEmpty() -> {
                 todayMessages()
             }
             else -> {
-                messages(before, user)
+                Result.Success(emptyList())
             }
         }
     }
