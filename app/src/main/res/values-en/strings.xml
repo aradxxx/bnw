@@ -22,6 +22,7 @@
     <string name="sending_confirmation">Are you sure you want to sent?</string>
 
     <!--profile-->
+    <string name="registered">Registered %1$s</string>
     <string name="messages_count">Messages</string>
     <string name="comments_count">Comments</string>
     <string name="log_in">Log In</string>
@@ -38,7 +39,7 @@
     <string name="dark_theme">Dark</string>
     <string name="choose_theme">Choose theme</string>
     <string name="system_default">System default</string>
-    <string name="anonymity">Anonymity</string>
+    <string name="anonymity">Anonymity by default</string>
     <string name="english">English</string>
     <string name="russian">Русский</string>
     <string name="scroll_to_replies">Scroll to replies</string>
@@ -53,6 +54,10 @@
     <string name="password">Password</string>
     <string name="sign_in">Sign In</string>
     <string name="auth_failed">Wrong user name or password</string>
+
+    <!--donate-->
+    <string name="donate">Donate</string>
+    <string name="donate_url">https://yoomoney.ru/to/41001208815080</string>
 
     <plurals name="minutes" tools:ignore="UnusedQuantity">
         <item quantity="zero">%1$d minutes ago</item>

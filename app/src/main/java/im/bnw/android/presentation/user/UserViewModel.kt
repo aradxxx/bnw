@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.user
 
+import com.github.terrakok.modo.android.launch
 import com.github.terrakok.modo.externalForward
 import com.github.terrakok.modo.forward
 import im.bnw.android.BuildConfig
@@ -148,6 +149,10 @@ class UserViewModel @Inject constructor(
 
     fun savedMessagesClicked() {
         modo.externalForward(Screens.SavedMessages)
+    }
+
+    fun donateClicked(donateUrl: String) {
+        modo.launch(Screens.externalHyperlink(donateUrl))
     }
 
     private fun logout() {

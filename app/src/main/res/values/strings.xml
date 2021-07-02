@@ -22,6 +22,7 @@
     <string name="sending_confirmation">Вы действительно хотите отправить?</string>
 
     <!--profile-->
+    <string name="registered">Зарегистрирован %1$s</string>
     <string name="messages_count">Сообщений</string>
     <string name="comments_count">Комментариев</string>
     <string name="log_in">Авторизация</string>
@@ -38,7 +39,7 @@
     <string name="dark_theme">Тёмная</string>
     <string name="choose_theme">Выбрать тему</string>
     <string name="system_default">По умолчанию</string>
-    <string name="anonymity">Анонимность</string>
+    <string name="anonymity">Анонимность по умолчанию</string>
     <string name="english">English</string>
     <string name="russian">Русский</string>
     <string name="scroll_to_replies">Скроллить к комментариям</string>
@@ -53,6 +54,10 @@
     <string name="saved_empty_title">Пока пусто</string>
     <string name="saved_empty_message">Сохраненные сообщения будут здесь</string>
     <string name="remove_saved_message_confirm">Вы уверены что хотите удалить сообщение из локального хранилища?</string>
+
+    <!--donate-->
+    <string name="donate">Помочь проекту</string>
+    <string name="donate_url">https://yoomoney.ru/to/41001208815080</string>
 
     <plurals name="minutes">
         <item quantity="zero">%1$d минут назад</item>

@@ -92,6 +92,7 @@
                         android:id="@+id/anonymity"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
+                        android:layout_marginTop="16dp"
                         android:paddingStart="24dp"
                         android:paddingEnd="16dp"
                         tools:text="@string/anonymity" />
@@ -121,6 +122,13 @@
                         android:visibility="visible"
                         app:cornerRadius="@dimen/button_corner_radius"
                         tools:visibility="gone" />
+
+                    <include
+                        android:id="@+id/about"
+                        layout="@layout/include_about"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp" />
                 </LinearLayout>
             </FrameLayout>
         </ScrollView>

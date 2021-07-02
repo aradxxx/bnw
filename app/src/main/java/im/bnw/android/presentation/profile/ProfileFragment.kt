@@ -15,8 +15,9 @@ import im.bnw.android.databinding.ItemProfileDetailCardBinding
 import im.bnw.android.domain.user.User
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.view.FailureView
+import im.bnw.android.presentation.util.DATE
+import im.bnw.android.presentation.util.format
 import im.bnw.android.presentation.util.newText
-import im.bnw.android.presentation.util.timeAgoString
 import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
 import javax.net.ssl.SSLException
@@ -91,7 +92,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             return
         }
         detailCard.isVisible = true
-        firstJoinDate.newText = timeAgoString(requireContext(), user.timestamp())
+        firstJoinDate.newText = getString(R.string.registered, user.timestamp().format(DATE))
         messagesCount.fillDetail(
             R.drawable.ic_messages,
             R.string.messages_count,

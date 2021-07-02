@@ -27,10 +27,11 @@ import im.bnw.android.presentation.user.adapter.SettingsDialog
 import im.bnw.android.presentation.user.adapter.SettingsItem
 import im.bnw.android.presentation.util.Const.ARGUMENT_SETTING
 import im.bnw.android.presentation.util.Const.SETTINGS_REQUEST_KEY
+import im.bnw.android.presentation.util.DATE
 import im.bnw.android.presentation.util.DialogCode
+import im.bnw.android.presentation.util.format
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.setLocale
-import im.bnw.android.presentation.util.timeAgoString
 import im.bnw.android.presentation.util.toItem
 import im.bnw.android.presentation.util.toSetting
 import im.bnw.android.presentation.util.viewBinding
@@ -83,6 +84,9 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
             savedMessagesCount.detail.setOnClickListener {
                 viewModel.savedMessagesClicked()
             }
+            about.donate.setOnClickListener {
+                viewModel.donateClicked(getString(R.string.donate_url))
+            }
         }
     }
 
@@ -127,6 +131,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         progressBar.isVisible = false
         anonImage.isVisible = false
         savedMessagesCard.isVisible = false
+        about.root.isVisible = false
     }
 
     private fun renderLoadingState() = with(binding) {
@@ -141,6 +146,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         progressBar.isVisible = true
         anonImage.isVisible = false
         savedMessagesCard.isVisible = false
+        about.root.isVisible = false
     }
 
     private fun renderLoadingFailedState(state: UserState.LoadingFailed) = with(binding) {
@@ -160,6 +166,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         progressBar.isVisible = false
         anonImage.isVisible = false
         savedMessagesCard.isVisible = false
+        about.root.isVisible = false
     }
 
     private fun renderUnauthorizedState(state: UserState.Unauthorized) = with(binding) {
@@ -179,6 +186,8 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
             R.string.saved_messages,
             state.savedMessagesCount,
         )
+        binding.about.donate.text = getString(R.string.donate)
+        about.root.isVisible = true
     }
 
     private fun renderProfileInfo(state: UserState.UserInfo) = with(binding) {
@@ -200,6 +209,8 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
             R.string.saved_messages,
             state.savedMessagesCount,
         )
+        binding.about.donate.text = getString(R.string.donate)
+        about.root.isVisible = true
     }
 
     private fun IncludeProfileDetailsBinding.drawDetails(user: User?) {
@@ -208,7 +219,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
             return
         }
         detailCard.isVisible = true
-        firstJoinDate.newText = timeAgoString(requireContext(), user.timestamp())
+        firstJoinDate.newText = getString(R.string.registered, user.timestamp().format(DATE))
         messagesCount.fillDetail(
             R.drawable.ic_messages,
             R.string.messages_count,

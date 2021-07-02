@@ -3,7 +3,6 @@ package im.bnw.android.presentation.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatDelegate
 import com.github.terrakok.modo.externalForward
-import com.github.terrakok.modo.forward
 import com.github.terrakok.modo.selectStack
 import im.bnw.android.BuildConfig
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
@@ -69,7 +68,7 @@ class MainViewModel @Inject constructor(
         val id = intent.data?.pathSegments?.getOrNull(1) ?: return
         when (segment) {
             BuildConfig.POST_PATH_SEGMENT -> {
-                modo.forward(Screens.MessageDetails(id))
+                modo.externalForward(Screens.MessageDetails(id))
             }
             BuildConfig.USER_PATH_SEGMENT -> {
                 navigateToUser(id)
