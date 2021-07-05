@@ -49,13 +49,22 @@
         app:mpb_progressStyle="horizontal"
         app:mpb_showProgressBackground="false" />
 
-    <im.bnw.android.presentation.core.view.FailureView
-        android:id="@+id/failure"
+    <ScrollView
+        android:id="@+id/failureScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp"
-        android:gravity="center"
-        android:visibility="gone"
-        app:message="@string/check_connection_and_tap_retry"
-        app:title="@string/no_connection" />
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+        <im.bnw.android.presentation.core.view.FailureView
+            android:id="@+id/failure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            app:message="@string/check_connection_and_tap_retry"
+            app:title="@string/no_connection" />
+    </ScrollView>
 </FrameLayout>

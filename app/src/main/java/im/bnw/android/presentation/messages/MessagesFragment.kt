@@ -97,7 +97,7 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
             val createMessageEnabled = state.createMessageVisible && state.messages.isNotEmpty()
             createMessage.isEnabled = createMessageEnabled
             createMessage.isVisible = createMessageEnabled
-            failure.isVisible = state.messages.isEmpty() && state.error != null
+            failureScroll.isVisible = state.messages.isEmpty() && state.error != null
             failure.message = when (state.error) {
                 is SSLException -> {
                     getString(R.string.possibly_domain_blocked)
