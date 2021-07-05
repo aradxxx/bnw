@@ -9,6 +9,7 @@ import dagger.Provides
 import im.bnw.android.BuildConfig
 import im.bnw.android.data.core.network.Api
 import im.bnw.android.data.core.network.ConnectionInterceptor
+import im.bnw.android.data.core.network.HeadersInterceptor
 import im.bnw.android.data.core.network.LoggingInterceptor
 import im.bnw.android.data.core.network.connectionprovider.AndroidConnectionProvider
 import im.bnw.android.data.core.network.connectionprovider.ConnectionProvider
@@ -37,6 +38,7 @@ class NetworkModule {
 
         builder.addInterceptor(LoggingInterceptor(userDataStore))
         builder.addInterceptor(ConnectionInterceptor(connectionProvider))
+        builder.addInterceptor(HeadersInterceptor)
         if (BuildConfig.DEBUG) {
             val interceptor = HttpLoggingInterceptor()
             interceptor.level = HttpLoggingInterceptor.Level.BODY
