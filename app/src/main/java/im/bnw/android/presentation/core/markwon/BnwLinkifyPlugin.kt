@@ -20,7 +20,7 @@ object BnwLinkifyPlugin : AbstractMarkwonPlugin() {
 }
 
 object BnwLinkListener : CorePlugin.OnTextAddedListener {
-    private val pattern: Pattern = Pattern.compile("((#\\w+)|(@\\w+))", Pattern.MULTILINE)
+    private val pattern: Pattern = Pattern.compile("((#\\S+)|(@\\S+))", Pattern.MULTILINE)
 
     override fun onTextAdded(visitor: MarkwonVisitor, text: String, start: Int) {
         val matcher: Matcher = pattern.matcher(text)
