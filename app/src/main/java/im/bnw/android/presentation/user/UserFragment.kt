@@ -241,7 +241,9 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(
         @StringRes nameResId: Int
     ) {
         isVisible = true
-        isChecked = checked
+        if (isChecked != checked) {
+            isChecked = checked
+        }
         newText = getString(nameResId)
     }
 

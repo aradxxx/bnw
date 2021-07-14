@@ -56,8 +56,11 @@ class UserViewModel @Inject constructor(
     }
 
     fun anonymityClicked(enabled: Boolean) {
-        val currentState = state.nullOr<UserState.UserInfo>() ?: return
         vmScope.launch(dispatchersProvider.default) {
+            val currentState = state.nullOr<UserState.UserInfo>() ?: return@launch
+            if (enabled == currentState.settings.incognito) {
+                return@launch
+            }
             settingsInteractor.updateSettings(
                 currentState.settings.copy(
                     incognito = enabled
@@ -69,6 +72,9 @@ class UserViewModel @Inject constructor(
     fun scrollToRepliesChanged(checked: Boolean) {
         vmScope.launch(dispatchersProvider.default) {
             val currentState = state.nullOr<UserState.UserInfo>() ?: return@launch
+            if (checked == currentState.settings.scrollToReplies) {
+                return@launch
+            }
             settingsInteractor.updateSettings(
                 currentState.settings.copy(
                     scrollToReplies = checked

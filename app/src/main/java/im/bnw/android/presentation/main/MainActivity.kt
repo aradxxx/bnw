@@ -2,12 +2,14 @@ package im.bnw.android.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import com.github.terrakok.modo.android.ModoRender
 import com.github.terrakok.modo.android.init
 import com.github.terrakok.modo.android.saveState
 import im.bnw.android.App
 import im.bnw.android.R
 import im.bnw.android.databinding.ActivityMainBinding
+import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.presentation.core.BaseActivity
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.BnwMultiStackFragment
@@ -46,14 +48,33 @@ class MainActivity : BaseActivity<MainViewModel, MainState>(
         checkDeepLink(intent)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        modo.saveState(outState)
+    }
+
+    override fun updateState(state: MainState) = when (state) {
+        MainState.Init -> {
+            // no op
+        }
+        is MainState.Main -> {
+            renderMain(state)
+        }
+    }
+
+    private fun renderMain(state: MainState.Main) {
+        AppCompatDelegate.setDefaultNightMode(state.theme.toDelegateTheme())
+    }
+
     private fun checkDeepLink(intent: Intent?) {
         intent ?: return
         viewModel.checkDeepLink(intent)
         setIntent(intent.setData(null))
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        modo.saveState(outState)
+    private fun ThemeSettings.toDelegateTheme(): Int = when (this) {
+        ThemeSettings.Default -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        ThemeSettings.Light -> AppCompatDelegate.MODE_NIGHT_NO
+        ThemeSettings.Dark -> AppCompatDelegate.MODE_NIGHT_YES
     }
 }
