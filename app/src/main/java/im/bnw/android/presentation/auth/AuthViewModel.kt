@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.auth
 
+import com.github.terrakok.modo.Modo
 import im.bnw.android.R
 import im.bnw.android.domain.auth.AuthInteractor
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
@@ -11,10 +12,12 @@ import java.io.IOException
 import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(
+    modo: Modo,
     private val authInteractor: AuthInteractor,
     private val dispatchersProvider: DispatchersProvider
 ) : BaseViewModel<AuthState>(
-    AuthState()
+    AuthState(),
+    modo
 ) {
     override fun handleException(e: Throwable) {
         when (e) {

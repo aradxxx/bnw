@@ -3,10 +3,10 @@ package im.bnw.android.presentation.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
+import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.ModoRender
 import com.github.terrakok.modo.android.init
 import com.github.terrakok.modo.android.saveState
-import im.bnw.android.App
 import im.bnw.android.R
 import im.bnw.android.databinding.ActivityMainBinding
 import im.bnw.android.domain.settings.ThemeSettings
@@ -14,13 +14,15 @@ import im.bnw.android.presentation.core.BaseActivity
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.BnwMultiStackFragment
 import im.bnw.android.presentation.util.viewBinding
+import javax.inject.Inject
 
 class MainActivity : BaseActivity<MainViewModel, MainState>(
     R.layout.activity_main,
     MainViewModel::class.java,
 ) {
+    @Inject
+    lateinit var modo: Modo
     private val binding by viewBinding(ActivityMainBinding::inflate)
-    private val modo = App.modo
     private val modoRender by lazy {
         object : ModoRender(this@MainActivity, R.id.container) {
             override fun createMultiStackFragment() = BnwMultiStackFragment()

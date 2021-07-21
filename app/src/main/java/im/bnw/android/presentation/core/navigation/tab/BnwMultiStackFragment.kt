@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.core.navigation.tab
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,17 +9,25 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.view.forEach
+import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.multi.MultiStackFragmentImpl
 import com.github.terrakok.modo.selectStack
-import im.bnw.android.App
+import dagger.android.support.AndroidSupportInjection
 import im.bnw.android.R
 import im.bnw.android.presentation.util.attrColor
 import im.bnw.android.presentation.util.dpToPxF
+import javax.inject.Inject
 
 private const val BOTTOM_NAVIGATION_ELEVATION = 8
 
 class BnwMultiStackFragment : MultiStackFragmentImpl() {
-    private val modo = App.modo
+    @Inject
+    lateinit var modo: Modo
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

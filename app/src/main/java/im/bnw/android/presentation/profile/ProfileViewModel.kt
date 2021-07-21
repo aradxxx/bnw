@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.profile
 
+import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.externalForward
 import im.bnw.android.BuildConfig
 import im.bnw.android.domain.core.Result
@@ -15,11 +16,13 @@ import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
     restoredState: ProfileState?,
+    modo: Modo,
     private val screenParams: ProfileScreenParams,
     private val profileInteractor: ProfileInteractor,
     private val dispatchersProvider: DispatchersProvider,
 ) : BaseViewModel<ProfileState>(
-    restoredState ?: ProfileState.Init
+    restoredState ?: ProfileState.Init,
+    modo
 ) {
     init {
         updateState { ProfileState.Loading }

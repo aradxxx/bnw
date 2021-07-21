@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.newpost
 
+import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.back
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.message.MessageInteractor
@@ -12,10 +13,12 @@ import javax.inject.Inject
 
 class NewPostViewModel @Inject constructor(
     restoredState: NewPostState?,
+    modo: Modo,
     private val messageInteractor: MessageInteractor,
     private val settingsInteractor: SettingsInteractor
 ) : BaseViewModel<NewPostState>(
-    restoredState ?: NewPostState()
+    restoredState ?: NewPostState(),
+    modo
 ) {
     init {
         subscribeSettings()

@@ -1,6 +1,7 @@
 package im.bnw.android.presentation.main
 
 import android.content.Intent
+import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.externalForward
 import com.github.terrakok.modo.selectStack
 import im.bnw.android.BuildConfig
@@ -19,11 +20,13 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     restoredState: MainState?,
+    modo: Modo,
     private val userManager: UserManager,
     private val settingsInteractor: SettingsInteractor,
     private val dispatchersProvider: DispatchersProvider,
 ) : BaseViewModel<MainState>(
-    restoredState ?: MainState.Init
+    restoredState ?: MainState.Init,
+    modo
 ) {
     init {
         subscribeSettings()

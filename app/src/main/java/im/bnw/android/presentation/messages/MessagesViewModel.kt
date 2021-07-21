@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.messages
 
+import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.launch
 import com.github.terrakok.modo.externalForward
 import com.github.terrakok.modo.selectStack
@@ -27,19 +28,28 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-private const val PAGE_SIZE = 20
+data class Dependencies @Inject constructor(
+    val restoredState: MessagesState?,
+    val modo: Modo,
+    val screenParams: MessagesScreenParams,
+    val messageInteractor: MessageInteractor,
+    val authInteractor: AuthInteractor,
+    val userManager: UserManager,
+    val dispatchersProvider: DispatchersProvider
+)
 
 class MessagesViewModel @Inject constructor(
-    restoredState: MessagesState?,
-    private val screenParams: MessagesScreenParams,
-    private val messageInteractor: MessageInteractor,
-    private val authInteractor: AuthInteractor,
-    private val userManager: UserManager,
-    private val dispatchersProvider: DispatchersProvider
+    dependencies: Dependencies
 ) : BaseViewModel<MessagesState>(
-    restoredState ?: MessagesState(user = screenParams.user)
+    dependencies.restoredState ?: MessagesState(user = dependencies.screenParams.user),
+    dependencies.modo
 ) {
     private val initiator = MutableStateFlow(false)
+    private val dispatchersProvider = dependencies.dispatchersProvider
+    private val messageInteractor = dependencies.messageInteractor
+    private val userManager = dependencies.userManager
+    private val screenParams = dependencies.screenParams
+    private val authInteractor = dependencies.authInteractor
 
     init {
         loadBefore()

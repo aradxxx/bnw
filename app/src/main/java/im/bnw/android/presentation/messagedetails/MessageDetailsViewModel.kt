@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.messagedetails
 
+import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.launch
 import com.github.terrakok.modo.externalForward
 import im.bnw.android.domain.core.Result
@@ -30,18 +31,29 @@ import javax.inject.Inject
 
 private const val REPLY_ITEM_SORT_DELIMITER = '_'
 
+data class Dependencies @Inject constructor(
+    val restoredState: MessageDetailsState?,
+    val modo: Modo,
+    val messageInteractor: MessageInteractor,
+    val messageDetailsScreenParams: MessageDetailsScreenParams,
+    val dispatchersProvider: DispatchersProvider,
+    val settingsInteractor: SettingsInteractor,
+    val userManager: UserManager
+)
+
 @SuppressWarnings("TooManyFunctions")
 class MessageDetailsViewModel @Inject constructor(
-    restoredState: MessageDetailsState?,
-    private val messageInteractor: MessageInteractor,
-    private val messageDetailsScreenParams: MessageDetailsScreenParams,
-    private val dispatchersProvider: DispatchersProvider,
-    private val settingsInteractor: SettingsInteractor,
-    private val userManager: UserManager
+    dependencies: Dependencies
 ) : BaseViewModel<MessageDetailsState>(
-    restoredState ?: MessageDetailsState.Init
+    dependencies.restoredState ?: MessageDetailsState.Init,
+    dependencies.modo
 ) {
     private val initiator = MutableStateFlow(false)
+    private val messageInteractor = dependencies.messageInteractor
+    private val messageDetailsScreenParams = dependencies.messageDetailsScreenParams
+    private val dispatchersProvider = dependencies.dispatchersProvider
+    private val settingsInteractor = dependencies.settingsInteractor
+    private val userManager = dependencies.userManager
 
     init {
         updateState { MessageDetailsState.Loading }
@@ -228,8 +240,5 @@ class MessageDetailsViewModel @Inject constructor(
         return "${parent.buildSortTag(replies)}$REPLY_ITEM_SORT_DELIMITER$timestamp"
     }
 
-    private suspend fun settings(): Settings {
-        return settingsInteractor.subscribeSettings()
-            .first()
-    }
+    private suspend fun settings(): Settings = settingsInteractor.subscribeSettings().first()
 }

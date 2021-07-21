@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.back
-import im.bnw.android.App
 import im.bnw.android.R
 import im.bnw.android.presentation.core.lifecycle.LiveEvent
 import im.bnw.android.presentation.util.BnwApiError
@@ -18,9 +18,9 @@ import java.util.concurrent.atomic.AtomicReference
 import javax.net.ssl.SSLException
 
 abstract class BaseViewModel<S : State>(
-    initialState: S
+    initialState: S,
+    protected val modo: Modo
 ) : ViewModel() {
-    val modo = App.modo
     private val stateLiveData = MutableLiveData(initialState)
     private val eventLiveData = LiveEvent<Any?>()
     private val atomicState = AtomicReference<S>(initialState)

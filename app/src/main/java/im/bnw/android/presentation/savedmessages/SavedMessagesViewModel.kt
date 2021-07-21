@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.savedmessages
 
+import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.launch
 import com.github.terrakok.modo.back
 import com.github.terrakok.modo.externalForward
@@ -23,10 +24,12 @@ import javax.inject.Inject
 
 class SavedMessagesViewModel @Inject constructor(
     restoredState: SavedMessagesState?,
+    modo: Modo,
     private val messageInteractor: MessageInteractor,
     private val dispatchersProvider: DispatchersProvider
 ) : BaseViewModel<SavedMessagesState>(
-    restoredState ?: SavedMessagesState.Init
+    restoredState ?: SavedMessagesState.Init,
+    modo
 ) {
     init {
         subscribeSavedMessages()

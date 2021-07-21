@@ -11,6 +11,7 @@ import im.bnw.android.di.savedmessages.SavedMessagesFragmentModule
 import im.bnw.android.di.splash.SplashFragmentModule
 import im.bnw.android.di.user.UserFragmentModule
 import im.bnw.android.presentation.auth.AuthFragment
+import im.bnw.android.presentation.core.navigation.tab.BnwMultiStackFragment
 import im.bnw.android.presentation.messagedetails.MessageDetailsFragment
 import im.bnw.android.presentation.messages.MessagesFragment
 import im.bnw.android.presentation.newpost.NewPostFragment
@@ -44,4 +45,7 @@ interface FragmentBindingModule {
 
     @ContributesAndroidInjector(modules = [SavedMessagesFragmentModule::class])
     fun bindSavedMessagesFragment(): SavedMessagesFragment
+
+    @ContributesAndroidInjector
+    fun bindBnwMultiStackFragment(): BnwMultiStackFragment
 }

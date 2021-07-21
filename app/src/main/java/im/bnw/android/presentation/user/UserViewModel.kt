@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.user
 
+import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.launch
 import com.github.terrakok.modo.externalForward
 import im.bnw.android.BuildConfig
@@ -27,12 +28,14 @@ import javax.inject.Inject
 @Suppress("TooManyFunctions")
 class UserViewModel @Inject constructor(
     restoredState: UserState?,
+    modo: Modo,
     private val messageInteractor: MessageInteractor,
     private val profileInteractor: ProfileInteractor,
     private val settingsInteractor: SettingsInteractor,
     private val dispatchersProvider: DispatchersProvider,
 ) : BaseViewModel<UserState>(
     restoredState ?: UserState.Init,
+    modo
 ) {
     init {
         updateState { UserState.Loading }
