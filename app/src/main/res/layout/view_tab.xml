@@ -6,12 +6,6 @@
     android:layout_height="56dp"
     android:background="?selectableItemBackground">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:alpha="0.1"
-        android:background="?android:textColorSecondary" />
-
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"

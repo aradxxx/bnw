@@ -2,7 +2,6 @@ package im.bnw.android.presentation.user
 
 import com.github.terrakok.modo.android.launch
 import com.github.terrakok.modo.externalForward
-import com.github.terrakok.modo.forward
 import im.bnw.android.BuildConfig
 import im.bnw.android.R
 import im.bnw.android.domain.core.Result
@@ -52,7 +51,7 @@ class UserViewModel @Inject constructor(
 
     fun messagesClicked() {
         val currentState = state.nullOr<UserState.UserInfo>() ?: return
-        modo.forward(Screens.Messages(currentState.user.name))
+        modo.externalForward(Screens.Messages(currentState.user.name))
     }
 
     fun anonymityClicked(enabled: Boolean) {
