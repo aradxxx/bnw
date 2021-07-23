@@ -28,8 +28,8 @@ import im.bnw.android.domain.settings.LanguageSettings
 import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.presentation.core.FragmentViewBindingDelegate
 import im.bnw.android.presentation.core.view.MediaOverlayView
-import im.bnw.android.presentation.user.LanguageItem
-import im.bnw.android.presentation.user.ThemeItem
+import im.bnw.android.presentation.settings.LanguageItem
+import im.bnw.android.presentation.settings.ThemeItem
 import java.util.Locale
 
 val Context.dataStore by preferencesDataStore("user")

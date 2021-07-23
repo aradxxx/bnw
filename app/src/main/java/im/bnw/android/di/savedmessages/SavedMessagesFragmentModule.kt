@@ -12,7 +12,7 @@ import im.bnw.android.presentation.savedmessages.SavedMessagesViewModel
 
 @Module(includes = [SavedMessagesFragmentModule.ViewModelModule::class])
 class SavedMessagesFragmentModule : FragmentModule<SavedMessagesFragment, SavedMessagesState>() {
-    @Module(includes = [SavedMessageModule::class])
+    @Module
     interface ViewModelModule {
         @Binds
         @IntoMap

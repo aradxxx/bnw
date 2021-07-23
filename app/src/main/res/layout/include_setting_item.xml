@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/setting"
     android:layout_width="match_parent"
     android:layout_height="56dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
     android:background="?selectableItemBackground">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
         android:layout_toStartOf="@id/value"
-        android:gravity="start|center"
+        android:gravity="center_vertical"
         android:textAppearance="@style/Text.Body1.Primary"
-        tools:text="Пункт настроек" />
+        tools:text="Пункт настройки" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/value"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:gravity="center|right"
+        android:gravity="center_vertical"
         android:textAppearance="@style/Text.Body1.Secondary"
         tools:text="1337" />
 </RelativeLayout>

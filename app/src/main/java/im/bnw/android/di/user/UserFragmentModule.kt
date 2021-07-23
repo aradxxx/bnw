@@ -12,7 +12,7 @@ import im.bnw.android.presentation.user.UserViewModel
 
 @Module(includes = [UserFragmentModule.ViewModelModule::class])
 class UserFragmentModule : FragmentModule<UserFragment, UserState>() {
-    @Module(includes = [UserModule::class])
+    @Module
     interface ViewModelModule {
         @Binds
         @IntoMap

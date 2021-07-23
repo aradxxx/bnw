@@ -1,13 +1,12 @@
-package im.bnw.android.presentation.user.adapter
+package im.bnw.android.presentation.settings.adapter
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import im.bnw.android.R
 import im.bnw.android.presentation.util.Const.ARGUMENT_SETTING
 import im.bnw.android.presentation.util.Const.SETTINGS_REQUEST_KEY
+import im.bnw.android.presentation.util.newText
 
 class SettingsDialog : BottomSheetDialogFragment() {
     private lateinit var title: String
@@ -59,12 +59,8 @@ class SettingsDialog : BottomSheetDialogFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_settings_dialog, container, false)
         with(view.findViewById<TextView>(R.id.title)) {
-            visibility = if (title.isNotEmpty()) {
-                text = title
-                VISIBLE
-            } else {
-                GONE
-            }
+            newText = title
+            isVisible = title.isNotEmpty()
         }
         return view
     }
@@ -75,9 +71,7 @@ class SettingsDialog : BottomSheetDialogFragment() {
             dismiss()
             parentFragment?.setFragmentResult(
                 SETTINGS_REQUEST_KEY,
-                bundleOf(
-                    ARGUMENT_SETTING to it,
-                )
+                bundleOf(ARGUMENT_SETTING to it)
             )
         }
         settingsAdapter.items = items

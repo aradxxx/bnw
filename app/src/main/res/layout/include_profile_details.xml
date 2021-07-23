@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/detail_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
@@ -13,7 +11,15 @@
         android:layout_width="192dp"
         android:layout_height="192dp"
         android:layout_margin="16dp"
-        tools:src="@drawable/ic_launcher_foreground" />
+        tools:src="@drawable/ic_profile" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/user_name"
+        style="@style/Text.Body1.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        tools:text="androiddev" />
 
     <TextView
         android:id="@+id/first_join_date"
@@ -24,31 +30,17 @@
         android:textAlignment="center"
         tools:text="На bnw уже 100 лет" />
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardBackgroundColor="?attr/barColor"
-        app:cardCornerRadius="16dp">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <include
+            android:id="@+id/messagesCount"
+            layout="@layout/item_profile_detail_card" />
 
-            <include
-                android:id="@+id/messagesCount"
-                layout="@layout/item_profile_detail_card" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:alpha="0.1"
-                android:background="?android:textColorSecondary" />
-
-            <include
-                android:id="@+id/commentsCount"
-                layout="@layout/item_profile_detail_card" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+        <include
+            android:id="@+id/commentsCount"
+            layout="@layout/item_profile_detail_card" />
+    </LinearLayout>
 </LinearLayout>

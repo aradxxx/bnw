@@ -6,13 +6,10 @@ import kotlinx.parcelize.Parcelize
 
 sealed class ProfileState : State {
     @Parcelize
-    object Init : ProfileState()
-
-    @Parcelize
     object Loading : ProfileState()
 
     @Parcelize
-    data class LoadingFailed(
+    data class Failed(
         val throwable: Throwable
     ) : ProfileState()
 

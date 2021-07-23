@@ -12,7 +12,7 @@ import im.bnw.android.presentation.newpost.NewPostViewModel
 
 @Module(includes = [NewPostFragmentModule.ViewModelModule::class])
 class NewPostFragmentModule : FragmentModule<NewPostFragment, NewPostState>() {
-    @Module(includes = [NewPostModule::class])
+    @Module
     interface ViewModelModule {
         @Binds
         @IntoMap

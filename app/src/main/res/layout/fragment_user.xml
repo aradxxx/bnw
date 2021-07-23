@@ -4,23 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".presentation.main.MainActivity">
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/barColor"
-        android:visibility="gone">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:menu="@menu/profile"
-            app:title="user_name" />
-    </com.google.android.material.appbar.AppBarLayout>
+        android:layout_height="1dp"
+        android:background="?attr/barColor" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_to_refresh"
@@ -38,12 +27,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                <ImageView
+                    android:id="@+id/settings"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="end"
+                    android:layout_margin="8dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_settings"
+                    app:tint="?android:textColorSecondary" />
+
+                <include
+                    android:id="@+id/loading_bar"
+                    layout="@layout/include_loading"
                     android:visibility="gone" />
 
                 <im.bnw.android.presentation.core.view.FailureView
@@ -54,82 +51,17 @@
                     android:gravity="center"
                     android:visibility="gone" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                <include
+                    android:id="@+id/authorized"
+                    layout="@layout/include_user_authorized"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
 
-                    <include
-                        android:id="@+id/details"
-                        layout="@layout/include_profile_details" />
-
-                    <ImageView
-                        android:id="@+id/anonImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:alpha="0.1"
-                        android:padding="32dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_anon"
-                        android:visibility="gone"
-                        app:tint="?attr/primaryIconColor" />
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/savedMessagesCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        app:cardBackgroundColor="?attr/barColor"
-                        app:cardCornerRadius="16dp">
-
-                        <include
-                            android:id="@+id/savedMessagesCount"
-                            layout="@layout/item_profile_detail_card" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/anonymity"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:layout_marginTop="16dp"
-                        android:paddingStart="24dp"
-                        android:paddingEnd="16dp"
-                        tools:text="@string/anonymity" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/scrollToReplies"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:paddingStart="24dp"
-                        android:paddingEnd="16dp"
-                        tools:text="@string/scroll_to_replies" />
-
-                    <include
-                        android:id="@+id/settings"
-                        layout="@layout/include_settings"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/login"
-                        android:layout_width="match_parent"
-                        android:layout_height="72dp"
-                        android:layout_gravity="bottom"
-                        android:layout_margin="16dp"
-                        android:text="@string/log_in"
-                        android:visibility="visible"
-                        app:cornerRadius="@dimen/button_corner_radius"
-                        tools:visibility="gone" />
-
-                    <include
-                        android:id="@+id/about"
-                        layout="@layout/include_about"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp" />
-                </LinearLayout>
+                <include
+                    android:id="@+id/unauthorized"
+                    layout="@layout/include_user_unauthorized"
+                    android:visibility="gone"
+                    tools:visibility="gone" />
             </FrameLayout>
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -15,6 +15,7 @@ import im.bnw.android.presentation.newpost.NewPostFragment
 import im.bnw.android.presentation.profile.ProfileFragment
 import im.bnw.android.presentation.profile.ProfileScreenParams
 import im.bnw.android.presentation.savedmessages.SavedMessagesFragment
+import im.bnw.android.presentation.settings.SettingsFragment
 import im.bnw.android.presentation.splash.SplashFragment
 import im.bnw.android.presentation.user.UserFragment
 import kotlinx.parcelize.Parcelize
@@ -65,6 +66,11 @@ object Screens {
         val user: String
     ) : AppScreen("Profile_$user") {
         override fun create(): Fragment = ProfileFragment.newInstance(ProfileScreenParams(user))
+    }
+
+    @Parcelize
+    object Settings : AppScreen("Settings") {
+        override fun create(): Fragment = SettingsFragment.newInstance()
     }
 
     @Parcelize

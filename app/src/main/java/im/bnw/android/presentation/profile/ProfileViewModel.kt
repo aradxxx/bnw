@@ -21,11 +21,10 @@ class ProfileViewModel @Inject constructor(
     private val profileInteractor: ProfileInteractor,
     private val dispatchersProvider: DispatchersProvider,
 ) : BaseViewModel<ProfileState>(
-    restoredState ?: ProfileState.Init,
+    restoredState ?: ProfileState.Loading,
     modo
 ) {
     init {
-        updateState { ProfileState.Loading }
         getProfile(screenParams.userName)
     }
 
@@ -35,7 +34,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun retryClicked() {
-        state.nullOr<ProfileState.LoadingFailed>() ?: return
+        state.nullOr<ProfileState.Failed>() ?: return
         getProfile(screenParams.userName)
     }
 
@@ -48,11 +47,11 @@ class ProfileViewModel @Inject constructor(
                         ProfileState.ProfileInfo(result.value)
                     }
                     is Result.Failure -> updateState {
-                        ProfileState.LoadingFailed(result.throwable)
+                        ProfileState.Failed(result.throwable)
                     }
                 }
             } catch (t: IOException) {
-                updateState { ProfileState.LoadingFailed(t) }
+                updateState { ProfileState.Failed(t) }
             }
         }
     }

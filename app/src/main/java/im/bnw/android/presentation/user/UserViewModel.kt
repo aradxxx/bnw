@@ -4,42 +4,36 @@ import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.launch
 import com.github.terrakok.modo.externalForward
 import im.bnw.android.BuildConfig
-import im.bnw.android.R
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.MessageInteractor
-import im.bnw.android.domain.settings.LanguageSettings
-import im.bnw.android.domain.settings.Settings
-import im.bnw.android.domain.settings.SettingsInteractor
-import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.domain.user.ProfileInteractor
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.util.nullOr
-import im.bnw.android.presentation.util.toItem
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class UserViewModel @Inject constructor(
     restoredState: UserState?,
     modo: Modo,
     private val messageInteractor: MessageInteractor,
     private val profileInteractor: ProfileInteractor,
-    private val settingsInteractor: SettingsInteractor,
     private val dispatchersProvider: DispatchersProvider,
 ) : BaseViewModel<UserState>(
-    restoredState ?: UserState.Init,
+    restoredState ?: UserState.Loading,
     modo
 ) {
     init {
-        updateState { UserState.Loading }
         subscribeUserInfo()
+    }
+
+    fun settingsClicked() {
+        modo.externalForward(Screens.Settings)
     }
 
     fun loginClicked() {
@@ -47,102 +41,19 @@ class UserViewModel @Inject constructor(
         modo.externalForward(Screens.Auth)
     }
 
+    fun logoutClicked() {
+        state.nullOr<UserState.Authorized>() ?: return
+        postEvent(LogoutEvent)
+    }
+
     fun logoutConfirmed() {
-        state.nullOr<UserState.UserInfo>() ?: return
+        state.nullOr<UserState.Authorized>() ?: return
         logout()
     }
 
     fun messagesClicked() {
-        val currentState = state.nullOr<UserState.UserInfo>() ?: return
+        val currentState = state.nullOr<UserState.Authorized>() ?: return
         modo.externalForward(Screens.Messages(currentState.user.name))
-    }
-
-    fun anonymityClicked(enabled: Boolean) {
-        vmScope.launch(dispatchersProvider.default) {
-            val currentState = state.nullOr<UserState.UserInfo>() ?: return@launch
-            if (enabled == currentState.settings.incognito) {
-                return@launch
-            }
-            settingsInteractor.updateSettings(
-                currentState.settings.copy(
-                    incognito = enabled
-                )
-            )
-        }
-    }
-
-    fun scrollToRepliesChanged(checked: Boolean) {
-        vmScope.launch(dispatchersProvider.default) {
-            val currentState = state.nullOr<UserState.UserInfo>() ?: return@launch
-            if (checked == currentState.settings.scrollToReplies) {
-                return@launch
-            }
-            settingsInteractor.updateSettings(
-                currentState.settings.copy(
-                    scrollToReplies = checked
-                )
-            )
-        }
-    }
-
-    fun chooseTheme() {
-        vmScope.launch(dispatchersProvider.default) {
-            settingsInteractor.subscribeSettings()
-                .first {
-                    val themeDialogEvent = SettingsDialogEvent(
-                        R.string.choose_theme,
-                        it.theme.toItem(),
-                        arrayListOf(
-                            ThemeItem.Default,
-                            ThemeItem.Light,
-                            ThemeItem.Dark,
-                        ),
-                    )
-                    postEvent(themeDialogEvent)
-                    true
-                }
-        }
-    }
-
-    fun chooseLanguage() {
-        vmScope.launch(dispatchersProvider.default) {
-            settingsInteractor.subscribeSettings()
-                .first {
-                    val languageDialogEvent = SettingsDialogEvent(
-                        R.string.choose_language,
-                        it.language.toItem(),
-                        arrayListOf(
-                            LanguageItem.Default,
-                            LanguageItem.English,
-                            LanguageItem.Russian,
-                        ),
-                    )
-                    postEvent(languageDialogEvent)
-                    true
-                }
-        }
-    }
-
-    fun themeChanged(theme: ThemeSettings) {
-        val settings = currentSettings() ?: return
-        vmScope.launch(dispatchersProvider.default) {
-            settingsInteractor.updateSettings(
-                settings.copy(
-                    theme = theme
-                )
-            )
-        }
-    }
-
-    fun languageChanged(language: LanguageSettings) {
-        val settings = currentSettings() ?: return
-        vmScope.launch(dispatchersProvider.default) {
-            settingsInteractor.updateSettings(
-                settings.copy(
-                    language = language
-                )
-            )
-        }
     }
 
     fun retryClicked() {
@@ -150,7 +61,7 @@ class UserViewModel @Inject constructor(
     }
 
     fun avatarClicked() {
-        val current = state.nullOr<UserState.UserInfo>() ?: return
+        val current = state.nullOr<UserState.Authorized>() ?: return
         val imageUrl = String.format(BuildConfig.USER_AVA_URL, current.user.name)
         postEvent(OpenMediaEvent(listOf(imageUrl)))
     }
@@ -180,20 +91,19 @@ class UserViewModel @Inject constructor(
     private fun subscribeUserInfo() = vmScope.launch {
         combine(
             profileInteractor.subscribeUserInfo(),
-            settingsInteractor.subscribeSettings(),
             messageInteractor.observeSavedMessages()
-        ) { result, settings, savedMessages ->
+        ) { result, savedMessages ->
             when (result) {
                 is Result.Success -> {
                     val user = result.value
                     if (user == null) {
-                        UserState.Unauthorized(savedMessages.count(), settings)
+                        UserState.Unauthorized(savedMessages.count())
                     } else {
-                        UserState.UserInfo(user, savedMessages.count(), settings)
+                        UserState.Authorized(user, savedMessages.count())
                     }
                 }
                 is Result.Failure -> {
-                    UserState.LoadingFailed(result.throwable)
+                    UserState.Failed(result.throwable)
                 }
             }
         }
@@ -201,17 +111,5 @@ class UserViewModel @Inject constructor(
             .collect { newState ->
                 updateState { newState }
             }
-    }
-
-    private fun currentSettings(): Settings? = when (val current = state) {
-        is UserState.Unauthorized -> {
-            current.settings
-        }
-        is UserState.UserInfo -> {
-            current.settings
-        }
-        else -> {
-            null
-        }
     }
 }

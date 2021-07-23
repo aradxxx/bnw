@@ -12,9 +12,9 @@
         android:id="@+id/icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
         app:tint="?android:textColorSecondary"
         tools:src="@drawable/ic_comments" />
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/icon"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:textAppearance="@style/Text.Body1.Primary"
         tools:text="Пункт информации" />
 
@@ -39,4 +39,11 @@
         android:gravity="center|right"
         android:textAppearance="@style/Text.Body1.Primary"
         tools:text="1337" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:alpha="0.1"
+        android:background="?android:textColorSecondary" />
 </RelativeLayout>

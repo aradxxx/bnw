@@ -21,6 +21,7 @@ import javax.inject.Singleton
         ViewModelFactoryModule::class,
         NetworkModule::class,
         DataModule::class,
+        AppModule::class,
         UserManagerModule::class,
         SettingsModule::class,
         NavigationModule::class,
