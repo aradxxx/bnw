@@ -8,6 +8,7 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 const val DATE = "dd.MM.yyyy"
+const val REG_DATE = "dd MMM yyyy"
 private const val APP_DATE_FORMAT = "dd MMM yyyy HH:mm"
 private const val TIME = "HH:mm"
 

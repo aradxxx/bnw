@@ -27,11 +27,15 @@
     <string name="comments_count">Comments</string>
     <string name="log_in">Log In</string>
     <string name="log_out">Log Out</string>
+    <string name="log_out_from_profile">Log Out</string>
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="retry">Retry</string>
     <string name="saved_messages">Saved messages</string>
 
     <!--settings-->
+    <string name="settings">Settings</string>
+    <string name="behavior">Behavior</string>
+    <string name="appearance">Appearance</string>
     <string name="language">Language</string>
     <string name="choose_language">Choose language</string>
     <string name="theme">Theme</string>

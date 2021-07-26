@@ -1,8 +1,8 @@
-package im.bnw.android.presentation.user
+package im.bnw.android.presentation.settings
 
 import androidx.annotation.StringRes
 import im.bnw.android.R
-import im.bnw.android.presentation.user.adapter.SettingsItem
+import im.bnw.android.presentation.settings.adapter.SettingsItem
 import kotlinx.parcelize.Parcelize
 
 sealed class ThemeItem(@StringRes nameResId: Int) : SettingsItem(nameResId) {

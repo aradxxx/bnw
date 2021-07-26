@@ -27,11 +27,15 @@
     <string name="comments_count">Комментариев</string>
     <string name="log_in">Авторизация</string>
     <string name="log_out">Выйти</string>
+    <string name="log_out_from_profile">Выйти из профиля</string>
     <string name="log_out_confirmation">Вы действительно хотите выйти?</string>
     <string name="retry">Повторить</string>
     <string name="saved_messages">Сохраненные сообщения</string>
 
     <!--settings-->
+    <string name="settings">Настройки</string>
+    <string name="behavior">Поведение</string>
+    <string name="appearance">Внешний вид</string>
     <string name="language">Язык</string>
     <string name="choose_language">Выбрать язык</string>
     <string name="theme">Тема</string>

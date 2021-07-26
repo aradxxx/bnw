@@ -15,12 +15,12 @@ import im.bnw.android.databinding.ItemProfileDetailCardBinding
 import im.bnw.android.domain.user.User
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.view.FailureView
-import im.bnw.android.presentation.util.DATE
+import im.bnw.android.presentation.util.REG_DATE
+import im.bnw.android.presentation.util.failureMessage
 import im.bnw.android.presentation.util.format
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
-import javax.net.ssl.SSLException
 
 class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
     R.layout.fragment_profile
@@ -45,36 +45,25 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
         }
     }
 
-    override fun updateState(state: ProfileState) = when (state) {
-        is ProfileState.Init -> renderInitState()
-        is ProfileState.Loading -> renderLoadingState()
-        is ProfileState.LoadingFailed -> renderLoadingFailedState(state)
-        is ProfileState.ProfileInfo -> renderProfileInfo(state)
+    override fun updateState(state: ProfileState) {
+        when (state) {
+            is ProfileState.Loading -> renderLoading()
+            is ProfileState.Failed -> renderFailed(state)
+            is ProfileState.ProfileInfo -> renderProfileInfo(state)
+        }
     }
 
-    private fun renderInitState() = with(binding) {
-        appBar.isVisible = false
-        details.drawDetails(null)
-        failure.isVisible = false
-        progressBar.isVisible = false
-    }
-
-    private fun renderLoadingState() = with(binding) {
+    private fun renderLoading() = with(binding) {
         appBar.isVisible = false
         details.drawDetails(null)
         failure.isVisible = false
         progressBar.isVisible = true
     }
 
-    private fun renderLoadingFailedState(state: ProfileState.LoadingFailed) = with(binding) {
-        val messageResId = if (state.throwable is SSLException) {
-            R.string.possibly_domain_blocked
-        } else {
-            R.string.check_connection_and_tap_retry
-        }
+    private fun renderFailed(state: ProfileState.Failed) = with(binding) {
         appBar.isVisible = false
         details.drawDetails(null)
-        failure.showFailure(R.string.no_connection, messageResId)
+        failure.showFailure(R.string.no_connection, failureMessage(state.throwable))
         progressBar.isVisible = false
     }
 
@@ -88,11 +77,20 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
 
     private fun IncludeProfileDetailsBinding.drawDetails(user: User?) {
         if (user == null) {
-            detailCard.isVisible = false
+            root.isVisible = false
             return
         }
-        detailCard.isVisible = true
-        firstJoinDate.newText = getString(R.string.registered, user.timestamp().format(DATE))
+        root.isVisible = true
+        userName.isVisible = false
+        val firstJoinTimestamp = user.timestamp()
+        if (firstJoinTimestamp != 0L) {
+            firstJoinDate.newText = getString(
+                R.string.registered,
+                firstJoinTimestamp.format(REG_DATE)
+            )
+        } else {
+            firstJoinDate.isVisible = false
+        }
         messagesCount.fillDetail(
             R.drawable.ic_messages,
             R.string.messages_count,

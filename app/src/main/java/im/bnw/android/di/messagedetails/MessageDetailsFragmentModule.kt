@@ -14,8 +14,7 @@ import im.bnw.android.presentation.messagedetails.MessageDetailsViewModel
 @Module(includes = [MessageDetailsFragmentModule.ViewModelModule::class])
 class MessageDetailsFragmentModule :
     FragmentWithArgsModule<MessageDetailsFragment, MessageDetailsState, MessageDetailsScreenParams>() {
-
-    @Module(includes = [MessageDetailsModule::class])
+    @Module
     interface ViewModelModule {
         @Binds
         @IntoMap

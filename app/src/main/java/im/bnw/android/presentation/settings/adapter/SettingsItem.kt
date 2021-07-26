@@ -1,4 +1,4 @@
-package im.bnw.android.presentation.user.adapter
+package im.bnw.android.presentation.settings.adapter
 
 import android.os.Parcelable
 import androidx.annotation.StringRes
