@@ -116,7 +116,7 @@ fun messageDelegate(
     }
 }
 
-@Suppress("LongMethod", "ComplexMethod")
+@Suppress("LongMethod", "ComplexMethod", "LongParameterList")
 fun messageWithMediaDelegate(
     cardRadius: Float,
     mediaHeight: Int,

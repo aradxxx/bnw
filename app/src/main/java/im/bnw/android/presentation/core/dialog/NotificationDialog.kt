@@ -17,6 +17,7 @@ private const val ARGUMENT_NEUTRAL_TITLE = "ARGUMENT_NEUTRAL_TITLE"
 
 private const val UNDEFINED_VALUE = -1
 
+@Suppress("LongParameterList")
 class NotificationDialog : DialogFragment() {
     private var title: String? = null
     private var message: String? = null

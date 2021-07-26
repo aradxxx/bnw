@@ -1,5 +1,0 @@
-task("quality") {
-    group "verification"
-    description "Runs all static checks on the build"
-    dependsOn "ktlint", "detekt", ":app:lint"
-}
