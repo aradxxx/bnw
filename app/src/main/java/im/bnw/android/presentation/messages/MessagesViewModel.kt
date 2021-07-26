@@ -38,6 +38,7 @@ data class Dependencies @Inject constructor(
     val dispatchersProvider: DispatchersProvider
 )
 
+@Suppress("TooManyFunctions")
 class MessagesViewModel @Inject constructor(
     dependencies: Dependencies
 ) : BaseViewModel<MessagesState>(

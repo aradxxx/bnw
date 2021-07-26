@@ -22,6 +22,7 @@ import im.bnw.android.presentation.util.format
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.viewBinding
 
+@Suppress("TooManyFunctions")
 class UserFragment : BaseFragment<UserViewModel, UserState>(R.layout.fragment_user) {
     private val binding by viewBinding(FragmentUserBinding::bind)
     override val vmClass = UserViewModel::class.java

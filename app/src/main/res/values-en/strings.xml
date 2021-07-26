@@ -14,7 +14,7 @@
     <string name="send">Send</string>
     <string name="message">Message</string>
     <string name="error">Error</string>
-    <string name="one_of_list">%d of %d</string>
+    <string name="one_of_list">%1$d of %2$d</string>
 
     <!--new post-->
     <string name="create_post">Write post</string>

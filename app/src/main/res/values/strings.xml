@@ -14,7 +14,7 @@
     <string name="send">Отправить</string>
     <string name="message">Сообщение</string>
     <string name="error">Ошибка</string>
-    <string name="one_of_list">%d из %d</string>
+    <string name="one_of_list">%1$d из %2$d</string>
 
     <!--new post-->
     <string name="create_post">Написать сообщение</string>
