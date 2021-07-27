@@ -14,6 +14,9 @@ class Converters {
 
     @TypeConverter
     fun stringToStringList(string: String): List<String> {
+        if (string.isEmpty()) {
+            return emptyList()
+        }
         return string.split(DELIMITER_ENTITIES)
     }
 
@@ -26,6 +29,9 @@ class Converters {
 
     @TypeConverter
     fun stringToMediaList(string: String): List<Media> {
+        if (string.isEmpty()) {
+            return emptyList()
+        }
         return string.split(DELIMITER_ENTITIES).mapNotNull {
             val splitted = it.split(DELIMITER_VALUES)
             if (splitted.size == 2) {
