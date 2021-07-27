@@ -70,7 +70,7 @@ class MessageDetailsViewModel @Inject constructor(
     fun userClicked(position: Int) {
         val current = state.nullOr<MessageDetailsState.Idle>() ?: return
         val userId = current.items[position].user
-        modo.externalForward(Screens.Messages(userId))
+        modo.externalForward(Screens.Profile(userId))
     }
 
     fun retryClicked() {
