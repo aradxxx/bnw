@@ -3,7 +3,6 @@ package im.bnw.android.presentation.messages
 import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.launch
 import com.github.terrakok.modo.externalForward
-import com.github.terrakok.modo.selectStack
 import im.bnw.android.domain.auth.AuthInteractor
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
@@ -13,7 +12,6 @@ import im.bnw.android.domain.usermanager.UserManager
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.navigation.Screens
-import im.bnw.android.presentation.core.navigation.tab.Tab
 import im.bnw.android.presentation.messages.adapter.MessageItem
 import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
@@ -21,7 +19,6 @@ import im.bnw.android.presentation.util.user
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -73,20 +70,7 @@ class MessagesViewModel @Inject constructor(
 
     fun userClicked(position: Int) {
         val userId = state.messages[position].user
-        if (state.user == userId) {
-            return
-        }
-        vmScope.launch(dispatchersProvider.main) {
-            userManager.getUserName()
-                .first {
-                    if (it == userId) {
-                        modo.selectStack(Tab.PROFILE.ordinal)
-                    } else {
-                        modo.externalForward(Screens.Profile(userId))
-                    }
-                    true
-                }
-        }
+        modo.externalForward(Screens.Profile(userId))
     }
 
     fun mediaClicked(messagePosition: Int, mediaPosition: Int) {
