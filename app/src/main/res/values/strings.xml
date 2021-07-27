@@ -22,7 +22,7 @@
     <string name="sending_confirmation">Вы действительно хотите отправить?</string>
 
     <!--profile-->
-    <string name="registered">Зарегистрирован %1$s</string>
+    <string name="registered">Зарегистрировался %1$s</string>
     <string name="messages_count">Сообщений</string>
     <string name="comments_count">Комментариев</string>
     <string name="log_in">Авторизация</string>
