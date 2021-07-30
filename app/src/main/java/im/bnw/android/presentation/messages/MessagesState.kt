@@ -15,7 +15,3 @@ data class MessagesState(
     val createMessageVisible: Boolean = false,
     val error: Throwable? = null
 ) : State
-
-sealed class Event {
-    object ScrollToTop : Event()
-}

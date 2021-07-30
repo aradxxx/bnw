@@ -22,8 +22,8 @@ abstract class BaseViewModel<S : State>(
     protected val modo: Modo
 ) : ViewModel() {
     private val stateLiveData = MutableLiveData(initialState)
-    private val eventLiveData = LiveEvent<Any?>()
-    private val atomicState = AtomicReference<S>(initialState)
+    private val eventLiveData = LiveEvent<Event>()
+    private val atomicState = AtomicReference(initialState)
     protected val state: S get() = atomicState.get()
     private val eHandler = CoroutineExceptionHandler { _, e ->
         handleException(e)
@@ -55,7 +55,7 @@ abstract class BaseViewModel<S : State>(
     }
 
     open fun stateLiveData(): LiveData<S> = stateLiveData
-    open fun eventLiveData(): LiveData<Any?> = eventLiveData
+    open fun eventLiveData(): LiveData<Event> = eventLiveData
 
     protected fun updateState(function: (S) -> S) {
         var currentState: S
@@ -67,7 +67,7 @@ abstract class BaseViewModel<S : State>(
         stateLiveData.postValue(updatedState)
     }
 
-    protected fun postEvent(event: Any?) {
+    protected fun postEvent(event: Event) {
         eventLiveData.postValue(event)
     }
 

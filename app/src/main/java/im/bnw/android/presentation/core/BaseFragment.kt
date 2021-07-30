@@ -47,7 +47,7 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
         // for implementing
     }
 
-    protected open fun onEvent(event: Any?) {
+    protected open fun onEvent(event: Event) {
         // for implementing
         when (event) {
             is DialogEvent -> showDialog {

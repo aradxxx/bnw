@@ -10,6 +10,8 @@ import im.bnw.android.R
 import im.bnw.android.databinding.FragmentSettingsBinding
 import im.bnw.android.databinding.IncludeSettingItemBinding
 import im.bnw.android.presentation.core.BaseFragment
+import im.bnw.android.presentation.core.Event
+import im.bnw.android.presentation.core.SettingsDialogEvent
 import im.bnw.android.presentation.settings.adapter.SettingsDialog
 import im.bnw.android.presentation.settings.adapter.SettingsItem
 import im.bnw.android.presentation.util.Const
@@ -47,7 +49,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
         }
     }
 
-    override fun onEvent(event: Any?) {
+    override fun onEvent(event: Event) {
         when (event) {
             is SettingsDialogEvent -> showSettingsDialog(event)
             else -> super.onEvent(event)

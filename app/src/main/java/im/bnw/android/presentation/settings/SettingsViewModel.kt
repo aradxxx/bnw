@@ -9,6 +9,7 @@ import im.bnw.android.domain.settings.SettingsInteractor
 import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.domain.user.ProfileInteractor
 import im.bnw.android.presentation.core.BaseViewModel
+import im.bnw.android.presentation.core.SettingsDialogEvent
 import im.bnw.android.presentation.util.nullOr
 import im.bnw.android.presentation.util.toItem
 import kotlinx.coroutines.flow.collect

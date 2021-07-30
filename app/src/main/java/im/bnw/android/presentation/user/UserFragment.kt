@@ -13,6 +13,8 @@ import im.bnw.android.R
 import im.bnw.android.databinding.FragmentUserBinding
 import im.bnw.android.databinding.ItemProfileDetailCardBinding
 import im.bnw.android.presentation.core.BaseFragment
+import im.bnw.android.presentation.core.Event
+import im.bnw.android.presentation.core.LogoutEvent
 import im.bnw.android.presentation.core.dialog.NotificationDialog
 import im.bnw.android.presentation.core.view.FailureView
 import im.bnw.android.presentation.util.DialogCode
@@ -56,7 +58,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(R.layout.fragment_us
         }
     }
 
-    override fun onEvent(event: Any?) {
+    override fun onEvent(event: Event) {
         when (event) {
             is LogoutEvent -> logoutConfirmDialog()
             else -> super.onEvent(event)

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import im.bnw.android.R
 import im.bnw.android.databinding.FragmentSavedMessagesListBinding
 import im.bnw.android.presentation.core.BaseFragment
+import im.bnw.android.presentation.core.Event
 import im.bnw.android.presentation.core.RemoveMessageFromLocalStorage
 import im.bnw.android.presentation.core.dialog.NotificationDialog
 import im.bnw.android.presentation.messages.adapter.MessageAdapter
@@ -69,7 +70,7 @@ class SavedMessagesFragment : BaseFragment<SavedMessagesViewModel, SavedMessages
         }
     }
 
-    override fun onEvent(event: Any?) {
+    override fun onEvent(event: Event) {
         when (event) {
             is RemoveMessageFromLocalStorage -> {
                 showMessageRemoveConfirmDialog()

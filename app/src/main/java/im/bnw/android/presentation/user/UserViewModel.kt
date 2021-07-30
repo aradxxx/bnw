@@ -9,6 +9,7 @@ import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.MessageInteractor
 import im.bnw.android.domain.user.ProfileInteractor
 import im.bnw.android.presentation.core.BaseViewModel
+import im.bnw.android.presentation.core.LogoutEvent
 import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.util.nullOr

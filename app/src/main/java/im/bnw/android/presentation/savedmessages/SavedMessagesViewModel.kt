@@ -75,7 +75,7 @@ class SavedMessagesViewModel @Inject constructor(
                 }
             }
         }
-        postEvent(RemoveMessageFromLocalStorage())
+        postEvent(RemoveMessageFromLocalStorage)
     }
 
     fun emptyButtonClicked() {
