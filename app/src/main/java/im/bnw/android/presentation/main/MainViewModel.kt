@@ -1,17 +1,21 @@
 package im.bnw.android.presentation.main
 
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import com.github.terrakok.modo.Modo
+import com.github.terrakok.modo.MultiScreen
 import com.github.terrakok.modo.externalForward
 import com.github.terrakok.modo.selectStack
 import im.bnw.android.BuildConfig
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.settings.SettingsInteractor
+import im.bnw.android.domain.settings.TabSettings
 import im.bnw.android.domain.usermanager.UserManager
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
@@ -32,12 +36,17 @@ class MainViewModel @Inject constructor(
         subscribeSettings()
     }
 
+    private val handler = Handler(Looper.getMainLooper())
+
     private fun subscribeSettings() = vmScope.launch {
         settingsInteractor.subscribeSettings()
             .flowOn(dispatchersProvider.io)
-            .collect { settings ->
+            .collectIndexed { index, settings ->
                 updateState {
                     MainState.Main(settings.theme, settings.transitionAnimations)
+                }
+                if (index == 0) {
+                    checkCurrentTab(settings.defaultTab)
                 }
             }
     }
@@ -68,6 +77,29 @@ class MainViewModel @Inject constructor(
             }
             else -> {
                 Timber.d("Unknown deep link found $segment $id")
+            }
+        }
+    }
+
+    private fun checkCurrentTab(defaultTab: TabSettings) {
+        val currentScreen = modo.state.chain.lastOrNull()
+        if (currentScreen is MultiScreen) {
+            val selected = currentScreen.selectedStack
+            val needSwitchTo = when {
+                defaultTab == TabSettings.Messages && selected != 0 -> {
+                    0
+                }
+                defaultTab == TabSettings.Hot && selected != 1 -> {
+                    1
+                }
+                defaultTab == TabSettings.User && selected != 2 -> {
+                    2
+                }
+                else -> null
+            }
+            needSwitchTo ?: return
+            handler.post {
+                modo.selectStack(needSwitchTo)
             }
         }
     }

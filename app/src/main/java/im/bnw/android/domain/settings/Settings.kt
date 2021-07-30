@@ -10,6 +10,7 @@ data class Settings(
     val transitionAnimations: Boolean,
     val theme: ThemeSettings,
     val language: LanguageSettings,
+    val defaultTab: TabSettings
 ) : Parcelable
 
 @Parcelize
@@ -35,4 +36,15 @@ sealed class LanguageSettings(val value: String) : Setting() {
 
     @Parcelize
     object Russian : LanguageSettings("ru")
+}
+
+sealed class TabSettings(val value: String) : Setting() {
+    @Parcelize
+    object Messages : TabSettings("messages")
+
+    @Parcelize
+    object Hot : TabSettings("hot")
+
+    @Parcelize
+    object User : TabSettings("user")
 }

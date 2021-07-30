@@ -26,3 +26,15 @@ sealed class LanguageItem(@StringRes nameResId: Int) : SettingsItem(nameResId) {
     @Parcelize
     object Russian : LanguageItem(R.string.russian)
 }
+
+sealed class TabSettingsItem(@StringRes nameResId: Int) : SettingsItem(nameResId) {
+    @Parcelize
+    object Messages : TabSettingsItem(R.string.general)
+
+    @Parcelize
+    object Hot : TabSettingsItem(R.string.today)
+
+    @Parcelize
+    object User : TabSettingsItem(R.string.profile)
+}
+

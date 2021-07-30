@@ -6,6 +6,7 @@ import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.settings.LanguageSettings
 import im.bnw.android.domain.settings.SettingsInteractor
+import im.bnw.android.domain.settings.TabSettings
 import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.domain.user.ProfileInteractor
 import im.bnw.android.presentation.core.BaseViewModel
@@ -94,6 +95,18 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun defaultTabChanged(tab: TabSettings) {
+        vmScope.launch(dispatchersProvider.default) {
+            val currentState = state.nullOr<SettingsState.Idle>() ?: return@launch
+            if (tab == currentState.settings.defaultTab) {
+                return@launch
+            }
+            settingsInteractor.updateSettings(
+                currentState.settings.copy(defaultTab = tab)
+            )
+        }
+    }
+
     fun chooseTheme() {
         vmScope.launch(dispatchersProvider.default) {
             settingsInteractor.subscribeSettings()
@@ -127,6 +140,26 @@ class SettingsViewModel @Inject constructor(
                         ),
                     )
                     postEvent(languageDialogEvent)
+                    true
+                }
+        }
+    }
+
+    fun chooseDefaultTab() {
+        vmScope.launch(dispatchersProvider.default) {
+            settingsInteractor.subscribeSettings()
+                .first {
+                    SettingsDialogEvent(
+                        R.string.default_tab,
+                        it.defaultTab.toItem(),
+                        arrayListOf(
+                            TabSettingsItem.Messages,
+                            TabSettingsItem.Hot,
+                            TabSettingsItem.User
+                        ),
+                    ).also { dialogEvent ->
+                        postEvent(dialogEvent)
+                    }
                     true
                 }
         }

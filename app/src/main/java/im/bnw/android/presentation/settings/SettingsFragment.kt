@@ -46,6 +46,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
             }
             theme.root.setOnClickListener { viewModel.chooseTheme() }
             language.root.setOnClickListener { viewModel.chooseLanguage() }
+            defaultTab.root.setOnClickListener { viewModel.chooseDefaultTab() }
         }
         setFragmentResultListener(Const.SETTINGS_REQUEST_KEY) { _, bundle ->
             settingsChanged(bundle.getParcelable(Const.ARGUMENT_SETTING))
@@ -96,6 +97,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
         appearance.isVisible = true
         theme.fillSetting(R.string.theme, state.settings.theme.toItem().nameResId)
         language.fillSetting(R.string.language, state.settings.language.toItem().nameResId)
+        defaultTab.fillSetting(R.string.default_tab, state.settings.defaultTab.toItem().nameResId)
     }
 
     private fun SwitchMaterial.drawSwitcher(
@@ -124,6 +126,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
             val language = setting.toSetting()
             viewModel.languageChanged(language)
             language.setLocale(requireContext())
+        }
+        is TabSettingsItem -> {
+            viewModel.defaultTabChanged(setting.toSetting())
         }
         else -> throw IllegalArgumentException("Unknown setting class")
     }

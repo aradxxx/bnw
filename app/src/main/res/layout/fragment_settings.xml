@@ -68,6 +68,10 @@
                     android:paddingEnd="16dp"
                     tools:text="@string/scroll_to_replies" />
 
+                <include
+                    android:id="@+id/defaultTab"
+                    layout="@layout/include_setting_item" />
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/appearance"
                     android:layout_width="wrap_content"

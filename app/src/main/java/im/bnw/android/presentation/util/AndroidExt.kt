@@ -25,10 +25,12 @@ import com.stfalcon.imageviewer.loader.ImageLoader
 import com.yariksoffice.lingver.Lingver
 import im.bnw.android.R
 import im.bnw.android.domain.settings.LanguageSettings
+import im.bnw.android.domain.settings.TabSettings
 import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.presentation.core.FragmentViewBindingDelegate
 import im.bnw.android.presentation.core.view.MediaOverlayView
 import im.bnw.android.presentation.settings.LanguageItem
+import im.bnw.android.presentation.settings.TabSettingsItem
 import im.bnw.android.presentation.settings.ThemeItem
 import java.util.Locale
 
@@ -79,6 +81,18 @@ fun LanguageItem.toSetting(): LanguageSettings = when (this) {
     LanguageItem.Default -> LanguageSettings.Default
     LanguageItem.English -> LanguageSettings.English
     LanguageItem.Russian -> LanguageSettings.Russian
+}
+
+fun TabSettings.toItem(): TabSettingsItem = when (this) {
+    TabSettings.Hot -> TabSettingsItem.Hot
+    TabSettings.Messages -> TabSettingsItem.Messages
+    TabSettings.User -> TabSettingsItem.User
+}
+
+fun TabSettingsItem.toSetting(): TabSettings = when (this) {
+    TabSettingsItem.Hot -> TabSettings.Hot
+    TabSettingsItem.Messages -> TabSettings.Messages
+    TabSettingsItem.User -> TabSettings.User
 }
 
 val Int.dpToPx: Int

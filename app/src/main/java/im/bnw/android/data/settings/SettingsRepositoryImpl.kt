@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import im.bnw.android.domain.settings.LanguageSettings
 import im.bnw.android.domain.settings.Settings
 import im.bnw.android.domain.settings.SettingsRepository
+import im.bnw.android.domain.settings.TabSettings
 import im.bnw.android.domain.settings.ThemeSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -22,6 +23,7 @@ class SettingsRepositoryImpl @Inject constructor(
         val LANGUAGE = stringPreferencesKey("language")
         val SCROLL_TO_REPLIES = booleanPreferencesKey("scrollToReplies")
         val TRANSITION_ANIMATIONS = booleanPreferencesKey("transitionAnimations")
+        val TAB = stringPreferencesKey("tab")
     }
 
     override suspend fun updateSettings(settings: Settings) {
@@ -31,6 +33,7 @@ class SettingsRepositoryImpl @Inject constructor(
             it[PreferencesKeys.LANGUAGE] = settings.language.value
             it[PreferencesKeys.SCROLL_TO_REPLIES] = settings.scrollToReplies
             it[PreferencesKeys.TRANSITION_ANIMATIONS] = settings.transitionAnimations
+            it[PreferencesKeys.TAB] = settings.defaultTab.value
         }
     }
 
@@ -42,6 +45,7 @@ class SettingsRepositoryImpl @Inject constructor(
                 it[PreferencesKeys.TRANSITION_ANIMATIONS] ?: true,
                 themeMap(it[PreferencesKeys.THEME].orEmpty()),
                 languageMap(it[PreferencesKeys.LANGUAGE].orEmpty()),
+                tabMap(it[PreferencesKeys.TAB].orEmpty())
             )
         }
     }
@@ -56,5 +60,11 @@ class SettingsRepositoryImpl @Inject constructor(
         "en" -> LanguageSettings.English
         "ru" -> LanguageSettings.Russian
         else -> LanguageSettings.Default
+    }
+
+    private fun tabMap(value: String): TabSettings = when (value) {
+        "user" -> TabSettings.User
+        "hot" -> TabSettings.Hot
+        else -> TabSettings.Messages
     }
 }

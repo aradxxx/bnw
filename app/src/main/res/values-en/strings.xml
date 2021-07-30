@@ -50,6 +50,7 @@
     <string name="russian">Русский</string>
     <string name="scroll_to_replies">Scroll to replies</string>
     <string name="transition_animations">Screen transition animations</string>
+    <string name="default_tab">Open on start</string>
 
     <!--saved messages-->
     <string name="saved_empty_title">Such empty</string>
