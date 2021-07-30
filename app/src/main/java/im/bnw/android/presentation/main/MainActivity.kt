@@ -3,7 +3,11 @@ package im.bnw.android.presentation.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.github.terrakok.modo.Modo
+import com.github.terrakok.modo.android.AppScreen
 import com.github.terrakok.modo.android.ModoRender
 import com.github.terrakok.modo.android.init
 import com.github.terrakok.modo.android.saveState
@@ -26,9 +30,26 @@ class MainActivity : BaseActivity<MainViewModel, MainState>(
     private val modoRender by lazy {
         object : ModoRender(this@MainActivity, R.id.container) {
             override fun createMultiStackFragment() = BnwMultiStackFragment()
+            override fun setupTransaction(
+                fragmentManager: FragmentManager,
+                transaction: FragmentTransaction,
+                screen: AppScreen,
+                newFragment: Fragment
+            ) {
+                if (!transitionAnimations) {
+                    return
+                }
+                transaction.setCustomAnimations(
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_left,
+                    R.anim.slide_out_right,
+                    R.anim.slide_in_right,
+                )
+            }
         }
     }
     private val binding by viewBinding(ActivityMainBinding::inflate)
+    private var transitionAnimations = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +87,7 @@ class MainActivity : BaseActivity<MainViewModel, MainState>(
             // no op
         }
         is MainState.Main -> {
+            transitionAnimations = state.transitionAnimations
             renderMain(state)
         }
     }

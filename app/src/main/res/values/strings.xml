@@ -49,6 +49,7 @@
     <string name="english">English</string>
     <string name="russian">Русский</string>
     <string name="scroll_to_replies">Скроллить к комментариям</string>
+    <string name="transition_animations">Анимация переключения экранов</string>
 
     <!--auth-->
     <string name="user_name">Имя</string>

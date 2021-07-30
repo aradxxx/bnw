@@ -58,6 +58,18 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun transitionAnimationsChanged(enabled: Boolean) {
+        vmScope.launch(dispatchersProvider.default) {
+            val currentState = state.nullOr<SettingsState.Idle>() ?: return@launch
+            if (enabled == currentState.settings.transitionAnimations) {
+                return@launch
+            }
+            settingsInteractor.updateSettings(
+                currentState.settings.copy(transitionAnimations = enabled)
+            )
+        }
+    }
+
     fun themeChanged(theme: ThemeSettings) {
         vmScope.launch(dispatchersProvider.default) {
             val currentState = state.nullOr<SettingsState.Idle>() ?: return@launch

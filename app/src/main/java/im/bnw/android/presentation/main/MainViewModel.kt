@@ -37,7 +37,7 @@ class MainViewModel @Inject constructor(
             .flowOn(dispatchersProvider.io)
             .collect { settings ->
                 updateState {
-                    MainState.Main(settings.theme)
+                    MainState.Main(settings.theme, settings.transitionAnimations)
                 }
             }
     }

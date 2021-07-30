@@ -41,6 +41,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
             scrollToReplies.setOnCheckedChangeListener { _, enabled ->
                 viewModel.scrollToRepliesChanged(enabled)
             }
+            transitionAnimations.setOnCheckedChangeListener { _, enabled ->
+                viewModel.transitionAnimationsChanged(enabled)
+            }
             theme.root.setOnClickListener { viewModel.chooseTheme() }
             language.root.setOnClickListener { viewModel.chooseLanguage() }
         }
@@ -70,6 +73,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
         behavior.isVisible = false
         anonymity.isVisible = false
         scrollToReplies.isVisible = false
+        transitionAnimations.isVisible = false
         appearance.isVisible = false
         theme.root.isVisible = false
         language.root.isVisible = false
@@ -87,6 +91,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
             anonymity.isVisible = false
         }
         scrollToReplies.drawSwitcher(state.settings.scrollToReplies, R.string.scroll_to_replies)
+        transitionAnimations.drawSwitcher(state.settings.transitionAnimations, R.string.transition_animations)
         appearance.newText = getString(R.string.appearance)
         appearance.isVisible = true
         theme.fillSetting(R.string.theme, state.settings.theme.toItem().nameResId)

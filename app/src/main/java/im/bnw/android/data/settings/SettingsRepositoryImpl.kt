@@ -21,6 +21,7 @@ class SettingsRepositoryImpl @Inject constructor(
         val THEME = stringPreferencesKey("theme")
         val LANGUAGE = stringPreferencesKey("language")
         val SCROLL_TO_REPLIES = booleanPreferencesKey("scrollToReplies")
+        val TRANSITION_ANIMATIONS = booleanPreferencesKey("transitionAnimations")
     }
 
     override suspend fun updateSettings(settings: Settings) {
@@ -29,6 +30,7 @@ class SettingsRepositoryImpl @Inject constructor(
             it[PreferencesKeys.THEME] = settings.theme.value
             it[PreferencesKeys.LANGUAGE] = settings.language.value
             it[PreferencesKeys.SCROLL_TO_REPLIES] = settings.scrollToReplies
+            it[PreferencesKeys.TRANSITION_ANIMATIONS] = settings.transitionAnimations
         }
     }
 
@@ -37,6 +39,7 @@ class SettingsRepositoryImpl @Inject constructor(
             Settings(
                 it[PreferencesKeys.INCOGNITO] ?: false,
                 it[PreferencesKeys.SCROLL_TO_REPLIES] ?: true,
+                it[PreferencesKeys.TRANSITION_ANIMATIONS] ?: true,
                 themeMap(it[PreferencesKeys.THEME].orEmpty()),
                 languageMap(it[PreferencesKeys.LANGUAGE].orEmpty()),
             )

@@ -56,16 +56,16 @@
                     android:id="@+id/anonymity"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
                     tools:text="@string/anonymity" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/scrollToReplies"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
                     tools:text="@string/scroll_to_replies" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -86,6 +86,14 @@
                 <include
                     android:id="@+id/language"
                     layout="@layout/include_setting_item" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/transitionAnimations"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    tools:text="@string/scroll_to_replies" />
             </LinearLayout>
         </FrameLayout>
     </ScrollView>
