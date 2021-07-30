@@ -7,11 +7,14 @@ import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.ModoRender
 import com.github.terrakok.modo.android.init
 import com.github.terrakok.modo.android.saveState
+import dev.chrisbanes.insetter.applyInsetter
 import im.bnw.android.R
+import im.bnw.android.databinding.ActivityMainBinding
 import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.presentation.core.BaseActivity
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.BnwMultiStackFragment
+import im.bnw.android.presentation.util.viewBinding
 import javax.inject.Inject
 
 class MainActivity : BaseActivity<MainViewModel, MainState>(
@@ -25,11 +28,17 @@ class MainActivity : BaseActivity<MainViewModel, MainState>(
             override fun createMultiStackFragment() = BnwMultiStackFragment()
         }
     }
+    private val binding by viewBinding(ActivityMainBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         modo.init(savedInstanceState, Screens.tabs())
         checkDeepLink(intent)
+        binding.container.applyInsetter {
+            type(ime = true) {
+                padding(animated = true)
+            }
+        }
     }
 
     override fun onResume() {
