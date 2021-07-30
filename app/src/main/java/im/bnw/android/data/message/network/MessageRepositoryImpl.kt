@@ -1,8 +1,11 @@
 package im.bnw.android.data.message.network
 
+import com.squareup.moshi.JsonDataException
 import im.bnw.android.data.core.db.AppDb
 import im.bnw.android.data.core.network.Api
+import im.bnw.android.data.core.network.httpresult.asFailure
 import im.bnw.android.data.core.network.httpresult.baseResponseToResult
+import im.bnw.android.data.core.network.httpresult.isFailure
 import im.bnw.android.data.core.network.httpresult.toResult
 import im.bnw.android.data.message.MessageMapper.toMessage
 import im.bnw.android.data.message.MessageMapper.toMessageEntity
@@ -12,6 +15,7 @@ import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageDetails
 import im.bnw.android.domain.message.MessageRepository
+import im.bnw.android.presentation.util.PostNotFound
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -42,12 +46,17 @@ class MessageRepositoryImpl @Inject constructor(
 
     override suspend fun messageDetails(messageId: String): Result<MessageDetails> =
         withContext(dispatchersProvider.io) {
-            return@withContext api.messageDetail(messageId).toResult { messageDetailsDto ->
-                MessageDetails(
-                    messageId,
-                    messageDetailsDto.message.toMessage(),
-                    messageDetailsDto.replies.map { it.toReply() }
-                )
+            val result = api.messageDetail(messageId)
+            return@withContext if (result.isFailure() && result.asFailure().error is JsonDataException) {
+                Result.Failure(PostNotFound)
+            } else {
+                result.toResult { messageDetailsDto ->
+                    MessageDetails(
+                        messageId,
+                        messageDetailsDto.message.toMessage(),
+                        messageDetailsDto.replies.map { it.toReply() }
+                    )
+                }
             }
         }
 

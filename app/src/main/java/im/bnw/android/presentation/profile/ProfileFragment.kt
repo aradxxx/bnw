@@ -16,8 +16,9 @@ import im.bnw.android.domain.user.User
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.view.FailureView
 import im.bnw.android.presentation.util.REG_DATE
-import im.bnw.android.presentation.util.failureMessage
+import im.bnw.android.presentation.util.UserNotFound
 import im.bnw.android.presentation.util.format
+import im.bnw.android.presentation.util.networkFailureMessage
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
@@ -63,7 +64,11 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
     private fun renderFailed(state: ProfileState.Failed) = with(binding) {
         appBar.isVisible = false
         details.drawDetails(null)
-        failure.showFailure(R.string.no_connection, failureMessage(state.throwable))
+        if (state.throwable is UserNotFound) {
+            failure.showFailure(R.string.error, R.string.user_not_found, R.drawable.ic_anon)
+        } else {
+            failure.showFailure(R.string.no_connection, networkFailureMessage(state.throwable))
+        }
         progressBar.isVisible = false
     }
 
@@ -120,9 +125,11 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
     private fun FailureView.showFailure(
         @StringRes titleResId: Int,
         @StringRes messageResId: Int,
+        @DrawableRes iconResId: Int = R.drawable.ic_google_downasaur
     ) {
         isVisible = true
         title = getString(titleResId)
         message = getString(messageResId)
+        imageResId = iconResId
     }
 }

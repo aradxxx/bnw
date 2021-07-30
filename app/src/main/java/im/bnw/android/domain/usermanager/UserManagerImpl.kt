@@ -1,11 +1,15 @@
 package im.bnw.android.domain.usermanager
 
+import com.squareup.moshi.JsonDataException
 import im.bnw.android.data.core.network.Api
+import im.bnw.android.data.core.network.httpresult.asFailure
+import im.bnw.android.data.core.network.httpresult.isFailure
 import im.bnw.android.data.core.network.httpresult.toResult
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.user.User
 import im.bnw.android.presentation.util.AuthFailedException
+import im.bnw.android.presentation.util.UserNotFound
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -36,13 +40,18 @@ class UserManagerImpl @Inject constructor(
 
     override suspend fun getUserInfo(userName: String): Result<User> =
         withContext(dispatchersProvider.io) {
-            api.userInfo(userName).toResult { response ->
-                User(
-                    response.user,
-                    response.messagesCount,
-                    response.regDate,
-                    response.commentsCount,
-                )
+            val result = api.userInfo(userName)
+            if (result.isFailure() && result.asFailure().error is JsonDataException) {
+                Result.Failure(UserNotFound)
+            } else {
+                result.toResult { response ->
+                    User(
+                        response.user,
+                        response.messagesCount,
+                        response.regDate,
+                        response.commentsCount,
+                    )
+                }
             }
         }
 

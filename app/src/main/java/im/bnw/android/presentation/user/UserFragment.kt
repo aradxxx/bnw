@@ -19,8 +19,8 @@ import im.bnw.android.presentation.core.dialog.NotificationDialog
 import im.bnw.android.presentation.core.view.FailureView
 import im.bnw.android.presentation.util.DialogCode
 import im.bnw.android.presentation.util.REG_DATE
-import im.bnw.android.presentation.util.failureMessage
 import im.bnw.android.presentation.util.format
+import im.bnw.android.presentation.util.networkFailureMessage
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.viewBinding
 
@@ -91,7 +91,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(R.layout.fragment_us
 
     private fun renderFailed(state: UserState.Failed) = with(binding) {
         swipeToRefresh.isEnabled = false
-        failure.showFailure(R.string.no_connection, failureMessage(state.throwable))
+        failure.showFailure(R.string.no_connection, networkFailureMessage(state.throwable))
         loadingBar.root.isVisible = false
         settings.isVisible = false
         authorized.root.isVisible = false

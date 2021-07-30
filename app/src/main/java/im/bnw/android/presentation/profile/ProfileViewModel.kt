@@ -11,7 +11,6 @@ import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.util.nullOr
 import kotlinx.coroutines.launch
-import java.io.IOException
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
@@ -41,17 +40,13 @@ class ProfileViewModel @Inject constructor(
     private fun getProfile(userName: String) {
         vmScope.launch(dispatchersProvider.default) {
             updateState { ProfileState.Loading }
-            try {
-                when (val result = profileInteractor.userInfo(userName)) {
-                    is Result.Success -> updateState {
-                        ProfileState.ProfileInfo(result.value)
-                    }
-                    is Result.Failure -> updateState {
-                        ProfileState.Failed(result.throwable)
-                    }
+            when (val result = profileInteractor.userInfo(userName)) {
+                is Result.Success -> updateState {
+                    ProfileState.ProfileInfo(result.value)
                 }
-            } catch (t: IOException) {
-                updateState { ProfileState.Failed(t) }
+                is Result.Failure -> updateState {
+                    ProfileState.Failed(result.throwable)
+                }
             }
         }
     }

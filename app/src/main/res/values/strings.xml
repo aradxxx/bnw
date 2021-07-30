@@ -15,6 +15,8 @@
     <string name="message">Сообщение</string>
     <string name="error">Ошибка</string>
     <string name="one_of_list">%1$d из %2$d</string>
+    <string name="user_not_found">Пользователь не найден</string>
+    <string name="message_not_found">Пост не найден</string>
 
     <!--new post-->
     <string name="create_post">Написать сообщение</string>

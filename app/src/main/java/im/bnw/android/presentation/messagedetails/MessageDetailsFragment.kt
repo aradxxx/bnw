@@ -2,6 +2,7 @@ package im.bnw.android.presentation.messagedetails
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.core.os.postDelayed
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -9,8 +10,10 @@ import im.bnw.android.R
 import im.bnw.android.databinding.FragmentMessageDetailsBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.recyclerview.LinearLayoutManagerSmoothScroll
+import im.bnw.android.presentation.core.view.FailureView
 import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
 import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
+import im.bnw.android.presentation.util.PostNotFound
 import im.bnw.android.presentation.util.UI
 import im.bnw.android.presentation.util.disableItemChangedAnimation
 import im.bnw.android.presentation.util.dpToPx
@@ -144,12 +147,15 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         progressBar.isVisible = false
         failure.isVisible = true
         content.isVisible = false
-        failure.message = when (state.throwable) {
+        when (state.throwable) {
+            is PostNotFound -> {
+                failure.showFailure(R.string.error, R.string.message_not_found)
+            }
             is SSLException -> {
-                getString(R.string.possibly_domain_blocked)
+                failure.showFailure(R.string.no_connection, R.string.possibly_domain_blocked)
             }
             else -> {
-                getString(R.string.check_connection)
+                failure.showFailure(R.string.no_connection, R.string.check_connection)
             }
         }
     }
@@ -159,5 +165,14 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         progressBar.isVisible = false
         failure.isVisible = false
         content.isVisible = false
+    }
+
+    private fun FailureView.showFailure(
+        @StringRes titleResId: Int,
+        @StringRes messageResId: Int
+    ) {
+        isVisible = true
+        title = getString(titleResId)
+        message = getString(messageResId)
     }
 }
