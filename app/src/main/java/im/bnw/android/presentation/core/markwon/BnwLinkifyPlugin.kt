@@ -11,6 +11,9 @@ import org.commonmark.node.Link
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
+private const val POST_LINK_REGEX = "#\\S+"
+private const val USER_NAME_REGEX = "@[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}"
+
 object BnwLinkifyPlugin : AbstractMarkwonPlugin() {
     override fun configure(registry: MarkwonPlugin.Registry) {
         registry.require(CorePlugin::class.java) {
@@ -20,7 +23,7 @@ object BnwLinkifyPlugin : AbstractMarkwonPlugin() {
 }
 
 object BnwLinkListener : CorePlugin.OnTextAddedListener {
-    private val pattern: Pattern = Pattern.compile("((#\\S+)|(@\\S+))", Pattern.MULTILINE)
+    private val pattern = Pattern.compile("(($POST_LINK_REGEX)|($USER_NAME_REGEX))", Pattern.MULTILINE)
 
     override fun onTextAdded(visitor: MarkwonVisitor, text: String, start: Int) {
         val matcher: Matcher = pattern.matcher(text)
