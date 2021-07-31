@@ -72,6 +72,12 @@
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <include
+            android:id="@+id/replyText"
+            layout="@layout/include_reply_text"
+            android:layout_width="match_parent"
+            android:layout_height="42dp" />
+
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"

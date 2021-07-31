@@ -31,16 +31,26 @@
                 android:src="@drawable/ic_reply"
                 app:tint="@color/colorPrimary" />
 
+            <ImageView
+                android:id="@+id/at"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_alignTop="@id/replyToUserName"
+                android:layout_marginTop="2dp"
+                android:layout_toEndOf="@id/replyToIcon"
+                android:src="@drawable/ic_at"
+                app:tint="?android:textColorSecondary" />
+
             <TextView
                 android:id="@+id/replyToUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="-2dp"
+                android:layout_marginStart="2dp"
                 android:layout_marginTop="6dp"
                 android:layout_marginEnd="16dp"
                 android:layout_toStartOf="@id/replyToClose"
-                android:layout_toEndOf="@id/replyToIcon"
+                android:layout_toEndOf="@id/at"
                 android:ellipsize="end"
                 android:gravity="bottom"
                 android:lines="1"
@@ -48,8 +58,6 @@
                 android:textAppearance="@style/Text.Body1.Secondary"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                app:drawableStartCompat="@drawable/ic_at"
-                app:drawableTint="?android:textColorSecondary"
                 tools:text="anonymous" />
 
             <TextView

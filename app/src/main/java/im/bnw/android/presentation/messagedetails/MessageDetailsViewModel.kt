@@ -229,7 +229,8 @@ class MessageDetailsViewModel @Inject constructor(
     private fun Reply.toReplyListItem(replies: List<Reply>): ReplyItem {
         val sortTag = buildSortTag(replies)
         val offset = sortTag.count { it == REPLY_ITEM_SORT_DELIMITER }
-        return ReplyItem(this, sortTag, offset)
+        val replyToUser = replies.firstOrNull { it.id == replyTo }?.user ?: ""
+        return ReplyItem(this, sortTag, offset, replyToUser)
     }
 
     private fun Reply.buildSortTag(replies: List<Reply>): String {

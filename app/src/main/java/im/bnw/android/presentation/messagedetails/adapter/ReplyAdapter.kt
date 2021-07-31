@@ -92,6 +92,13 @@ fun replyDelegate(
             user.newText = reply.user
             date.newText = reply.timestamp.formatDateTime()
             id.newText = reply.id
+            if (item.replyToUser.isNotEmpty()) {
+                replyText.replyToUserName.text = item.replyToUser
+                replyText.replyToText.text = reply.replyToText
+                replyText.root.isVisible = true
+            } else {
+                replyText.root.isVisible = false
+            }
 
             Glide.with(context)
                 .load(String.format(BuildConfig.USER_AVA_THUMB_URL, reply.user))
@@ -203,6 +210,13 @@ fun replyWithMediaDelegate(
             replyTo.newText = reply.replyTo
             replyTo.isVisible = reply.replyTo.isNotEmpty()
             replyToIcon.isVisible = reply.replyTo.isNotEmpty()
+            if (item.replyToUser.isNotEmpty()) {
+                replyText.replyToUserName.text = item.replyToUser
+                replyText.replyToText.text = reply.replyToText
+                replyText.root.isVisible = true
+            } else {
+                replyText.root.isVisible = false
+            }
 
             Glide.with(context)
                 .load(String.format(BuildConfig.USER_AVA_THUMB_URL, reply.user))

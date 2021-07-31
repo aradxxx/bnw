@@ -8,5 +8,6 @@ import kotlinx.parcelize.Parcelize
 data class ReplyItem(
     val reply: Reply,
     val sortTag: String,
-    val offset: Int
+    val offset: Int,
+    val replyToUser: String
 ) : MessageListItem
