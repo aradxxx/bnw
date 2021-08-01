@@ -16,15 +16,13 @@ import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.Event
 import im.bnw.android.presentation.core.LogoutEvent
 import im.bnw.android.presentation.core.dialog.NotificationDialog
-import im.bnw.android.presentation.core.view.FailureView
 import im.bnw.android.presentation.util.DialogCode
 import im.bnw.android.presentation.util.REG_DATE
-import im.bnw.android.presentation.util.format
 import im.bnw.android.presentation.util.networkFailureMessage
+import im.bnw.android.presentation.util.format
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.viewBinding
 
-@Suppress("TooManyFunctions")
 class UserFragment : BaseFragment<UserViewModel, UserState>(R.layout.fragment_user) {
     private val binding by viewBinding(FragmentUserBinding::bind)
     override val vmClass = UserViewModel::class.java
@@ -36,25 +34,27 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(R.layout.fragment_us
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
-            with(authorized) {
-                details.avatar.setOnClickListener { viewModel.avatarClicked() }
-                details.messagesCount.detail.setOnClickListener { viewModel.messagesClicked() }
-                savedMessagesCount.detail.setOnClickListener { viewModel.savedMessagesClicked() }
-                about.donate.setOnClickListener {
-                    viewModel.donateClicked(getString(R.string.donate_url))
-                }
-                logout.setOnClickListener { viewModel.logoutClicked() }
-            }
-            with(unauthorized) {
-                savedMessagesCount.detail.setOnClickListener { viewModel.savedMessagesClicked() }
-                about.donate.setOnClickListener {
-                    viewModel.donateClicked(getString(R.string.donate_url))
-                }
-                login.setOnClickListener { viewModel.loginClicked() }
-            }
             settings.setOnClickListener { viewModel.settingsClicked() }
             failure.setActionListener { viewModel.retryClicked() }
             swipeToRefresh.setOnRefreshListener { viewModel.retryClicked() }
+        }
+        with(binding.authorized) {
+            details.avatar.setOnClickListener { viewModel.avatarClicked() }
+            details.messagesCount.root.setOnClickListener { viewModel.messagesClicked() }
+            savedMessagesCount.root.setOnClickListener { viewModel.savedMessagesClicked() }
+            savedRepliesCount.root.setOnClickListener { viewModel.savedRepliesClicked() }
+            about.donate.setOnClickListener {
+                viewModel.donateClicked(BuildConfig.DONATE_URL)
+            }
+            logout.setOnClickListener { viewModel.logoutClicked() }
+        }
+        with(binding.unauthorized) {
+            savedMessagesCount.root.setOnClickListener { viewModel.savedMessagesClicked() }
+            savedRepliesCount.root.setOnClickListener { viewModel.savedRepliesClicked() }
+            about.donate.setOnClickListener {
+                viewModel.donateClicked(BuildConfig.DONATE_URL)
+            }
+            login.setOnClickListener { viewModel.loginClicked() }
         }
     }
 
@@ -91,7 +91,10 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(R.layout.fragment_us
 
     private fun renderFailed(state: UserState.Failed) = with(binding) {
         swipeToRefresh.isEnabled = false
-        failure.showFailure(R.string.no_connection, networkFailureMessage(state.throwable))
+        failure.setFailure(
+            titleResId = R.string.no_connection,
+            messageString = requireContext().networkFailureMessage(state.throwable),
+        )
         loadingBar.root.isVisible = false
         settings.isVisible = false
         authorized.root.isVisible = false
@@ -126,7 +129,12 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(R.layout.fragment_us
             savedMessagesCount.fillDetail(
                 R.drawable.ic_save,
                 R.string.saved_messages,
-                state.savedMessagesCount,
+                state.savedDetails.messagesCount,
+            )
+            savedRepliesCount.fillDetail(
+                R.drawable.ic_save,
+                R.string.saved_replies,
+                state.savedDetails.repliesCount,
             )
             about.donate.text = getString(R.string.donate)
             Glide.with(requireContext())
@@ -149,7 +157,12 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(R.layout.fragment_us
             savedMessagesCount.fillDetail(
                 R.drawable.ic_save,
                 R.string.saved_messages,
-                state.savedMessagesCount,
+                state.savedDetails.messagesCount,
+            )
+            savedRepliesCount.fillDetail(
+                R.drawable.ic_save,
+                R.string.saved_replies,
+                state.savedDetails.repliesCount,
             )
             about.donate.text = getString(R.string.donate)
         }
@@ -173,14 +186,5 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(R.layout.fragment_us
         icon.setImageResource(iconResId)
         text.newText = getString(textResId)
         counter.newText = count.toString()
-    }
-
-    private fun FailureView.showFailure(
-        @StringRes titleResId: Int,
-        @StringRes messageResId: Int,
-    ) {
-        title = getString(titleResId)
-        message = getString(messageResId)
-        isVisible = true
     }
 }

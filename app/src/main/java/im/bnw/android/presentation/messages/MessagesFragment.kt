@@ -9,7 +9,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import im.bnw.android.R
-import im.bnw.android.data.core.network.httpresult.HttpException
 import im.bnw.android.databinding.FragmentMessagesListBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.Event
@@ -20,9 +19,9 @@ import im.bnw.android.presentation.util.UI
 import im.bnw.android.presentation.util.disableItemChangedAnimation
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.dpToPxF
+import im.bnw.android.presentation.util.networkFailureMessage
 import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
-import javax.net.ssl.SSLException
 
 class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     R.layout.fragment_messages_list
@@ -100,17 +99,10 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
             createMessage.isEnabled = createMessageEnabled
             createMessage.isVisible = createMessageEnabled
             failureScroll.isVisible = state.messages.isEmpty() && state.error != null
-            failure.message = when (state.error) {
-                is SSLException -> {
-                    getString(R.string.possibly_domain_blocked)
-                }
-                is HttpException -> {
-                    state.error.statusMessage ?: ""
-                }
-                else -> {
-                    getString(R.string.check_connection)
-                }
-            }
+            failure.setFailure(
+                titleResId = R.string.no_connection,
+                messageString = requireContext().networkFailureMessage(state.error),
+            )
         }
     }
 }

@@ -10,12 +10,14 @@ import im.bnw.android.data.core.network.httpresult.toResult
 import im.bnw.android.data.message.MessageMapper.toMessage
 import im.bnw.android.data.message.MessageMapper.toMessageEntity
 import im.bnw.android.data.message.MessageMapper.toReply
+import im.bnw.android.data.message.MessageMapper.toReplyEntity
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageDetails
 import im.bnw.android.domain.message.MessageRepository
 import im.bnw.android.presentation.util.PostNotFound
+import im.bnw.android.domain.message.Reply
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -83,6 +85,26 @@ class MessageRepositoryImpl @Inject constructor(
     override suspend fun remove(message: Message) {
         return withContext(dispatchersProvider.io) {
             appDb.messageDao().delete(message.id)
+        }
+    }
+
+    override fun observeSavedReplies(filter: List<String>?): Flow<List<Reply>> {
+        return appDb.replyDao().observeSavedReplies(filter).map { list ->
+            list.map {
+                it.toReply()
+            }
+        }
+    }
+
+    override suspend fun save(reply: Reply) {
+        return withContext(dispatchersProvider.io) {
+            appDb.replyDao().insert(reply.toReplyEntity())
+        }
+    }
+
+    override suspend fun remove(reply: Reply) {
+        return withContext(dispatchersProvider.io) {
+            appDb.replyDao().delete(reply.id)
         }
     }
 

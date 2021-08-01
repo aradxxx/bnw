@@ -65,7 +65,9 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideAppDb(context: Context) =
-        Room.databaseBuilder(context, AppDb::class.java, BuildConfig.DB_NAME)
-            .build()
+    fun provideAppDb(context: Context) = Room.databaseBuilder(
+            context,
+            AppDb::class.java,
+            BuildConfig.DB_NAME
+        ).build()
 }

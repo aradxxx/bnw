@@ -7,7 +7,6 @@
 
     <string name="no_connection">Нет подключения</string>
     <string name="check_connection">Проверьте подключение к сети</string>
-    <string name="check_connection_and_tap_retry">Проверьте подключение к сети и повторите попытку</string>
     <string name="possibly_domain_blocked">Возможно https://bnw.im заблокирован провайдером</string>
     <string name="ok">OK</string>
     <string name="cancel">Отмена</string>
@@ -17,6 +16,7 @@
     <string name="one_of_list">%1$d из %2$d</string>
     <string name="user_not_found">Пользователь не найден</string>
     <string name="message_not_found">Пост не найден</string>
+    <string name="saved_empty_title">Пока пусто</string>
 
     <!--new post-->
     <string name="create_post">Написать сообщение</string>
@@ -33,6 +33,7 @@
     <string name="log_out_confirmation">Вы действительно хотите выйти?</string>
     <string name="retry">Повторить</string>
     <string name="saved_messages">Сохраненные сообщения</string>
+    <string name="saved_replies">Сохраненные комментарии</string>
 
     <!--settings-->
     <string name="settings">Настройки</string>
@@ -59,13 +60,15 @@
     <string name="auth_failed">Неверный логин или пароль</string>
 
     <!--saved messages-->
-    <string name="saved_empty_title">Пока пусто</string>
-    <string name="saved_empty_message">Сохраненные сообщения будут здесь</string>
+    <string name="saved_empty_messages">Сохраненные сообщения будут здесь</string>
     <string name="remove_saved_message_confirm">Вы уверены что хотите удалить сообщение из локального хранилища?</string>
+
+    <!--saved replies-->
+    <string name="saved_empty_replies">Сохраненные комментарии будут здесь</string>
+    <string name="remove_saved_reply_confirm">Вы уверены что хотите удалить комментарий из локального хранилища?</string>
 
     <!--donate-->
     <string name="donate">Помочь проекту</string>
-    <string name="donate_url">https://yoomoney.ru/to/41001208815080</string>
 
     <plurals name="minutes">
         <item quantity="zero">%1$d минут назад</item>

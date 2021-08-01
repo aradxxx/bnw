@@ -3,9 +3,10 @@ package im.bnw.android.data.message.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import im.bnw.android.data.message.db.Table.MESSAGE_TABLE
 import im.bnw.android.domain.message.Media
 
-@Entity(tableName = "message")
+@Entity(tableName = MESSAGE_TABLE)
 data class MessageEntity(
     @ColumnInfo(name = "id")
     @PrimaryKey

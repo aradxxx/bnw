@@ -22,6 +22,7 @@ data class OpenMediaEvent(
 ) : Event
 
 object RemoveMessageFromLocalStorage : Event
+object RemoveReplyFromLocalStorage : Event
 object ScrollToTop : Event
 
 data class SettingsDialogEvent(

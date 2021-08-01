@@ -35,7 +35,7 @@
         android:textAlignment="center"
         android:textAppearance="@style/Text.Body1.Secondary"
         android:textSize="18sp"
-        tools:text="@string/check_connection_and_tap_retry" />
+        tools:text="@string/check_connection" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/action"

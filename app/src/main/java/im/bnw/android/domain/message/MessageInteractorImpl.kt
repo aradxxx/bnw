@@ -55,4 +55,20 @@ class MessageInteractorImpl @Inject constructor(
             messageRepository.remove(message)
         }
     }
+
+    override fun observeSavedReplies(filter: List<String>?): Flow<List<Reply>> {
+        return messageRepository.observeSavedReplies(filter)
+    }
+
+    override suspend fun save(reply: Reply) {
+        return withContext(dispatchersProvider.default) {
+            messageRepository.save(reply)
+        }
+    }
+
+    override suspend fun remove(reply: Reply) {
+        return withContext(dispatchersProvider.default) {
+            messageRepository.remove(reply)
+        }
+    }
 }

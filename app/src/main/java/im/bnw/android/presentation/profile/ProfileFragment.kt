@@ -14,11 +14,10 @@ import im.bnw.android.databinding.IncludeProfileDetailsBinding
 import im.bnw.android.databinding.ItemProfileDetailCardBinding
 import im.bnw.android.domain.user.User
 import im.bnw.android.presentation.core.BaseFragment
-import im.bnw.android.presentation.core.view.FailureView
 import im.bnw.android.presentation.util.REG_DATE
 import im.bnw.android.presentation.util.UserNotFound
-import im.bnw.android.presentation.util.format
 import im.bnw.android.presentation.util.networkFailureMessage
+import im.bnw.android.presentation.util.format
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
@@ -39,7 +38,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
         with(binding) {
             toolbar.setNavigationOnClickListener { viewModel.backPressed() }
             failure.setActionListener { viewModel.retryClicked() }
-            details.messagesCount.detail.setOnClickListener { viewModel.messagesClicked() }
+            details.messagesCount.root.setOnClickListener { viewModel.messagesClicked() }
             details.avatar.setOnClickListener {
                 viewModel.avatarClicked()
             }
@@ -65,9 +64,16 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
         appBar.isVisible = false
         details.drawDetails(null)
         if (state.throwable is UserNotFound) {
-            failure.showFailure(R.string.error, R.string.user_not_found, R.drawable.ic_anon)
+            failure.setFailure(
+                imageResId = R.drawable.ic_anon,
+                titleResId = R.string.error,
+                messageString = getString(R.string.user_not_found),
+            )
         } else {
-            failure.showFailure(R.string.no_connection, networkFailureMessage(state.throwable))
+            failure.setFailure(
+                titleResId = R.string.no_connection,
+                messageString = requireContext().networkFailureMessage(state.throwable),
+            )
         }
         progressBar.isVisible = false
     }
@@ -120,16 +126,5 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
         icon.setImageResource(iconResId)
         text.newText = getString(textResId)
         counter.newText = count.toString()
-    }
-
-    private fun FailureView.showFailure(
-        @StringRes titleResId: Int,
-        @StringRes messageResId: Int,
-        @DrawableRes iconResId: Int = R.drawable.ic_google_downasaur
-    ) {
-        isVisible = true
-        title = getString(titleResId)
-        message = getString(messageResId)
-        imageResId = iconResId
     }
 }

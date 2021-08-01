@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import im.bnw.android.data.message.db.Table.MESSAGE_TABLE
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -16,15 +17,15 @@ interface MessageDao {
         }
     }
 
-    @Query("SELECT * from message")
+    @Query("SELECT * from $MESSAGE_TABLE")
     fun observeSavedMessagesAll(): Flow<List<MessageEntity>>
 
-    @Query("SELECT * from message WHERE id IN (:filter)")
+    @Query("SELECT * from $MESSAGE_TABLE WHERE id IN (:filter)")
     fun observeSavedMessagesFilter(filter: List<String>): Flow<List<MessageEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(messageEntity: MessageEntity)
 
-    @Query("DELETE FROM message WHERE id == :messageId")
+    @Query("DELETE FROM $MESSAGE_TABLE WHERE id == :messageId")
     fun delete(messageId: String)
 }

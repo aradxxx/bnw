@@ -24,7 +24,7 @@
         android:layout_margin="16dp"
         android:gravity="center"
         android:visibility="gone"
-        app:message="@string/check_connection_and_tap_retry"
+        app:message="@string/check_connection"
         app:title="@string/no_connection" />
 
     <RelativeLayout

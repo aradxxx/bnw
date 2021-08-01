@@ -134,7 +134,7 @@ fun messageWithMediaDelegate(
     }
 ) {
     val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-    val mediaAdapter = MediaAdapter() { mediaPosition ->
+    val mediaAdapter = MediaAdapter { mediaPosition ->
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
             mediaListener(position, mediaPosition)
@@ -320,7 +320,8 @@ fun MessageItem.areContentsTheSame(other: MessageItem): Boolean {
 }
 
 fun ReplyItem.areContentsTheSame(other: ReplyItem): Boolean {
-    return reply.id == other.reply.id &&
+    return saved == other.saved &&
+        reply.id == other.reply.id &&
         reply.text == other.reply.text &&
         reply.user == other.reply.user &&
         reply.timestamp == other.reply.timestamp

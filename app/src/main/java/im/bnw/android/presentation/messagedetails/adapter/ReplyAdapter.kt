@@ -31,7 +31,8 @@ import java.lang.Integer.min
 
 fun replyDelegate(
     userClickListener: (Int) -> Unit,
-    replyCardClickListener: (Int) -> Unit
+    replyCardClickListener: (Int) -> Unit,
+    saveReplyListener: (Int) -> Unit,
 ) = adapterDelegateViewBinding<ReplyItem, MessageListItem, ItemReplyCardBinding>(
     viewBinding = { layoutInflater, root ->
         ItemReplyCardBinding.inflate(layoutInflater, root, false)
@@ -67,6 +68,13 @@ fun replyDelegate(
         }
     }
 
+    fun saveReplyClicked() {
+        val position = adapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            saveReplyListener(position)
+        }
+    }
+
     with(binding) {
         userProfile.setOnClickListener {
             userClicked()
@@ -80,6 +88,9 @@ fun replyDelegate(
         }
         text.setOnClickListener {
             cardClicked()
+        }
+        save.setOnClickListener {
+            saveReplyClicked()
         }
     }
     bind {
@@ -99,6 +110,7 @@ fun replyDelegate(
             } else {
                 replyText.root.isVisible = false
             }
+            save.isActivated = item.saved
 
             Glide.with(context)
                 .load(String.format(BuildConfig.USER_AVA_THUMB_URL, reply.user))
@@ -112,7 +124,8 @@ fun replyDelegate(
 fun replyWithMediaDelegate(
     userClickListener: (Int) -> Unit,
     mediaListener: (Int, Int) -> Unit,
-    replyCardClickListener: (Int) -> Unit
+    replyCardClickListener: (Int) -> Unit,
+    saveReplyListener: (Int) -> Unit,
 ) = adapterDelegateViewBinding<ReplyItem, MessageListItem, ItemReplyCardWithMediaBinding>(
     viewBinding = { layoutInflater, root ->
         ItemReplyCardWithMediaBinding.inflate(layoutInflater, root, false)
@@ -154,6 +167,14 @@ fun replyWithMediaDelegate(
             replyCardClickListener(position)
         }
     }
+
+    fun saveReplyClicked() {
+        val position = adapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            saveReplyListener(position)
+        }
+    }
+
     with(binding) {
         userProfile.setOnClickListener {
             userClicked()
@@ -167,6 +188,9 @@ fun replyWithMediaDelegate(
         }
         text.setOnClickListener {
             cardClicked()
+        }
+        save.setOnClickListener {
+            saveReplyClicked()
         }
         with(mediaList) {
             layoutManager = linearLayoutManager
@@ -217,6 +241,7 @@ fun replyWithMediaDelegate(
             } else {
                 replyText.root.isVisible = false
             }
+            save.isActivated = item.saved
 
             Glide.with(context)
                 .load(String.format(BuildConfig.USER_AVA_THUMB_URL, reply.user))
@@ -276,7 +301,8 @@ class ReplyAdapter(
     userNameListener: (Int) -> Unit,
     mediaListener: (Int, Int) -> Unit,
     replyCardClickListener: (Int) -> Unit,
-    saveMessageListener: (Int) -> Unit
+    saveMessageListener: (Int) -> Unit,
+    saveReplyListener: (Int) -> Unit,
 ) : AsyncListDifferDelegationAdapter<MessageListItem>(messageListItemDiffCallback) {
     private val savedInstanceStates: MutableMap<String, Parcelable?> = mutableMapOf()
 
@@ -285,14 +311,16 @@ class ReplyAdapter(
             addDelegate(
                 replyDelegate(
                     userNameListener,
-                    replyCardClickListener
+                    replyCardClickListener,
+                    saveReplyListener,
                 )
             )
             addDelegate(
                 replyWithMediaDelegate(
                     userNameListener,
                     mediaListener,
-                    replyCardClickListener
+                    replyCardClickListener,
+                    saveReplyListener,
                 )
             )
             addDelegate(

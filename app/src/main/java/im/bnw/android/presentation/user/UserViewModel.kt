@@ -72,6 +72,10 @@ class UserViewModel @Inject constructor(
         modo.externalForward(Screens.SavedMessages)
     }
 
+    fun savedRepliesClicked() {
+        modo.externalForward(Screens.SavedReplies)
+    }
+
     fun donateClicked(donateUrl: String) {
         modo.launch(Screens.externalHyperlink(donateUrl))
     }
@@ -93,15 +97,20 @@ class UserViewModel @Inject constructor(
     private fun subscribeUserInfo() = vmScope.launch {
         combine(
             profileInteractor.subscribeUserInfo(),
-            messageInteractor.observeSavedMessages()
-        ) { result, savedMessages ->
+            messageInteractor.observeSavedMessages(),
+            messageInteractor.observeSavedReplies()
+        ) { result, savedMessages, savedReplies ->
             when (result) {
                 is Result.Success -> {
                     val user = result.value
-                    if (user == null) {
-                        UserState.Unauthorized(savedMessages.count())
+                    val saved = SavedDetails(
+                        savedMessages.count(),
+                        savedReplies.count(),
+                    )
+                    if (user != null) {
+                        UserState.Authorized(user, saved)
                     } else {
-                        UserState.Authorized(user, savedMessages.count())
+                        UserState.Unauthorized(saved)
                     }
                 }
                 is Result.Failure -> {

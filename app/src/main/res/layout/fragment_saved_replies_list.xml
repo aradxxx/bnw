@@ -11,7 +11,7 @@
         android:background="?attr/barColor" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/messages_list"
+        android:id="@+id/replies_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:nestedScrollingEnabled="false"
@@ -32,6 +32,6 @@
         android:gravity="center"
         android:visibility="gone"
         app:actionText="@string/ok"
-        app:message="@string/saved_empty_messages"
+        app:message="@string/saved_empty_replies"
         app:title="@string/saved_empty_title" />
 </FrameLayout>
