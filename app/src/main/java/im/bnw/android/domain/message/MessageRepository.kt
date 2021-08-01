@@ -11,4 +11,7 @@ interface MessageRepository {
     fun observeSavedMessages(filter: List<String>?): Flow<List<Message>>
     suspend fun save(message: Message)
     suspend fun remove(message: Message)
+    fun observeSavedReplies(filter: List<String>?): Flow<List<Reply>>
+    suspend fun save(reply: Reply)
+    suspend fun remove(reply: Reply)
 }

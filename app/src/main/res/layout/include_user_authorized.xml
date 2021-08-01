@@ -16,6 +16,10 @@
         layout="@layout/item_profile_detail_card" />
 
     <include
+        android:id="@+id/savedRepliesCount"
+        layout="@layout/item_profile_detail_card" />
+
+    <include
         android:id="@+id/about"
         layout="@layout/include_about"
         android:layout_width="match_parent"

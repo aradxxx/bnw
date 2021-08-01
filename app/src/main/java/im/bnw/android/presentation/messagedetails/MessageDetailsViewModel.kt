@@ -143,21 +143,41 @@ class MessageDetailsViewModel @Inject constructor(
         }
     }
 
+    fun saveReplyClicked(position: Int) = vmScope.launch {
+        val reply = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position) ?: return@launch
+        if (reply is ReplyItem) {
+            if (!reply.saved) {
+                messageInteractor.save(reply.reply)
+            } else {
+                messageInteractor.remove(reply.reply)
+            }
+        }
+    }
+
     private fun subscribeSavedMessage() = vmScope.launch {
         combine(
             messageInteractor.observeSavedMessages(listOf(messageDetailsScreenParams.messageId)),
+            messageInteractor.observeSavedReplies(),
             initiator
-        ) { savedMessages, _ ->
+        ) { savedMessages, savedReplies, _ ->
             updateState { currentState ->
                 if (currentState is MessageDetailsState.Idle) {
                     currentState.copy(
                         items = currentState.items.map { item ->
-                            if (item is MessageItem) {
-                                item.copy(
-                                    saved = savedMessages.any { item.id == it.id }
-                                )
-                            } else {
-                                item
+                            when (item) {
+                                is MessageItem -> {
+                                    item.copy(
+                                        saved = savedMessages.any { item.id == it.id }
+                                    )
+                                }
+                                is ReplyItem -> {
+                                    item.copy(
+                                        saved = savedReplies.any { item.id == it.id }
+                                    )
+                                }
+                                else -> {
+                                    item
+                                }
                             }
                         }
                     )

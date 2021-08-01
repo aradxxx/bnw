@@ -11,4 +11,7 @@ interface MessageInteractor {
     fun observeSavedMessages(filter: List<String>? = null): Flow<List<Message>>
     suspend fun save(message: Message)
     suspend fun remove(message: Message)
+    fun observeSavedReplies(filter: List<String>? = null): Flow<List<Reply>>
+    suspend fun save(reply: Reply)
+    suspend fun remove(reply: Reply)
 }

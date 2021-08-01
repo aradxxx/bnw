@@ -9,5 +9,6 @@ data class ReplyItem(
     val reply: Reply,
     val sortTag: String,
     val offset: Int,
-    val replyToUser: String
+    val replyToUser: String,
+    val saved: Boolean = false,
 ) : MessageListItem

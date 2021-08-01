@@ -61,12 +61,8 @@ class SavedMessagesFragment : BaseFragment<SavedMessagesViewModel, SavedMessages
 
     override fun updateState(state: SavedMessagesState) {
         when (state) {
-            is SavedMessagesState.Idle -> {
-                renderIdleState(state)
-            }
-            SavedMessagesState.Init -> {
-                renderInitState()
-            }
+            is SavedMessagesState.Idle -> renderIdleState(state)
+            SavedMessagesState.Init -> renderInitState()
         }
     }
 
@@ -100,7 +96,7 @@ class SavedMessagesFragment : BaseFragment<SavedMessagesViewModel, SavedMessages
         with(binding) {
             messagesList.isVisible = false
             failure.isVisible = false
-            progressBar.isVisible = true
+            loadingBar.root.isVisible = true
         }
     }
 
@@ -108,7 +104,7 @@ class SavedMessagesFragment : BaseFragment<SavedMessagesViewModel, SavedMessages
         messageAdapter.items = state.messages
         with(binding) {
             messagesList.isVisible = true
-            progressBar.isVisible = false
+            loadingBar.root.isVisible = false
             failure.isVisible = state.messages.isEmpty()
         }
     }

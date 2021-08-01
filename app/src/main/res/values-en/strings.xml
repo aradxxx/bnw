@@ -7,7 +7,6 @@
 
     <string name="no_connection">No connection</string>
     <string name="check_connection">Check internet connection</string>
-    <string name="check_connection_and_tap_retry">Check internet connection and tap to retry</string>
     <string name="possibly_domain_blocked">Possibly https://bnw.im is blocked by your service provider</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -17,6 +16,7 @@
     <string name="one_of_list">%1$d of %2$d</string>
     <string name="user_not_found">User not found</string>
     <string name="message_not_found">Post not found</string>
+    <string name="saved_empty_title">Such empty</string>
 
     <!--new post-->
     <string name="create_post">Write post</string>
@@ -33,6 +33,7 @@
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="retry">Retry</string>
     <string name="saved_messages">Saved messages</string>
+    <string name="saved_replies">Saved replies</string>
 
     <!--settings-->
     <string name="settings">Settings</string>
@@ -53,9 +54,12 @@
     <string name="default_tab">Open on start</string>
 
     <!--saved messages-->
-    <string name="saved_empty_title">Such empty</string>
-    <string name="saved_empty_message">Saved messages will be here</string>
+    <string name="saved_empty_messages">Saved messages will be here</string>
     <string name="remove_saved_message_confirm">Are you sure you want remove message from local storage?</string>
+
+    <!--saved replies-->
+    <string name="saved_empty_replies">Saved replies will be here</string>
+    <string name="remove_saved_reply_confirm">Are you sure you want remove reply from local storage?</string>
 
     <!--auth-->
     <string name="user_name">User name</string>
@@ -65,7 +69,6 @@
 
     <!--donate-->
     <string name="donate">Donate</string>
-    <string name="donate_url">https://yoomoney.ru/to/41001208815080</string>
 
     <plurals name="minutes" tools:ignore="UnusedQuantity">
         <item quantity="zero">%1$d minutes ago</item>

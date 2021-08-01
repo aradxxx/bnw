@@ -2,7 +2,6 @@ package im.bnw.android.presentation.messagedetails
 
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.StringRes
 import androidx.core.os.postDelayed
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -10,18 +9,17 @@ import im.bnw.android.R
 import im.bnw.android.databinding.FragmentMessageDetailsBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.recyclerview.LinearLayoutManagerSmoothScroll
-import im.bnw.android.presentation.core.view.FailureView
 import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
 import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
 import im.bnw.android.presentation.util.PostNotFound
 import im.bnw.android.presentation.util.UI
 import im.bnw.android.presentation.util.disableItemChangedAnimation
 import im.bnw.android.presentation.util.dpToPx
+import im.bnw.android.presentation.util.networkFailureMessage
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.setThrottledClickListener
 import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
-import javax.net.ssl.SSLException
 
 private const val DECORATIONS_INVALIDATE_DELAY = 200L
 
@@ -37,7 +35,8 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             { position -> viewModel.userClicked(position) },
             { position, mediaPosition -> viewModel.mediaClicked(position, mediaPosition) },
             { position -> viewModel.replyClicked(position) },
-            { position -> viewModel.saveMessageClicked(position) }
+            { position -> viewModel.saveMessageClicked(position) },
+            { position -> viewModel.saveReplyClicked(position) },
         )
     }
 
@@ -85,18 +84,10 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
 
     override fun updateState(state: MessageDetailsState) {
         when (state) {
-            is MessageDetailsState.Idle -> {
-                renderIdle(state)
-            }
-            is MessageDetailsState.Loading -> {
-                renderLoading()
-            }
-            is MessageDetailsState.LoadingFailed -> {
-                renderLoadingFailed(state)
-            }
-            is MessageDetailsState.Init -> {
-                renderInit()
-            }
+            is MessageDetailsState.Idle -> renderIdle(state)
+            is MessageDetailsState.Loading -> renderLoading()
+            is MessageDetailsState.LoadingFailed -> renderLoadingFailed(state)
+            is MessageDetailsState.Init -> renderInit()
         }
     }
 
@@ -147,16 +138,16 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         progressBar.isVisible = false
         failure.isVisible = true
         content.isVisible = false
-        when (state.throwable) {
-            is PostNotFound -> {
-                failure.showFailure(R.string.error, R.string.message_not_found)
-            }
-            is SSLException -> {
-                failure.showFailure(R.string.no_connection, R.string.possibly_domain_blocked)
-            }
-            else -> {
-                failure.showFailure(R.string.no_connection, R.string.check_connection)
-            }
+        if (state.throwable is PostNotFound) {
+            failure.setFailure(
+                titleResId = R.string.error,
+                messageString = getString(R.string.message_not_found),
+            )
+        } else {
+            failure.setFailure(
+                titleResId = R.string.no_connection,
+                messageString = requireContext().networkFailureMessage(state.throwable),
+            )
         }
     }
 
@@ -165,14 +156,5 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         progressBar.isVisible = false
         failure.isVisible = false
         content.isVisible = false
-    }
-
-    private fun FailureView.showFailure(
-        @StringRes titleResId: Int,
-        @StringRes messageResId: Int
-    ) {
-        isVisible = true
-        title = getString(titleResId)
-        message = getString(messageResId)
     }
 }

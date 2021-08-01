@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.user
 
+import android.os.Parcelable
 import im.bnw.android.domain.user.User
 import im.bnw.android.presentation.core.State
 import kotlinx.parcelize.Parcelize
@@ -16,11 +17,17 @@ sealed class UserState : State {
     @Parcelize
     data class Authorized(
         val user: User,
-        val savedMessagesCount: Int,
+        val savedDetails: SavedDetails,
     ) : UserState()
 
     @Parcelize
     data class Unauthorized(
-        val savedMessagesCount: Int,
+        val savedDetails: SavedDetails,
     ) : UserState()
 }
+
+@Parcelize
+data class SavedDetails(
+    val messagesCount: Int,
+    val repliesCount: Int,
+) : Parcelable

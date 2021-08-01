@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="16dp"
-            app:message="@string/check_connection_and_tap_retry"
+            app:message="@string/check_connection"
             app:title="@string/no_connection" />
     </ScrollView>
 </FrameLayout>
