@@ -18,6 +18,8 @@
         style="@style/Text.Body1.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:textSize="24sp"
         tools:text="androiddev" />
@@ -27,6 +29,8 @@
         style="@style/Text.Body1.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:textAlignment="center"
         android:textSize="12sp"
