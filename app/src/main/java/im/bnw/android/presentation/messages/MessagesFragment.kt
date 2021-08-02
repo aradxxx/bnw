@@ -12,7 +12,7 @@ import im.bnw.android.R
 import im.bnw.android.databinding.FragmentMessagesListBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.Event
-import im.bnw.android.presentation.core.ScrollToTop
+import im.bnw.android.presentation.core.ScrollTo
 import im.bnw.android.presentation.messages.adapter.MessageAdapter
 import im.bnw.android.presentation.messages.adapter.messageItemDecorator
 import im.bnw.android.presentation.util.UI
@@ -83,8 +83,8 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
 
     override fun onEvent(event: Event) {
         when (event) {
-            is ScrollToTop -> handler.postDelayed(200) {
-                linearLayoutManager.smoothScrollToPosition(binding.messagesList, null, 0)
+            is ScrollTo -> handler.postDelayed(200) {
+                linearLayoutManager.smoothScrollToPosition(binding.messagesList, null, event.position)
             }
             else -> super.onEvent(event)
         }

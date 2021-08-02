@@ -23,7 +23,7 @@ data class OpenMediaEvent(
 
 object RemoveMessageFromLocalStorage : Event
 object RemoveReplyFromLocalStorage : Event
-object ScrollToTop : Event
+data class ScrollTo(val position: Int = 0) : Event
 
 data class SettingsDialogEvent(
     val title: Int,

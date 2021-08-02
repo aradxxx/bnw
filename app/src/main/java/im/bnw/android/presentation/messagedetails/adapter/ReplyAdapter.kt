@@ -33,6 +33,7 @@ fun replyDelegate(
     userClickListener: (Int) -> Unit,
     replyCardClickListener: (Int) -> Unit,
     saveReplyListener: (Int) -> Unit,
+    quoteClickListener: (Int) -> Unit
 ) = adapterDelegateViewBinding<ReplyItem, MessageListItem, ItemReplyCardBinding>(
     viewBinding = { layoutInflater, root ->
         ItemReplyCardBinding.inflate(layoutInflater, root, false)
@@ -75,6 +76,13 @@ fun replyDelegate(
         }
     }
 
+    fun quoteClicked() {
+        val position = adapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            quoteClickListener(position)
+        }
+    }
+
     with(binding) {
         userProfile.setOnClickListener {
             userClicked()
@@ -91,6 +99,9 @@ fun replyDelegate(
         }
         save.setOnClickListener {
             saveReplyClicked()
+        }
+        replyText.root.setOnClickListener {
+            quoteClicked()
         }
     }
     bind {
@@ -126,6 +137,7 @@ fun replyWithMediaDelegate(
     mediaListener: (Int, Int) -> Unit,
     replyCardClickListener: (Int) -> Unit,
     saveReplyListener: (Int) -> Unit,
+    quoteClickListener: (Int) -> Unit
 ) = adapterDelegateViewBinding<ReplyItem, MessageListItem, ItemReplyCardWithMediaBinding>(
     viewBinding = { layoutInflater, root ->
         ItemReplyCardWithMediaBinding.inflate(layoutInflater, root, false)
@@ -175,6 +187,13 @@ fun replyWithMediaDelegate(
         }
     }
 
+    fun quoteClicked() {
+        val position = adapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            quoteClickListener(position)
+        }
+    }
+
     with(binding) {
         userProfile.setOnClickListener {
             userClicked()
@@ -191,6 +210,9 @@ fun replyWithMediaDelegate(
         }
         save.setOnClickListener {
             saveReplyClicked()
+        }
+        replyText.root.setOnClickListener {
+            quoteClicked()
         }
         with(mediaList) {
             layoutManager = linearLayoutManager
@@ -303,6 +325,7 @@ class ReplyAdapter(
     replyCardClickListener: (Int) -> Unit,
     saveMessageListener: (Int) -> Unit,
     saveReplyListener: (Int) -> Unit,
+    quoteClickListener: (Int) -> Unit
 ) : AsyncListDifferDelegationAdapter<MessageListItem>(messageListItemDiffCallback) {
     private val savedInstanceStates: MutableMap<String, Parcelable?> = mutableMapOf()
 
@@ -313,6 +336,7 @@ class ReplyAdapter(
                     userNameListener,
                     replyCardClickListener,
                     saveReplyListener,
+                    quoteClickListener
                 )
             )
             addDelegate(
@@ -321,6 +345,7 @@ class ReplyAdapter(
                     mediaListener,
                     replyCardClickListener,
                     saveReplyListener,
+                    quoteClickListener
                 )
             )
             addDelegate(

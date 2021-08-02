@@ -14,6 +14,7 @@ import im.bnw.android.domain.settings.SettingsInteractor
 import im.bnw.android.domain.usermanager.UserManager
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.OpenMediaEvent
+import im.bnw.android.presentation.core.ScrollTo
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
 import im.bnw.android.presentation.messages.adapter.MessageItem
@@ -152,6 +153,17 @@ class MessageDetailsViewModel @Inject constructor(
                 messageInteractor.remove(reply.reply)
             }
         }
+    }
+
+    fun quoteClicked(position: Int) = vmScope.launch {
+        val reply = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position) ?: return@launch
+        if (reply !is ReplyItem) {
+            return@launch
+        }
+        val replyId = reply.reply.replyTo
+        val quotedReplyIndex = state.nullOr<MessageDetailsState.Idle>()?.items?.indexOfFirst { it.id == replyId }
+            ?: return@launch
+        postEvent(ScrollTo(quotedReplyIndex))
     }
 
     private fun subscribeSavedMessage() = vmScope.launch {

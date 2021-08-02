@@ -44,6 +44,7 @@ class SavedRepliesFragment : BaseFragment<SavedRepliesViewModel, SavedRepliesSta
             { position -> viewModel.cardClicked(position) },
             { },
             { position -> viewModel.saveReplyClicked(position) },
+            {}
         )
         linearLayoutManager = LinearLayoutManager(requireContext())
         with(binding.repliesList) {

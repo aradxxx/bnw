@@ -5,9 +5,12 @@ import android.view.View
 import androidx.core.os.postDelayed
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
+import androidx.recyclerview.widget.LinearLayoutManager
 import im.bnw.android.R
 import im.bnw.android.databinding.FragmentMessageDetailsBinding
 import im.bnw.android.presentation.core.BaseFragment
+import im.bnw.android.presentation.core.Event
+import im.bnw.android.presentation.core.ScrollTo
 import im.bnw.android.presentation.core.recyclerview.LinearLayoutManagerSmoothScroll
 import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
 import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
@@ -37,8 +40,10 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             { position -> viewModel.replyClicked(position) },
             { position -> viewModel.saveMessageClicked(position) },
             { position -> viewModel.saveReplyClicked(position) },
+            { position -> viewModel.quoteClicked(position) },
         )
     }
+    private lateinit var linearLayoutManager: LinearLayoutManager
 
     companion object {
         fun newInstance(params: MessageDetailsScreenParams) = MessageDetailsFragment().withInitialArguments(params)
@@ -46,11 +51,12 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        linearLayoutManager = LinearLayoutManagerSmoothScroll(
+            context = requireContext(),
+            smoothScrollSpeedMillisecondsPerInch = LinearLayoutManagerSmoothScroll.SCROLL_SPEED_FAST
+        )
         with(binding.replies) {
-            layoutManager = LinearLayoutManagerSmoothScroll(
-                context = requireContext(),
-                smoothScrollSpeedMillisecondsPerInch = LinearLayoutManagerSmoothScroll.SCROLL_SPEED_FAST
-            )
+            layoutManager = linearLayoutManager
             adapter = replyAdapter
             addItemDecoration(replyItemDecorator)
             disableItemChangedAnimation()
@@ -91,6 +97,17 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         }
     }
 
+    override fun onEvent(event: Event) {
+        when (event) {
+            is ScrollTo -> {
+                handler.post {
+                    binding.replies.smoothScrollToPosition(event.position)
+                }
+            }
+            else -> super.onEvent(event)
+        }
+    }
+
     private fun renderIdle(state: MessageDetailsState.Idle) = with(binding) {
         swipeToRefresh.isRefreshing = false
         progressBar.isVisible = false
@@ -100,7 +117,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             state.items.size > 1 &&
             state.needScrollToReplies
         ) {
-            handler.postDelayed(0) {
+            handler.post {
                 replies.smoothScrollToPosition(1)
             }
         }

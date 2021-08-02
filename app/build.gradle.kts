@@ -29,7 +29,7 @@ android {
         buildConfigField("String", "DONATE_URL", "\"https://yoomoney.ru/to/41001208815080\"")
     }
 
-    lint {
+    lintOptions {
         isWarningsAsErrors = true
         disable("NullSafeMutableLiveData")
     }
