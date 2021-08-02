@@ -10,9 +10,8 @@ import javax.inject.Inject
 private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
 
 abstract class BaseActivity<VM : BaseViewModel<S>, S : State>(
-    layoutRes: Int,
     private val vmClass: Class<VM>
-) : DaggerAppCompatActivity(layoutRes) {
+) : DaggerAppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     protected val viewModel: VM by lazy {

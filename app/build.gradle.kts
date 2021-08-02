@@ -123,8 +123,6 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
 
-    implementation("dev.chrisbanes.insetter:insetter:0.6.0")
-
     implementation("com.github.stfalcon:stfalcon-imageviewer:1.0.1")
 
     testImplementation("junit:junit:4.13.2")

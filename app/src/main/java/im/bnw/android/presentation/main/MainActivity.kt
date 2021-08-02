@@ -2,7 +2,15 @@ package im.bnw.android.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.OnApplyWindowInsetsListener
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsAnimationCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -11,7 +19,6 @@ import com.github.terrakok.modo.android.AppScreen
 import com.github.terrakok.modo.android.ModoRender
 import com.github.terrakok.modo.android.init
 import com.github.terrakok.modo.android.saveState
-import dev.chrisbanes.insetter.applyInsetter
 import im.bnw.android.R
 import im.bnw.android.databinding.ActivityMainBinding
 import im.bnw.android.domain.settings.ThemeSettings
@@ -22,7 +29,6 @@ import im.bnw.android.presentation.util.viewBinding
 import javax.inject.Inject
 
 class MainActivity : BaseActivity<MainViewModel, MainState>(
-    R.layout.activity_main,
     MainViewModel::class.java,
 ) {
     @Inject
@@ -49,17 +55,39 @@ class MainActivity : BaseActivity<MainViewModel, MainState>(
         }
     }
     private val binding by viewBinding(ActivityMainBinding::inflate)
+    private val insetListener = OnApplyWindowInsetsListener { _, insets ->
+        binding.container.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            val insetsTypes = WindowInsetsCompat.Type.statusBars()
+            updateMargins(
+                top = insets.getInsets(insetsTypes).top,
+            )
+        }
+        insets
+    }
+    private val insetAnimationCallback = object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_STOP) {
+        override fun onProgress(
+            insets: WindowInsetsCompat,
+            runningAnimations: MutableList<WindowInsetsAnimationCompat>,
+        ): WindowInsetsCompat {
+            binding.container.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                val insetsTypes = WindowInsetsCompat.Type.ime()
+                updateMargins(
+                    bottom = insets.getInsets(insetsTypes).bottom,
+                )
+            }
+            return insets
+        }
+    }
     private var transitionAnimations = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         modo.init(savedInstanceState, Screens.tabs())
         checkDeepLink(intent)
-        binding.container.applyInsetter {
-            type(ime = true) {
-                padding(animated = true)
-            }
-        }
+        ViewCompat.setOnApplyWindowInsetsListener(binding.container, insetListener)
+        ViewCompat.setWindowInsetsAnimationCallback(binding.container, insetAnimationCallback)
     }
 
     override fun onResume() {
