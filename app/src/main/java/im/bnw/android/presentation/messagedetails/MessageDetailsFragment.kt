@@ -1,10 +1,10 @@
 package im.bnw.android.presentation.messagedetails
 
+import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.animation.doOnCancel
 import androidx.core.animation.doOnEnd
 import androidx.core.os.postDelayed
 import androidx.core.view.doOnDetach
@@ -30,6 +30,9 @@ import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
 
 private const val DECORATIONS_INVALIDATE_DELAY = 200L
+private const val FLASH_DELAY = 380L
+private const val FLASH_DURATION = 500L
+private const val FLASH_PROPERTY = "backgroundColor"
 
 class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDetailsState>(
     R.layout.fragment_message_details
@@ -48,7 +51,15 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             { position -> viewModel.quoteClicked(position) },
         )
     }
+    private val flashColor by lazy {
+        requireContext().getColor(R.color.colorRipple)
+    }
+    private val transparentColor by lazy {
+        requireContext().getColor(android.R.color.transparent)
+    }
     private lateinit var linearLayoutManager: LinearLayoutManager
+    private var toFlash: Animator? = null
+    private var fromFlash: Animator? = null
 
     companion object {
         fun newInstance(params: MessageDetailsScreenParams) = MessageDetailsFragment().withInitialArguments(params)
@@ -106,14 +117,31 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         when (event) {
             is ScrollTo -> {
                 handler.post {
-                    binding.replies.smoothScrollToPosition(event.position)
-                    linearLayoutManager.findViewByPosition(event.position)?.let {
-                        animateView(it)
+                    val needScroll = event.position < linearLayoutManager.findFirstCompletelyVisibleItemPosition() ||
+                        event.position > linearLayoutManager.findLastCompletelyVisibleItemPosition()
+                    if (needScroll) {
+                        binding.replies.smoothScrollToPosition(event.position)
+                    }
+                    val delay = if (needScroll) {
+                        FLASH_DELAY
+                    } else {
+                        0
+                    }
+                    handler.postDelayed(delay) {
+                        linearLayoutManager.findViewByPosition(event.position)?.let {
+                            animateView(it)
+                        }
                     }
                 }
             }
             else -> super.onEvent(event)
         }
+    }
+
+    override fun onDestroyView() {
+        toFlash?.cancel()
+        fromFlash?.cancel()
+        super.onDestroyView()
     }
 
     private fun renderIdle(state: MessageDetailsState.Idle) = with(binding) {
@@ -187,30 +215,29 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         if (it !is ViewGroup) {
             return
         }
-        val view = it.getChildAt(0) ?: return
-        val transparentColor = context?.getColor(android.R.color.transparent) ?: return
-        view.doOnDetach {
-            it.clearAnimation()
-            it.setBackgroundColor(transparentColor)
+        if (toFlash != null || fromFlash != null) {
+            return
         }
-
-        ObjectAnimator.ofArgb(view, "backgroundColor", transparentColor, 0x4255b9f7).apply {
-            startDelay = 200L
-            duration = 500L
+        val view = it.getChildAt(0) ?: return
+        fromFlash = ObjectAnimator.ofArgb(view, FLASH_PROPERTY, transparentColor).apply {
+            startDelay = FLASH_DURATION
+            duration = FLASH_DURATION
             doOnEnd {
-                ObjectAnimator.ofArgb(view, "backgroundColor", 0x4255b9f7, transparentColor).apply {
-                    startDelay = 750L
-                    duration = 500L
-                    start()
-                    doOnCancel {
-                        view.setBackgroundColor(transparentColor)
-                    }
-                }
+                fromFlash = null
             }
-            doOnCancel {
-                view.setBackgroundColor(transparentColor)
+        }
+        toFlash = ObjectAnimator.ofArgb(view, FLASH_PROPERTY, flashColor).apply {
+            duration = FLASH_DURATION
+            doOnEnd {
+                fromFlash?.start()
+                toFlash = null
             }
             start()
+        }
+        view.doOnDetach {
+            fromFlash?.cancel()
+            toFlash?.cancel()
+            it.setBackgroundColor(transparentColor)
         }
     }
 }
