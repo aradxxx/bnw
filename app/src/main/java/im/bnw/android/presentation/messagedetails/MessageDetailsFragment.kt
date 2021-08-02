@@ -1,7 +1,9 @@
 package im.bnw.android.presentation.messagedetails
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
+import androidx.cardview.widget.CardView
 import androidx.core.os.postDelayed
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -102,9 +104,23 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             is ScrollTo -> {
                 handler.post {
                     binding.replies.smoothScrollToPosition(event.position)
+                    linearLayoutManager.findViewByPosition(event.position)?.let {
+                        animateView(it)
+                    }
                 }
             }
             else -> super.onEvent(event)
+        }
+    }
+
+    private fun animateView(it: View) {
+        if (it !is CardView) {
+            return
+        }
+
+        ObjectAnimator.ofFloat(it, "alpha", 1F, 0.4F, 1F).apply {
+            startDelay = 200L
+            start()
         }
     }
 
