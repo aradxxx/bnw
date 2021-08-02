@@ -3,8 +3,11 @@ package im.bnw.android.presentation.messagedetails
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
-import androidx.cardview.widget.CardView
+import android.view.ViewGroup
+import androidx.core.animation.doOnCancel
+import androidx.core.animation.doOnEnd
 import androidx.core.os.postDelayed
+import androidx.core.view.doOnDetach
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -113,17 +116,6 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         }
     }
 
-    private fun animateView(it: View) {
-        if (it !is CardView) {
-            return
-        }
-
-        ObjectAnimator.ofFloat(it, "alpha", 1F, 0.4F, 1F).apply {
-            startDelay = 200L
-            start()
-        }
-    }
-
     private fun renderIdle(state: MessageDetailsState.Idle) = with(binding) {
         swipeToRefresh.isRefreshing = false
         progressBar.isVisible = false
@@ -189,5 +181,36 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         progressBar.isVisible = false
         failure.isVisible = false
         content.isVisible = false
+    }
+
+    private fun animateView(it: View) {
+        if (it !is ViewGroup) {
+            return
+        }
+        val view = it.getChildAt(0) ?: return
+        val transparentColor = context?.getColor(android.R.color.transparent) ?: return
+        view.doOnDetach {
+            it.clearAnimation()
+            it.setBackgroundColor(transparentColor)
+        }
+
+        ObjectAnimator.ofArgb(view, "backgroundColor", transparentColor, 0x4255b9f7).apply {
+            startDelay = 200L
+            duration = 500L
+            doOnEnd {
+                ObjectAnimator.ofArgb(view, "backgroundColor", 0x4255b9f7, transparentColor).apply {
+                    startDelay = 750L
+                    duration = 500L
+                    start()
+                    doOnCancel {
+                        view.setBackgroundColor(transparentColor)
+                    }
+                }
+            }
+            doOnCancel {
+                view.setBackgroundColor(transparentColor)
+            }
+            start()
+        }
     }
 }

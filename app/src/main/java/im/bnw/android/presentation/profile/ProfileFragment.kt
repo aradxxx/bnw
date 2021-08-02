@@ -16,8 +16,8 @@ import im.bnw.android.domain.user.User
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.util.REG_DATE
 import im.bnw.android.presentation.util.UserNotFound
-import im.bnw.android.presentation.util.networkFailureMessage
 import im.bnw.android.presentation.util.format
+import im.bnw.android.presentation.util.networkFailureMessage
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.viewBinding
 import im.bnw.android.presentation.util.withInitialArguments
@@ -92,7 +92,8 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             return
         }
         root.isVisible = true
-        userName.isVisible = false
+        userName.isVisible = true
+        userName.text = user.name
         val firstJoinTimestamp = user.timestamp()
         if (firstJoinTimestamp != 0L) {
             firstJoinDate.newText = getString(
