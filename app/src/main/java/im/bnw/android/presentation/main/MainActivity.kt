@@ -57,9 +57,11 @@ class MainActivity : BaseActivity<MainViewModel, MainState>(
     private val binding by viewBinding(ActivityMainBinding::inflate)
     private val insetListener = OnApplyWindowInsetsListener { _, insets ->
         binding.container.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            val insetsTypes = WindowInsetsCompat.Type.statusBars()
+            val statusBars = WindowInsetsCompat.Type.statusBars()
+            val navigationBars = WindowInsetsCompat.Type.navigationBars()
             updateMargins(
-                top = insets.getInsets(insetsTypes).top,
+                top = insets.getInsets(statusBars).top,
+                bottom = insets.getInsets(navigationBars).bottom
             )
         }
         insets
@@ -70,9 +72,15 @@ class MainActivity : BaseActivity<MainViewModel, MainState>(
             runningAnimations: MutableList<WindowInsetsAnimationCompat>,
         ): WindowInsetsCompat {
             binding.container.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                val insetsTypes = WindowInsetsCompat.Type.ime()
+                val ime = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+                val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+                val bottom = if (ime > 0) {
+                    ime
+                } else {
+                    navigationBars
+                }
                 updateMargins(
-                    bottom = insets.getInsets(insetsTypes).bottom,
+                    bottom = bottom,
                 )
             }
             return insets
