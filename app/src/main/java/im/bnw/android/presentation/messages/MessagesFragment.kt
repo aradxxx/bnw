@@ -94,7 +94,7 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
         messageAdapter.items = state.messages
         with(binding) {
             progressBarLine.isVisible = state.beforeLoading && state.messages.isNotEmpty()
-            swipeToRefresh.isRefreshing = state.afterLoading || (state.beforeLoading && state.messages.isEmpty())
+            swipeToRefresh.isRefreshing = state.showSwipeToRefresh
             val createMessageEnabled = state.createMessageVisible && state.messages.isNotEmpty()
             createMessage.isEnabled = createMessageEnabled
             createMessage.isVisible = createMessageEnabled

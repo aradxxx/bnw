@@ -15,6 +15,7 @@ import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.messages.adapter.MessageItem
 import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
+import im.bnw.android.presentation.util.toEvent
 import im.bnw.android.presentation.util.user
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
@@ -106,11 +107,11 @@ class MessagesViewModel @Inject constructor(
     }
 
     private fun loadBefore() {
-        if (state.beforeLoading || state.fullLoaded) {
+        if (state.beforeLoading) {
             return
         }
         vmScope.launch(dispatchersProvider.default) {
-            updateState { it.copy(beforeLoading = true, error = null) }
+            updateState { it.copy(beforeLoading = true, showSwipeToRefresh = it.messages.isEmpty(), error = null) }
             val last = if (state.messages.isNotEmpty()) {
                 state.messages.last().id
             } else {
@@ -122,16 +123,23 @@ class MessagesViewModel @Inject constructor(
                     updateState {
                         it.copy(
                             beforeLoading = false,
+                            showSwipeToRefresh = false,
                             messages = it.messages + newPage
                         )
                     }
                     initiator.value = !initiator.value
                 }
                 is Result.Failure -> {
+                    if (state.messages.isNotEmpty()) {
+                        newPageResult.throwable.toEvent()?.let {
+                            postEvent(it)
+                        }
+                    }
                     Timber.e(newPageResult.throwable)
                     updateState {
                         it.copy(
                             beforeLoading = false,
+                            showSwipeToRefresh = false,
                             error = newPageResult.throwable
                         )
                     }
@@ -140,28 +148,35 @@ class MessagesViewModel @Inject constructor(
         }
     }
 
-    private fun loadAfter() {
-        if (state.afterLoading && state.messages.isEmpty()) {
+    private fun loadAfter(silent: Boolean = false) {
+        if (state.afterLoading) {
             return
         }
         vmScope.launch(dispatchersProvider.default) {
-            updateState { it.copy(afterLoading = true, error = null) }
+            updateState { it.copy(afterLoading = true, showSwipeToRefresh = !silent, error = null) }
             when (val newPageResult = messageInteractor.messages("", state.user, screenParams.today)) {
                 is Result.Success -> {
                     val newPage = newPageResult.value.toListItems()
                     updateState {
                         it.copy(
                             afterLoading = false,
+                            showSwipeToRefresh = false,
                             messages = newPage
                         )
                     }
                     initiator.value = !initiator.value
                 }
                 is Result.Failure -> {
+                    if (state.messages.isNotEmpty()) {
+                        newPageResult.throwable.toEvent()?.let {
+                            postEvent(it)
+                        }
+                    }
                     Timber.e(newPageResult.throwable)
                     updateState {
                         it.copy(
                             afterLoading = false,
+                            showSwipeToRefresh = false,
                             error = newPageResult.throwable
                         )
                     }

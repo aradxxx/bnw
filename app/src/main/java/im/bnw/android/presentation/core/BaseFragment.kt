@@ -128,7 +128,7 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
 
     protected fun showDialog(tag: String, dialogFragment: () -> DialogFragment) {
         dismissDialog(tag)
-        val fragmentManager: FragmentManager = childFragmentManager
+        val fragmentManager: FragmentManager = parentFragmentManager
         val df = dialogFragment()
         try {
             df.show(fragmentManager, tag)

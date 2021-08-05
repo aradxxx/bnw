@@ -11,7 +11,7 @@ data class MessagesState(
     val user: String = "",
     val beforeLoading: Boolean = false,
     val afterLoading: Boolean = false,
-    val fullLoaded: Boolean = false,
+    val showSwipeToRefresh: Boolean = false,
     val createMessageVisible: Boolean = false,
     val error: Throwable? = null
 ) : State

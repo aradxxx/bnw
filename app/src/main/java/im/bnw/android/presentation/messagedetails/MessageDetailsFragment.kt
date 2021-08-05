@@ -227,7 +227,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             }
         }
         toFlash = ObjectAnimator.ofArgb(view, FLASH_PROPERTY, flashColor).apply {
-            duration = FLASH_DURATION
+            duration = FLASH_DURATION / 3
             doOnEnd {
                 fromFlash?.start()
                 toFlash = null

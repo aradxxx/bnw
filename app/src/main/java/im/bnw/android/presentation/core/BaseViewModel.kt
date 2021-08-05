@@ -6,16 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.back
-import im.bnw.android.R
 import im.bnw.android.presentation.core.lifecycle.LiveEvent
-import im.bnw.android.presentation.util.BnwApiError
+import im.bnw.android.presentation.util.toEvent
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.plus
 import timber.log.Timber
-import java.io.IOException
 import java.util.concurrent.atomic.AtomicReference
-import javax.net.ssl.SSLException
 
 abstract class BaseViewModel<S : State>(
     initialState: S,
@@ -34,24 +31,9 @@ abstract class BaseViewModel<S : State>(
         if (e is CancellationException) {
             return
         }
-        when (e) {
-            is SSLException -> postEvent(
-                DialogEvent(
-                    R.string.no_connection,
-                    R.string.possibly_domain_blocked
-                )
-            )
-            is IOException -> postEvent(
-                DialogEvent(
-                    R.string.no_connection,
-                    R.string.check_connection
-                )
-            )
-            is BnwApiError -> postEvent(
-                BnwApiErrorEvent(e.description)
-            )
-        }
         Timber.e(e)
+        val event = e.toEvent() ?: return
+        postEvent(event)
     }
 
     open fun stateLiveData(): LiveData<S> = stateLiveData
