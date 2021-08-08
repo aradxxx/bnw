@@ -16,7 +16,7 @@ import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageDetails
 import im.bnw.android.domain.message.MessageRepository
-import im.bnw.android.presentation.util.PostNotFound
+import im.bnw.android.presentation.util.PostNotFoundException
 import im.bnw.android.domain.message.Reply
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -50,7 +50,7 @@ class MessageRepositoryImpl @Inject constructor(
         withContext(dispatchersProvider.io) {
             val result = api.messageDetail(messageId)
             return@withContext if (result.isFailure() && result.asFailure().error is JsonDataException) {
-                Result.Failure(PostNotFound)
+                Result.Failure(PostNotFoundException)
             } else {
                 result.toResult { messageDetailsDto ->
                     MessageDetails(

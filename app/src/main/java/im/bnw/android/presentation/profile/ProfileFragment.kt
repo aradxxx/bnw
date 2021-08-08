@@ -15,7 +15,7 @@ import im.bnw.android.databinding.ItemProfileDetailCardBinding
 import im.bnw.android.domain.user.User
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.util.REG_DATE
-import im.bnw.android.presentation.util.UserNotFound
+import im.bnw.android.presentation.util.UserNotFoundException
 import im.bnw.android.presentation.util.format
 import im.bnw.android.presentation.util.networkFailureMessage
 import im.bnw.android.presentation.util.newText
@@ -63,7 +63,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
     private fun renderFailed(state: ProfileState.Failed) = with(binding) {
         appBar.isVisible = false
         details.drawDetails(null)
-        if (state.throwable is UserNotFound) {
+        if (state.throwable is UserNotFoundException) {
             failure.setFailure(
                 imageResId = R.drawable.ic_anon,
                 titleResId = R.string.error,

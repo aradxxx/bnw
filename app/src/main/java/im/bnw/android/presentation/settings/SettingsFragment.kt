@@ -41,6 +41,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
             scrollToReplies.setOnCheckedChangeListener { _, enabled ->
                 viewModel.scrollToRepliesChanged(enabled)
             }
+            savePostDraft.setOnCheckedChangeListener { _, enabled ->
+                viewModel.savePostDraftChanged(enabled)
+            }
             transitionAnimations.setOnCheckedChangeListener { _, enabled ->
                 viewModel.transitionAnimationsChanged(enabled)
             }
@@ -74,6 +77,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
         behavior.isVisible = false
         anonymity.isVisible = false
         scrollToReplies.isVisible = false
+        savePostDraft.isVisible = false
         transitionAnimations.isVisible = false
         appearance.isVisible = false
         theme.root.isVisible = false
@@ -88,8 +92,10 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
         behavior.isVisible = true
         if (state.user != null) {
             anonymity.drawSwitcher(state.settings.incognito, R.string.anonymity)
+            savePostDraft.drawSwitcher(state.settings.savePostDraft, R.string.save_post_draft)
         } else {
             anonymity.isVisible = false
+            savePostDraft.isVisible = false
         }
         scrollToReplies.drawSwitcher(state.settings.scrollToReplies, R.string.scroll_to_replies)
         transitionAnimations.drawSwitcher(state.settings.transitionAnimations, R.string.transition_animations)

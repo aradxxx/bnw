@@ -15,6 +15,8 @@ import im.bnw.android.domain.usermanager.UserManager
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
@@ -28,6 +30,7 @@ class MainViewModel @Inject constructor(
     private val userManager: UserManager,
     private val settingsInteractor: SettingsInteractor,
     private val dispatchersProvider: DispatchersProvider,
+    private val mainScope: CoroutineScope,
 ) : BaseViewModel<MainState>(
     restoredState ?: MainState.Init,
     modo
@@ -37,6 +40,11 @@ class MainViewModel @Inject constructor(
     }
 
     private val handler = Handler(Looper.getMainLooper())
+
+    override fun onCleared() {
+        mainScope.cancel()
+        super.onCleared()
+    }
 
     private fun subscribeSettings() = vmScope.launch {
         settingsInteractor.subscribeSettings()

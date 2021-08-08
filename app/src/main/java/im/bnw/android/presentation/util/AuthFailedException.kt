@@ -9,10 +9,14 @@ import im.bnw.android.presentation.core.Event
 import java.io.IOException
 import javax.net.ssl.SSLException
 
-class AuthFailedException : IOException()
-data class BnwApiError(val description: String) : Throwable()
-object UserNotFound : Throwable()
-object PostNotFound : Throwable()
+data class BnwApiError(
+    val description: String
+) : Throwable()
+
+object AuthFailedException : IOException()
+object UserNotFoundException : Throwable()
+object PostNotFoundException : Throwable()
+object EmptyDraftException : Throwable()
 
 fun Context.networkFailureMessage(throwable: Throwable?) = when (throwable) {
     is SSLException -> {

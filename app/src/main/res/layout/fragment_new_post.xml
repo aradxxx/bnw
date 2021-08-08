@@ -35,7 +35,7 @@
         android:textSize="18sp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/post"
+        android:id="@+id/send"
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:insetLeft="0dp"

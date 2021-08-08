@@ -13,9 +13,7 @@ import im.bnw.android.presentation.util.hideSystemUI
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.viewBinding
 
-class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
-    R.layout.fragment_auth
-) {
+class AuthFragment : BaseFragment<AuthViewModel, AuthState>(R.layout.fragment_auth) {
     private val binding by viewBinding(FragmentAuthBinding::bind)
     override val vmClass = AuthViewModel::class.java
 
@@ -26,12 +24,22 @@ class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
-            toolbar.setNavigationOnClickListener { viewModel.backPressed() }
-            loginEdit.doAfterTextChanged { viewModel.loginChanged(it.toString()) }
-            passwordEdit.doAfterTextChanged { viewModel.passwordChanged(it.toString()) }
-            cancel.setOnClickListener { viewModel.backPressed() }
-            signIn.setOnClickListener { viewModel.signInClicked() }
-            ViewCompat.getWindowInsetsController(loginEdit)?.show(WindowInsetsCompat.Type.ime())
+            toolbar.setNavigationOnClickListener {
+                viewModel.backPressed()
+            }
+            login.doAfterTextChanged {
+                viewModel.loginChanged(it.toString())
+            }
+            password.doAfterTextChanged {
+                viewModel.passwordChanged(it.toString())
+            }
+            cancel.setOnClickListener {
+                viewModel.backPressed()
+            }
+            signIn.setOnClickListener {
+                viewModel.signInClicked()
+            }
+            ViewCompat.getWindowInsetsController(login)?.show(WindowInsetsCompat.Type.ime())
         }
     }
 
@@ -48,28 +56,24 @@ class AuthFragment : BaseFragment<AuthViewModel, AuthState>(
         }
     }
 
-    private fun renderIdleState(state: AuthState) {
-        with(binding) {
-            login.isVisible = true
-            login.isEnabled = true
-            loginEdit.newText = state.userName
-            password.isVisible = true
-            password.isEnabled = true
-            passwordEdit.newText = state.password
-            cancel.isVisible = true
-            signIn.isVisible = true
-            signIn.isEnabled = state.userName.isNotEmpty() && state.password.isNotEmpty()
-            progressBar.isVisible = false
-        }
+    private fun renderIdleState(state: AuthState) = with(binding) {
+        loginLayout.isVisible = true
+        loginLayout.isEnabled = true
+        login.newText = state.userName
+        passwordLayout.isVisible = true
+        passwordLayout.isEnabled = true
+        password.newText = state.password
+        cancel.isVisible = true
+        signIn.isVisible = true
+        signIn.isEnabled = state.userName.isNotEmpty() && state.password.isNotEmpty()
+        progressBar.isVisible = false
     }
 
-    private fun renderLoadingState() {
-        with(binding) {
-            login.isVisible = false
-            password.isVisible = false
-            cancel.isVisible = false
-            signIn.isVisible = false
-            progressBar.isVisible = true
-        }
+    private fun renderLoadingState() = with(binding) {
+        loginLayout.isVisible = false
+        passwordLayout.isVisible = false
+        cancel.isVisible = false
+        signIn.isVisible = false
+        progressBar.isVisible = true
     }
 }
