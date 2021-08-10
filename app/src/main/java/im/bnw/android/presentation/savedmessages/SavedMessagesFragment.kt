@@ -12,9 +12,8 @@ import im.bnw.android.databinding.FragmentSavedMessagesListBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.Event
 import im.bnw.android.presentation.core.RemoveMessageFromLocalStorage
-import im.bnw.android.presentation.messages.MessageClickListener
-import im.bnw.android.presentation.core.dialog.PopupDialogParams
 import im.bnw.android.presentation.core.dialog.PopupDialogFragment
+import im.bnw.android.presentation.core.dialog.PopupDialogParams
 import im.bnw.android.presentation.messages.adapter.MessageAdapter
 import im.bnw.android.presentation.messages.adapter.messageItemDecorator
 import im.bnw.android.presentation.util.DialogCode
@@ -30,27 +29,11 @@ class SavedMessagesFragment : BaseFragment<SavedMessagesViewModel, SavedMessages
     private val binding by viewBinding(FragmentSavedMessagesListBinding::bind)
     override val vmClass = SavedMessagesViewModel::class.java
 
-    private val messageClickListener = object : MessageClickListener {
-        override fun cardClicked(position: Int) = viewModel.cardClicked(position)
-
-        override fun userClicked(position: Int) = viewModel.userClicked(position)
-
-        override fun mediaClicked(position: Int, mediaPosition: Int) =
-            viewModel.mediaClicked(position, mediaPosition)
-
-        override fun saveMessageClicked(position: Int) = viewModel.saveMessageClicked(position)
-
-        override fun saveReplyClicked(position: Int) = Unit
-
-        override fun replyCardClicked(position: Int) = Unit
-
-        override fun quoteClicked(position: Int) = Unit
-    }
     private val messageAdapter by lazy {
         MessageAdapter(
+            viewModel,
             UI.MESSAGE_CARD_RADIUS.dpToPxF,
             UI.MESSAGE_MEDIA_HEIGHT.dpToPx,
-            messageClickListener,
         )
     }
     private lateinit var linearLayoutManager: LinearLayoutManager

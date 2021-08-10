@@ -23,14 +23,13 @@ import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.itemCallback
 import im.bnw.android.presentation.util.loadCircleAvatar
 import im.bnw.android.presentation.util.newText
-import im.bnw.android.presentation.util.setTextNotZeroCount
 import im.bnw.android.presentation.util.timeAgoString
 import io.noties.markwon.Markwon
 import io.noties.markwon.linkify.LinkifyPlugin
 
 fun messageDelegate(
-    cardRadius: Float,
     messageClickListener: MessageClickListener,
+    cardRadius: Float,
 ) = adapterDelegateViewBinding<MessageItem, MessageListItem, ItemMessageCardBinding>(
     viewBinding = { layoutInflater, root ->
         ItemMessageCardBinding.inflate(layoutInflater, root, false)
@@ -69,7 +68,7 @@ fun messageDelegate(
     fun saveMessageClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.saveMessageClicked(position)
+            messageClickListener.saveClicked(position)
         }
     }
 
@@ -87,7 +86,7 @@ fun messageDelegate(
                 cardClicked()
             }
         }
-        save.setOnClickListener {
+        footer.save.setOnClickListener {
             saveMessageClicked()
         }
     }
@@ -98,22 +97,22 @@ fun messageDelegate(
             markwon.setMarkdown(text, message.text)
             user.newText = message.user
             date.newText = item.message.timestamp.formatDateTime()
-            save.isActivated = item.saved
             with(footer) {
                 id.newText = message.id
-                comments.setTextNotZeroCount(message.replyCount)
-                recommends.setTextNotZeroCount(message.recommendations.count())
+                comments.newText = message.replyCount.toString()
+                recommends.newText = message.recommendations.count().toString()
+                save.isChecked = item.saved
             }
             avatar.loadCircleAvatar(context, message.user)
         }
     }
 }
 
-@Suppress("LongMethod", "ComplexMethod", "LongParameterList")
+@Suppress("LongMethod", "ComplexMethod")
 fun messageWithMediaDelegate(
+    messageClickListener: MessageClickListener,
     cardRadius: Float,
     mediaHeight: Int,
-    messageClickListener: MessageClickListener,
     savedInstanceStates: MutableMap<String, Parcelable?>,
 ) = adapterDelegateViewBinding<MessageItem, MessageListItem, ItemMessageCardWithMediaBinding>(
     viewBinding = { layoutInflater, root ->
@@ -160,7 +159,7 @@ fun messageWithMediaDelegate(
     fun saveMessageClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.saveMessageClicked(position)
+            messageClickListener.saveClicked(position)
         }
     }
 
@@ -191,7 +190,7 @@ fun messageWithMediaDelegate(
                 cardClicked()
             }
         }
-        save.setOnClickListener {
+        footer.save.setOnClickListener {
             saveMessageClicked()
         }
         with(mediaList) {
@@ -211,11 +210,11 @@ fun messageWithMediaDelegate(
             markwon.setMarkdown(text, message.text)
             user.newText = message.user
             date.newText = item.message.timestamp.formatDateTime()
-            save.isActivated = item.saved
             with(footer) {
                 id.newText = message.id
-                comments.setTextNotZeroCount(message.replyCount)
-                recommends.setTextNotZeroCount(message.recommendations.count())
+                comments.newText = message.replyCount.toString()
+                recommends.newText = message.recommendations.count().toString()
+                save.isChecked = item.saved
             }
             avatar.loadCircleAvatar(context, message.user)
         }
@@ -311,9 +310,9 @@ fun ReplyItem.areContentsTheSame(other: ReplyItem): Boolean {
 }
 
 class MessageAdapter(
+    messageClickListener: MessageClickListener,
     cardRadius: Float,
     mediaHeight: Int,
-    messageClickListener: MessageClickListener,
 ) : AsyncListDifferDelegationAdapter<MessageListItem>(messageListItemDiffCallback) {
     private val savedInstanceStates: MutableMap<String, Parcelable?> = mutableMapOf()
 
@@ -321,15 +320,15 @@ class MessageAdapter(
         delegatesManager.apply {
             addDelegate(
                 messageDelegate(
-                    cardRadius,
                     messageClickListener,
+                    cardRadius,
                 )
             )
             addDelegate(
                 messageWithMediaDelegate(
+                    messageClickListener,
                     cardRadius,
                     mediaHeight,
-                    messageClickListener,
                     savedInstanceStates,
                 )
             )

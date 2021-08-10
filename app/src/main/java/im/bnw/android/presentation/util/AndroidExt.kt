@@ -1,4 +1,4 @@
-@file:Suppress("TooManyFunctions")
+@file:Suppress("TooManyFunctions", "MagicNumber")
 
 package im.bnw.android.presentation.util
 
@@ -14,6 +14,8 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
@@ -22,7 +24,6 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.google.android.material.chip.Chip
 import com.stfalcon.imageviewer.StfalconImageViewer
 import com.stfalcon.imageviewer.loader.ImageLoader
 import com.yariksoffice.lingver.Lingver
@@ -133,14 +134,22 @@ fun ImageView.loadCircleAvatar(context: Context, otherUrlPart: String) {
         .into(this)
 }
 
-fun Chip.setTextNotZeroCount(count: Int) {
-    if (count != 0) {
-        newText = count.toString()
-        textEndPadding = 8.dpToPxF
+/**
+ * Show system keyboard. if [view] not null, then keyboard will focused on this,
+ * otherwise default keyboard behaviour.
+ *
+ * @param view the view to focus when keyboard shown.
+ */
+fun Fragment.showKeyboard(view: View? = null) {
+    if (view != null) {
+        ViewCompat.getWindowInsetsController(view)?.show(WindowInsetsCompat.Type.ime())
     } else {
-        newText = ""
-        textEndPadding = (-4).dpToPxF
+        showSystemUI(WindowInsetsCompat.Type.ime())
     }
+}
+
+fun Fragment.hideKeyboard() {
+    hideSystemUI(WindowInsetsCompat.Type.ime())
 }
 
 fun Fragment.showSystemUI(windowInsetsTypes: Int) =

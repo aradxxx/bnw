@@ -6,8 +6,6 @@ import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
 import im.bnw.android.R
 import im.bnw.android.databinding.FragmentNewPostBinding
@@ -18,8 +16,9 @@ import im.bnw.android.presentation.core.dialog.PopupDialogParams
 import im.bnw.android.presentation.core.dialog.PopupDialogFragment
 import im.bnw.android.presentation.util.DialogCode
 import im.bnw.android.presentation.util.attrColor
-import im.bnw.android.presentation.util.hideSystemUI
+import im.bnw.android.presentation.util.hideKeyboard
 import im.bnw.android.presentation.util.newText
+import im.bnw.android.presentation.util.showKeyboard
 import im.bnw.android.presentation.util.viewBinding
 
 class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
@@ -52,12 +51,12 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
             postText.doAfterTextChanged {
                 viewModel.textChanged(it.toString())
             }
-            ViewCompat.getWindowInsetsController(postText)?.show(WindowInsetsCompat.Type.ime())
+            showKeyboard(postText)
         }
     }
 
     override fun onDestroyView() {
-        hideSystemUI(WindowInsetsCompat.Type.ime())
+        hideKeyboard()
         super.onDestroyView()
     }
 

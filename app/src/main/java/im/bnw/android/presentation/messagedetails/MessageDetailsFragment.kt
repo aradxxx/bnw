@@ -19,7 +19,6 @@ import im.bnw.android.presentation.core.ScrollTo
 import im.bnw.android.presentation.core.recyclerview.LinearLayoutManagerSmoothScroll
 import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
 import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
-import im.bnw.android.presentation.messages.MessageClickListener
 import im.bnw.android.presentation.util.PostNotFoundException
 import im.bnw.android.presentation.util.UI
 import im.bnw.android.presentation.util.disableItemChangedAnimation
@@ -41,27 +40,12 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
     private val binding by viewBinding(FragmentMessageDetailsBinding::bind)
     override val vmClass = MessageDetailsViewModel::class.java
 
-    private val messageClickListener = object : MessageClickListener {
-        override fun cardClicked(position: Int) = Unit
-
-        override fun userClicked(position: Int) = viewModel.userClicked(position)
-
-        override fun mediaClicked(position: Int, mediaPosition: Int) =
-            viewModel.mediaClicked(position, mediaPosition)
-
-        override fun saveMessageClicked(position: Int) = viewModel.saveMessageClicked(position)
-
-        override fun saveReplyClicked(position: Int) = viewModel.saveReplyClicked(position)
-
-        override fun replyCardClicked(position: Int) = viewModel.replyClicked(position)
-
-        override fun quoteClicked(position: Int) = viewModel.quoteClicked(position)
-    }
     private val replyAdapter by lazy {
         ReplyAdapter(
+            viewModel,
             0F,
             UI.MESSAGE_DETAILS_MEDIA_HEIGHT.dpToPx,
-            messageClickListener,
+            { position -> viewModel.quoteClicked(position) },
         )
     }
     private val flashColor by lazy {
@@ -75,7 +59,8 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
     private var fromFlash: Animator? = null
 
     companion object {
-        fun newInstance(params: MessageDetailsScreenParams) = MessageDetailsFragment().withInitialArguments(params)
+        fun newInstance(params: MessageDetailsScreenParams) =
+            MessageDetailsFragment().withInitialArguments(params)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -109,7 +94,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
                 viewModel.sendReplyClicked()
             }
             replyToClose.setOnClickListener {
-                viewModel.replyClicked()
+                viewModel.closeReplyClicked()
             }
             replyText.doAfterTextChanged {
                 viewModel.replyTextChanged(it.toString())
@@ -224,11 +209,9 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         content.isVisible = false
     }
 
+    @Suppress("MagicNumber")
     private fun animateView(it: View) {
-        if (it !is ViewGroup) {
-            return
-        }
-        if (toFlash != null || fromFlash != null) {
+        if (it !is ViewGroup || toFlash != null || fromFlash != null) {
             return
         }
         val view = it.getChildAt(0) ?: return

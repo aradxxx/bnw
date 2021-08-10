@@ -17,6 +17,7 @@ import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.ScrollTo
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
+import im.bnw.android.presentation.messages.MessageClickListener
 import im.bnw.android.presentation.messages.adapter.MessageItem
 import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
@@ -48,7 +49,8 @@ class MessageDetailsViewModel @Inject constructor(
 ) : BaseViewModel<MessageDetailsState>(
     dependencies.restoredState ?: MessageDetailsState.Init,
     dependencies.modo
-) {
+),
+    MessageClickListener {
     private val initiator = MutableStateFlow(false)
     private val messageInteractor = dependencies.messageInteractor
     private val messageDetailsScreenParams = dependencies.messageDetailsScreenParams
@@ -62,16 +64,50 @@ class MessageDetailsViewModel @Inject constructor(
         subscribeSavedMessage()
     }
 
-    fun mediaClicked(replyPosition: Int, mediaPosition: Int) {
-        val item = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(replyPosition) ?: return
+    override fun cardClicked(position: Int) {
+        vmScope.launch {
+            val current = state.nullOr<MessageDetailsState.Idle>() ?: return@launch
+            val reply = current.items.getOrNull(position)
+            if (reply !is ReplyItem) {
+                return@launch
+            }
+            updateState { current.copy(replyTo = reply.reply) }
+        }
+    }
+
+    override fun userClicked(position: Int) {
+        val current = state.nullOr<MessageDetailsState.Idle>() ?: return
+        val userId = current.items[position].user
+        modo.externalForward(Screens.Profile(userId))
+    }
+
+    override fun mediaClicked(position: Int, mediaPosition: Int) {
+        val item = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position) ?: return
         val media = item.media.getOrNull(mediaPosition) ?: return
         openMedia(item.media, media)
     }
 
-    fun userClicked(position: Int) {
-        val current = state.nullOr<MessageDetailsState.Idle>() ?: return
-        val userId = current.items[position].user
-        modo.externalForward(Screens.Profile(userId))
+    override fun saveClicked(position: Int) {
+        vmScope.launch {
+            val message = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position)
+                ?: return@launch
+            when (message) {
+                is MessageItem -> {
+                    if (!message.saved) {
+                        messageInteractor.save(message.message)
+                    } else {
+                        messageInteractor.remove(message.message)
+                    }
+                }
+                is ReplyItem -> {
+                    if (!message.saved) {
+                        messageInteractor.save(message.reply)
+                    } else {
+                        messageInteractor.remove(message.reply)
+                    }
+                }
+            }
+        }
     }
 
     fun retryClicked() {
@@ -88,24 +124,14 @@ class MessageDetailsViewModel @Inject constructor(
         updateState { current.copy(anon = !current.anon) }
     }
 
-    fun replyClicked(position: Int? = null) {
-        val current = state.nullOr<MessageDetailsState.Idle>() ?: return
-        if (position != null) {
-            val item = current.items.getOrNull(position)
-            val replyTo = if (item is ReplyItem) {
-                item.reply
-            } else {
-                null
-            }
-            updateState { current.copy(replyTo = replyTo) }
-        } else {
-            updateState { current.copy(replyTo = null) }
-        }
-    }
-
     fun replyTextChanged(replyText: String) {
         val current = state.nullOr<MessageDetailsState.Idle>() ?: return
         updateState { current.copy(replyText = replyText) }
+    }
+
+    fun closeReplyClicked() = vmScope.launch {
+        val current = state.nullOr<MessageDetailsState.Idle>() ?: return@launch
+        updateState { current.copy(replyTo = null) }
     }
 
     fun sendReplyClicked() = vmScope.launch {
@@ -129,33 +155,6 @@ class MessageDetailsViewModel @Inject constructor(
             is Result.Failure -> {
                 handleException(result.throwable)
                 updateState { current.copy(sendProgress = false) }
-            }
-        }
-    }
-
-    fun saveMessageClicked(position: Int) {
-        vmScope.launch {
-            val message = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position)
-                ?: return@launch
-            if (message is MessageItem) {
-                if (!message.saved) {
-                    messageInteractor.save(message.message)
-                } else {
-                    messageInteractor.remove(message.message)
-                }
-            }
-        }
-    }
-
-    fun saveReplyClicked(position: Int) {
-        vmScope.launch {
-            val reply = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position) ?: return@launch
-            if (reply is ReplyItem) {
-                if (!reply.saved) {
-                    messageInteractor.save(reply.reply)
-                } else {
-                    messageInteractor.remove(reply.reply)
-                }
             }
         }
     }

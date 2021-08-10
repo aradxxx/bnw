@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class SettingsViewModel @Inject constructor(
     restoredState: SettingsState?,
     modo: Modo,

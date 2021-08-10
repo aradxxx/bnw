@@ -30,6 +30,7 @@ import java.lang.Integer.min
 
 fun replyDelegate(
     messageClickListener: MessageClickListener,
+    quoteClickListener: (Int) -> Unit,
 ) = adapterDelegateViewBinding<ReplyItem, MessageListItem, ItemReplyCardBinding>(
     viewBinding = { layoutInflater, root ->
         ItemReplyCardBinding.inflate(layoutInflater, root, false)
@@ -61,21 +62,21 @@ fun replyDelegate(
     fun cardClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.replyCardClicked(position)
+            messageClickListener.cardClicked(position)
         }
     }
 
     fun saveReplyClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.saveReplyClicked(position)
+            messageClickListener.saveClicked(position)
         }
     }
 
     fun quoteClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.quoteClicked(position)
+            quoteClickListener(position)
         }
     }
 
@@ -123,9 +124,10 @@ fun replyDelegate(
     }
 }
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "ComplexMethod")
 fun replyWithMediaDelegate(
     messageClickListener: MessageClickListener,
+    quoteClickListener: (Int) -> Unit,
 ) = adapterDelegateViewBinding<ReplyItem, MessageListItem, ItemReplyCardWithMediaBinding>(
     viewBinding = { layoutInflater, root ->
         ItemReplyCardWithMediaBinding.inflate(layoutInflater, root, false)
@@ -164,21 +166,21 @@ fun replyWithMediaDelegate(
     fun cardClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.replyCardClicked(position)
+            messageClickListener.cardClicked(position)
         }
     }
 
     fun saveReplyClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.saveReplyClicked(position)
+            messageClickListener.saveClicked(position)
         }
     }
 
     fun quoteClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.quoteClicked(position)
+            quoteClickListener(position)
         }
     }
 
@@ -205,30 +207,7 @@ fun replyWithMediaDelegate(
         with(mediaList) {
             layoutManager = linearLayoutManager
             adapter = mediaAdapter
-            addItemDecoration(
-                object : RecyclerView.ItemDecoration() {
-                    val normal = 16.dpToPx
-                    val half = 8.dpToPx
-                    override fun getItemOffsets(
-                        outRect: Rect,
-                        itemPosition: Int,
-                        parent: RecyclerView
-                    ) {
-                        if (itemPosition == 0) {
-                            outRect.left = normal
-                        } else {
-                            outRect.left = half
-                        }
-                        outRect.bottom = half
-                        outRect.top = half
-                        if (itemPosition + 1 == parent.adapter?.itemCount) {
-                            outRect.right = normal
-                        } else {
-                            outRect.right = 0
-                        }
-                    }
-                }
-            )
+            addItemDecoration(replyItemMediaDecorator)
         }
     }
     bind {
@@ -293,6 +272,29 @@ val replyItemDecorator = object : RecyclerView.ItemDecoration() {
     }
 }
 
+val replyItemMediaDecorator = object : RecyclerView.ItemDecoration() {
+    val normal = 16.dpToPx
+    val half = 8.dpToPx
+    override fun getItemOffsets(
+        outRect: Rect,
+        itemPosition: Int,
+        parent: RecyclerView
+    ) {
+        if (itemPosition == 0) {
+            outRect.left = normal
+        } else {
+            outRect.left = half
+        }
+        outRect.bottom = half
+        outRect.top = half
+        if (itemPosition + 1 == parent.adapter?.itemCount) {
+            outRect.right = normal
+        } else {
+            outRect.right = 0
+        }
+    }
+}
+
 private fun MessageListItem?.getOffset(): Int {
     return when (this) {
         is ReplyItem -> offset
@@ -301,9 +303,10 @@ private fun MessageListItem?.getOffset(): Int {
 }
 
 class ReplyAdapter(
+    messageClickListener: MessageClickListener,
     messageCardRadius: Float,
     messageMediaHeight: Int,
-    messageClickListener: MessageClickListener,
+    quoteClickListener: (Int) -> Unit,
 ) : AsyncListDifferDelegationAdapter<MessageListItem>(messageListItemDiffCallback) {
     private val savedInstanceStates: MutableMap<String, Parcelable?> = mutableMapOf()
 
@@ -312,24 +315,26 @@ class ReplyAdapter(
             addDelegate(
                 replyDelegate(
                     messageClickListener,
+                    quoteClickListener,
                 )
             )
             addDelegate(
                 replyWithMediaDelegate(
                     messageClickListener,
+                    quoteClickListener,
                 )
             )
             addDelegate(
                 messageDelegate(
-                    messageCardRadius,
                     messageClickListener,
+                    messageCardRadius,
                 )
             )
             addDelegate(
                 messageWithMediaDelegate(
+                    messageClickListener,
                     messageCardRadius,
                     messageMediaHeight,
-                    messageClickListener,
                     savedInstanceStates,
                 )
             )

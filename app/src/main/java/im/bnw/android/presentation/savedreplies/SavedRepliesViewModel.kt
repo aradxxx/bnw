@@ -12,6 +12,7 @@ import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.RemoveReplyFromLocalStorage
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
+import im.bnw.android.presentation.messages.MessageClickListener
 import im.bnw.android.presentation.util.media
 import im.bnw.android.presentation.util.nullOr
 import im.bnw.android.presentation.util.user
@@ -29,23 +30,23 @@ class SavedRepliesViewModel @Inject constructor(
 ) : BaseViewModel<SavedRepliesState>(
     restoredState ?: SavedRepliesState.Init,
     modo
-) {
+), MessageClickListener {
     init {
         subscribeSavedReplies()
     }
 
-    fun cardClicked(position: Int) {
+    override fun cardClicked(position: Int) {
         val reply = state.nullOr<SavedRepliesState.Idle>()?.replies?.getOrNull(position)?.reply ?: return
         modo.externalForward(Screens.MessageDetails(reply.messageId))
     }
 
-    fun userClicked(position: Int) {
+    override fun userClicked(position: Int) {
         val userId = state.nullOr<SavedRepliesState.Idle>()?.replies?.getOrNull(position)?.user ?: return
         modo.externalForward(Screens.Profile(userId))
     }
 
-    fun mediaClicked(replyPosition: Int, mediaPosition: Int) {
-        val reply = state.nullOr<SavedRepliesState.Idle>()?.replies?.getOrNull(replyPosition) ?: return
+    override fun mediaClicked(position: Int, mediaPosition: Int) {
+        val reply = state.nullOr<SavedRepliesState.Idle>()?.replies?.getOrNull(position) ?: return
         val media = reply.media.getOrNull(mediaPosition) ?: return
         if (media.isYoutube()) {
             modo.launch(Screens.externalHyperlink(media.fullUrl))
@@ -61,7 +62,7 @@ class SavedRepliesViewModel @Inject constructor(
         }
     }
 
-    fun saveReplyClicked(position: Int) {
+    override fun saveClicked(position: Int) {
         vmScope.launch {
             val reply = state.nullOr<SavedRepliesState.Idle>()?.replies?.getOrNull(position) ?: return@launch
             if (reply.saved) {

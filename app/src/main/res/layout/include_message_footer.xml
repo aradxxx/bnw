@@ -1,44 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.chip.ChipGroup xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:singleLine="true">
+    android:gravity="center_vertical">
 
-    <com.google.android.material.chip.Chip
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_sharp"
+        android:gravity="center_vertical"
+        android:minWidth="82dp"
+        android:singleLine="true"
         android:textAppearance="@style/Text.Body1.Secondary"
-        app:chipBackgroundColor="?attr/chipBackgroundColor"
-        app:chipIcon="@drawable/ic_sharp"
-        app:chipIconSize="20dp"
-        app:chipIconTint="?android:textColorSecondary"
-        app:iconEndPadding="-10dp"
+        app:drawableTint="?android:textColorSecondary"
         tools:text="AEZAKMI" />
 
-    <com.google.android.material.chip.Chip
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/comments_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_chat"
+        app:tint="?android:textColorSecondary" />
+
+    <TextView
         android:id="@+id/comments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:gravity="center_vertical"
+        android:minWidth="48dp"
+        android:singleLine="true"
         android:textAppearance="@style/Text.Body1.Secondary"
-        app:chipBackgroundColor="?attr/chipBackgroundColor"
-        app:chipIcon="@drawable/ic_chat"
-        app:chipIconSize="20dp"
-        app:chipIconTint="?android:textColorSecondary"
-        app:iconStartPadding="8dp"
         tools:text="3" />
 
-    <com.google.android.material.chip.Chip
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/recommends_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_share"
+        app:tint="?android:textColorSecondary" />
+
+    <TextView
         android:id="@+id/recommends"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:minWidth="48dp"
+        android:singleLine="true"
         android:textAppearance="@style/Text.Body1.Secondary"
-        app:chipBackgroundColor="?attr/chipBackgroundColor"
-        app:chipIcon="@drawable/ic_share"
+        tools:text="2" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.google.android.material.chip.Chip
+        style="@style/Widget.MaterialComponents.Chip.Choice"
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:chipBackgroundColor="@color/chip_background_color"
+        app:chipIcon="@drawable/ic_save"
         app:chipIconSize="20dp"
         app:chipIconTint="?android:textColorSecondary"
+        app:chipIconVisible="true"
         app:iconStartPadding="8dp"
-        tools:text="2" />
-</com.google.android.material.chip.ChipGroup>
+        app:textEndPadding="-2dp"
+        app:tint="@color/primary_icon_color" />
+</LinearLayout>

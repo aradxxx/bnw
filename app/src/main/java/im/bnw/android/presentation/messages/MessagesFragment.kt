@@ -27,27 +27,11 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     private val binding by viewBinding(FragmentMessagesListBinding::bind)
     override val vmClass = MessagesViewModel::class.java
 
-    private val messageClickListener = object : MessageClickListener {
-        override fun cardClicked(position: Int) = viewModel.cardClicked(position)
-
-        override fun userClicked(position: Int) = viewModel.userClicked(position)
-
-        override fun mediaClicked(position: Int, mediaPosition: Int) =
-            viewModel.mediaClicked(position, mediaPosition)
-
-        override fun saveMessageClicked(position: Int) = viewModel.saveMessageClicked(position)
-
-        override fun saveReplyClicked(position: Int) = Unit
-
-        override fun replyCardClicked(position: Int) = Unit
-
-        override fun quoteClicked(position: Int) = Unit
-    }
     private val messageAdapter by lazy {
         MessageAdapter(
+            viewModel,
             UI.MESSAGE_CARD_RADIUS.dpToPxF,
             UI.MESSAGE_MEDIA_HEIGHT.dpToPx,
-            messageClickListener,
         )
     }
     private val messageScrollListener = object : RecyclerView.OnScrollListener() {
@@ -76,9 +60,9 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
             layoutManager = linearLayoutManager
             adapter = messageAdapter
             addItemDecoration(messageItemDecorator)
-            disableItemChangedAnimation()
             addOnScrollListener(messageScrollListener)
             addOnScrollListener(FabVisibilityScrollListener(binding.createMessage))
+            disableItemChangedAnimation()
         }
         with(binding.swipeToRefresh) {
             setColorSchemeResources(R.color.colorPrimary)

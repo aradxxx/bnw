@@ -8,7 +8,6 @@ import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageInteractor
-import im.bnw.android.domain.usermanager.UserManager
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.navigation.Screens
@@ -32,7 +31,6 @@ data class Dependencies @Inject constructor(
     val screenParams: MessagesScreenParams,
     val messageInteractor: MessageInteractor,
     val authInteractor: AuthInteractor,
-    val userManager: UserManager,
     val dispatchersProvider: DispatchersProvider
 )
 
@@ -42,11 +40,10 @@ class MessagesViewModel @Inject constructor(
 ) : BaseViewModel<MessagesState>(
     dependencies.restoredState ?: MessagesState(user = dependencies.screenParams.user),
     dependencies.modo
-) {
+), MessageClickListener {
     private val initiator = MutableStateFlow(false)
     private val dispatchersProvider = dependencies.dispatchersProvider
     private val messageInteractor = dependencies.messageInteractor
-    private val userManager = dependencies.userManager
     private val screenParams = dependencies.screenParams
     private val authInteractor = dependencies.authInteractor
 
@@ -56,26 +53,18 @@ class MessagesViewModel @Inject constructor(
         subscribeSavedMessages()
     }
 
-    fun swipeRefresh() {
-        loadAfter()
-    }
-
-    fun bottomNear() {
-        loadBefore()
-    }
-
-    fun cardClicked(position: Int) {
+    override fun cardClicked(position: Int) {
         val messageId = state.messages.getOrNull(position)?.id ?: return
         modo.externalForward(Screens.MessageDetails(messageId))
     }
 
-    fun userClicked(position: Int) {
+    override fun userClicked(position: Int) {
         val userId = state.messages[position].user
         modo.externalForward(Screens.Profile(userId))
     }
 
-    fun mediaClicked(messagePosition: Int, mediaPosition: Int) {
-        val message = state.messages.getOrNull(messagePosition) ?: return
+    override fun mediaClicked(position: Int, mediaPosition: Int) {
+        val message = state.messages.getOrNull(position) ?: return
         val media = message.media.getOrNull(mediaPosition) ?: return
         if (media.isYoutube()) {
             modo.launch(Screens.externalHyperlink(media.fullUrl))
@@ -91,11 +80,7 @@ class MessagesViewModel @Inject constructor(
         }
     }
 
-    fun createPostClicked() {
-        modo.externalForward(Screens.NewPost)
-    }
-
-    fun saveMessageClicked(position: Int) {
+    override fun saveClicked(position: Int) {
         vmScope.launch {
             val message = state.messages.getOrNull(position) ?: return@launch
             if (message is MessageItem) {
@@ -106,6 +91,18 @@ class MessagesViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun swipeRefresh() {
+        loadAfter()
+    }
+
+    fun bottomNear() {
+        loadBefore()
+    }
+
+    fun createPostClicked() {
+        modo.externalForward(Screens.NewPost)
     }
 
     private fun loadBefore() {

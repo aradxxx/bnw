@@ -2,15 +2,14 @@ package im.bnw.android.presentation.auth
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import im.bnw.android.R
 import im.bnw.android.databinding.FragmentAuthBinding
 import im.bnw.android.presentation.core.BaseFragment
-import im.bnw.android.presentation.util.hideSystemUI
+import im.bnw.android.presentation.util.hideKeyboard
 import im.bnw.android.presentation.util.newText
+import im.bnw.android.presentation.util.showKeyboard
 import im.bnw.android.presentation.util.viewBinding
 
 class AuthFragment : BaseFragment<AuthViewModel, AuthState>(R.layout.fragment_auth) {
@@ -39,12 +38,12 @@ class AuthFragment : BaseFragment<AuthViewModel, AuthState>(R.layout.fragment_au
             signIn.setOnClickListener {
                 viewModel.signInClicked()
             }
-            ViewCompat.getWindowInsetsController(login)?.show(WindowInsetsCompat.Type.ime())
+            showKeyboard(login)
         }
     }
 
     override fun onDestroyView() {
-        hideSystemUI(WindowInsetsCompat.Type.ime())
+        hideKeyboard()
         super.onDestroyView()
     }
 

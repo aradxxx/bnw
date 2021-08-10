@@ -25,6 +25,7 @@ import im.bnw.android.presentation.splash.SplashFragment
 import im.bnw.android.presentation.user.UserFragment
 
 @Module
+@Suppress("TooManyFunctions")
 interface FragmentBindingModule {
     @ContributesAndroidInjector
     fun bindBnwMultiStackFragment(): BnwMultiStackFragment
