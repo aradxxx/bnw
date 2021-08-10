@@ -4,8 +4,6 @@ import java.util.Locale
 
 object Const {
     const val BUNDLE_INITIAL_ARGS = "INITIAL_ARGS"
-    const val SETTINGS_REQUEST_KEY = "SETTINGS"
-    const val ARGUMENT_SETTING = "ARGUMENT_SETTING"
 }
 
 object DialogCode {

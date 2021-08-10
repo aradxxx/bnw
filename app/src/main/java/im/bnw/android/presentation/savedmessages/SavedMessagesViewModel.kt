@@ -62,20 +62,22 @@ class SavedMessagesViewModel @Inject constructor(
         }
     }
 
-    fun saveMessageClicked(position: Int) = vmScope.launch {
-        val message = state.nullOr<SavedMessagesState.Idle>()?.messages?.getOrNull(position) ?: return@launch
-        if (message.saved) {
-            updateState {
-                if (it is SavedMessagesState.Idle) {
-                    it.copy(
-                        candidateToRemove = message
-                    )
-                } else {
-                    it
+    fun saveMessageClicked(position: Int) {
+        vmScope.launch {
+            val message = state.nullOr<SavedMessagesState.Idle>()?.messages?.getOrNull(position) ?: return@launch
+            if (message.saved) {
+                updateState {
+                    if (it is SavedMessagesState.Idle) {
+                        it.copy(
+                            candidateToRemove = message
+                        )
+                    } else {
+                        it
+                    }
                 }
             }
+            postEvent(RemoveMessageFromLocalStorage)
         }
-        postEvent(RemoveMessageFromLocalStorage)
     }
 
     fun emptyButtonClicked() {

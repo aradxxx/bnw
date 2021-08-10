@@ -95,13 +95,15 @@ class MessagesViewModel @Inject constructor(
         modo.externalForward(Screens.NewPost)
     }
 
-    fun saveMessageClicked(position: Int) = vmScope.launch {
-        val message = state.messages.getOrNull(position) ?: return@launch
-        if (message is MessageItem) {
-            if (!message.saved) {
-                messageInteractor.save(message.message)
-            } else {
-                messageInteractor.remove(message.message)
+    fun saveMessageClicked(position: Int) {
+        vmScope.launch {
+            val message = state.messages.getOrNull(position) ?: return@launch
+            if (message is MessageItem) {
+                if (!message.saved) {
+                    messageInteractor.save(message.message)
+                } else {
+                    messageInteractor.remove(message.message)
+                }
             }
         }
     }

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:background="?selectableItemBackground">
+    android:background="?selectableItemBackgroundBorderless"
+    android:clipToPadding="true">
 
     <ImageView
         android:id="@+id/icon"

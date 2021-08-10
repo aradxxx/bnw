@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.chip.ChipGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:singleLine="true">
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Text.Body1.Secondary"
+        app:chipBackgroundColor="?attr/chipBackgroundColor"
+        app:chipIcon="@drawable/ic_sharp"
+        app:chipIconSize="20dp"
+        app:chipIconTint="?android:textColorSecondary"
+        app:iconEndPadding="-10dp"
+        tools:text="AEZAKMI" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/comments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Text.Body1.Secondary"
+        app:chipBackgroundColor="?attr/chipBackgroundColor"
+        app:chipIcon="@drawable/ic_chat"
+        app:chipIconSize="20dp"
+        app:chipIconTint="?android:textColorSecondary"
+        app:iconStartPadding="8dp"
+        tools:text="3" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/recommends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Text.Body1.Secondary"
+        app:chipBackgroundColor="?attr/chipBackgroundColor"
+        app:chipIcon="@drawable/ic_share"
+        app:chipIconSize="20dp"
+        app:chipIconTint="?android:textColorSecondary"
+        app:iconStartPadding="8dp"
+        tools:text="2" />
+</com.google.android.material.chip.ChipGroup>

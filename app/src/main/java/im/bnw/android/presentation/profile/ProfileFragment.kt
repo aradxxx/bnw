@@ -17,6 +17,7 @@ import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.util.REG_DATE
 import im.bnw.android.presentation.util.UserNotFoundException
 import im.bnw.android.presentation.util.format
+import im.bnw.android.presentation.util.loadCircleAvatar
 import im.bnw.android.presentation.util.networkFailureMessage
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.viewBinding
@@ -113,10 +114,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ProfileState>(
             R.string.comments_count,
             user.commentsCount,
         )
-        Glide.with(requireContext())
-            .load(String.format(BuildConfig.USER_AVA_URL, user.name))
-            .transform(CircleCrop())
-            .into(avatar)
+        avatar.loadCircleAvatar(requireContext(), user.name)
     }
 
     private fun ItemProfileDetailCardBinding.fillDetail(

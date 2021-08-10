@@ -1,6 +1,7 @@
 package im.bnw.android.presentation.core
 
 import androidx.annotation.StringRes
+import im.bnw.android.domain.settings.LanguageSettings
 import im.bnw.android.presentation.settings.adapter.SettingsItem
 
 interface Event
@@ -37,4 +38,8 @@ data class SettingsDialogEvent(
 
 data class CursorToEnd(
     val text: String
+) : Event
+
+data class LanguageChangedEvent(
+    val language: LanguageSettings,
 ) : Event

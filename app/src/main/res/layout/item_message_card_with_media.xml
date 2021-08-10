@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         android:orientation="vertical">
 
         <com.google.android.material.card.MaterialCardView
@@ -33,7 +32,7 @@
                 android:paddingEnd="16dp">
 
                 <ImageView
-                    android:id="@+id/ava"
+                    android:id="@+id/avatar"
                     android:layout_width="48dp"
                     android:layout_height="48dp" />
 
@@ -42,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
-                    android:layout_toEndOf="@id/ava"
+                    android:layout_toEndOf="@id/avatar"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
 
@@ -90,64 +89,13 @@
             android:overScrollMode="never"
             android:scrollbars="none" />
 
-        <LinearLayout
+        <include
+            android:id="@+id/footer"
+            layout="@layout/include_message_footer"
             android:layout_width="match_parent"
-            android:layout_height="24dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="-4dp"
-                android:drawableStart="@drawable/ic_sharp"
-                android:gravity="center_vertical"
-                android:minWidth="82dp"
-                android:singleLine="true"
-                android:textAppearance="@style/Text.Body1.Secondary"
-                app:drawableTint="?android:textColorSecondary"
-                tools:text="WWWWWW" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/comments_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_chat"
-                app:tint="?android:textColorSecondary" />
-
-            <TextView
-                android:id="@+id/comments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:gravity="center_vertical"
-                android:minWidth="48dp"
-                android:singleLine="true"
-                android:textAppearance="@style/Text.Body1.Secondary"
-                tools:text="3" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/recommends_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_share"
-                app:tint="?android:textColorSecondary" />
-
-            <TextView
-                android:id="@+id/recommends"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:minWidth="48dp"
-                android:singleLine="true"
-                android:textAppearance="@style/Text.Body1.Secondary"
-                tools:text="2" />
-        </LinearLayout>
+            android:layout_marginTop="4dp" />
     </LinearLayout>
 
     <ImageView
@@ -155,7 +103,6 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="4dp"
         android:background="?selectableItemBackgroundBorderless"
         android:padding="16dp"
         android:src="@drawable/ic_save"

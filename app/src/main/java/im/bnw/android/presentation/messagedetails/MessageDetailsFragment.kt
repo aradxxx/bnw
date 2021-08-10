@@ -19,6 +19,7 @@ import im.bnw.android.presentation.core.ScrollTo
 import im.bnw.android.presentation.core.recyclerview.LinearLayoutManagerSmoothScroll
 import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
 import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
+import im.bnw.android.presentation.messages.MessageClickListener
 import im.bnw.android.presentation.util.PostNotFoundException
 import im.bnw.android.presentation.util.UI
 import im.bnw.android.presentation.util.disableItemChangedAnimation
@@ -39,16 +40,28 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
 ) {
     private val binding by viewBinding(FragmentMessageDetailsBinding::bind)
     override val vmClass = MessageDetailsViewModel::class.java
-    private val replyAdapter: ReplyAdapter by lazy {
+
+    private val messageClickListener = object : MessageClickListener {
+        override fun cardClicked(position: Int) = Unit
+
+        override fun userClicked(position: Int) = viewModel.userClicked(position)
+
+        override fun mediaClicked(position: Int, mediaPosition: Int) =
+            viewModel.mediaClicked(position, mediaPosition)
+
+        override fun saveMessageClicked(position: Int) = viewModel.saveMessageClicked(position)
+
+        override fun saveReplyClicked(position: Int) = viewModel.saveReplyClicked(position)
+
+        override fun replyCardClicked(position: Int) = viewModel.replyClicked(position)
+
+        override fun quoteClicked(position: Int) = viewModel.quoteClicked(position)
+    }
+    private val replyAdapter by lazy {
         ReplyAdapter(
             0F,
             UI.MESSAGE_DETAILS_MEDIA_HEIGHT.dpToPx,
-            { position -> viewModel.userClicked(position) },
-            { position, mediaPosition -> viewModel.mediaClicked(position, mediaPosition) },
-            { position -> viewModel.replyClicked(position) },
-            { position -> viewModel.saveMessageClicked(position) },
-            { position -> viewModel.saveReplyClicked(position) },
-            { position -> viewModel.quoteClicked(position) },
+            messageClickListener,
         )
     }
     private val flashColor by lazy {

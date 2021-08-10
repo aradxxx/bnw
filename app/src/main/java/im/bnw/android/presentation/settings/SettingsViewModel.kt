@@ -10,9 +10,12 @@ import im.bnw.android.domain.settings.TabSettings
 import im.bnw.android.domain.settings.ThemeSettings
 import im.bnw.android.domain.user.ProfileInteractor
 import im.bnw.android.presentation.core.BaseViewModel
+import im.bnw.android.presentation.core.LanguageChangedEvent
 import im.bnw.android.presentation.core.SettingsDialogEvent
+import im.bnw.android.presentation.settings.adapter.SettingsItem
 import im.bnw.android.presentation.util.nullOr
 import im.bnw.android.presentation.util.toItem
+import im.bnw.android.presentation.util.toSetting
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -83,39 +86,18 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun themeChanged(theme: ThemeSettings) {
-        vmScope.launch(dispatchersProvider.default) {
-            val currentState = state.nullOr<SettingsState.Idle>() ?: return@launch
-            if (theme == currentState.settings.theme) {
-                return@launch
+    fun choiceSettingsChanged(item: SettingsItem?) {
+        when (item) {
+            is ThemeItem -> {
+                themeChanged(item.toSetting())
             }
-            settingsInteractor.updateSettings(
-                currentState.settings.copy(theme = theme)
-            )
-        }
-    }
-
-    fun languageChanged(language: LanguageSettings) {
-        vmScope.launch(dispatchersProvider.default) {
-            val currentState = state.nullOr<SettingsState.Idle>() ?: return@launch
-            if (language == currentState.settings.language) {
-                return@launch
+            is LanguageItem -> {
+                languageChanged(item.toSetting())
             }
-            settingsInteractor.updateSettings(
-                currentState.settings.copy(language = language)
-            )
-        }
-    }
-
-    fun defaultTabChanged(tab: TabSettings) {
-        vmScope.launch(dispatchersProvider.default) {
-            val currentState = state.nullOr<SettingsState.Idle>() ?: return@launch
-            if (tab == currentState.settings.defaultTab) {
-                return@launch
+            is TabSettingsItem -> {
+                defaultTabChanged(item.toSetting())
             }
-            settingsInteractor.updateSettings(
-                currentState.settings.copy(defaultTab = tab)
-            )
+            else -> throw IllegalArgumentException("Unknown setting class")
         }
     }
 
@@ -176,6 +158,43 @@ class SettingsViewModel @Inject constructor(
                     }
                     true
                 }
+        }
+    }
+
+    private fun themeChanged(theme: ThemeSettings) {
+        vmScope.launch(dispatchersProvider.default) {
+            val currentState = state.nullOr<SettingsState.Idle>() ?: return@launch
+            if (theme == currentState.settings.theme) {
+                return@launch
+            }
+            settingsInteractor.updateSettings(
+                currentState.settings.copy(theme = theme)
+            )
+        }
+    }
+
+    private fun languageChanged(language: LanguageSettings) {
+        vmScope.launch(dispatchersProvider.default) {
+            val currentState = state.nullOr<SettingsState.Idle>() ?: return@launch
+            if (language == currentState.settings.language) {
+                return@launch
+            }
+            settingsInteractor.updateSettings(
+                currentState.settings.copy(language = language)
+            )
+            postEvent(LanguageChangedEvent(language))
+        }
+    }
+
+    private fun defaultTabChanged(tab: TabSettings) {
+        vmScope.launch(dispatchersProvider.default) {
+            val currentState = state.nullOr<SettingsState.Idle>() ?: return@launch
+            if (tab == currentState.settings.defaultTab) {
+                return@launch
+            }
+            settingsInteractor.updateSettings(
+                currentState.settings.copy(defaultTab = tab)
+            )
         }
     }
 

@@ -133,37 +133,44 @@ class MessageDetailsViewModel @Inject constructor(
         }
     }
 
-    fun saveMessageClicked(position: Int) = vmScope.launch {
-        val message = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position) ?: return@launch
-        if (message is MessageItem) {
-            if (!message.saved) {
-                messageInteractor.save(message.message)
-            } else {
-                messageInteractor.remove(message.message)
+    fun saveMessageClicked(position: Int) {
+        vmScope.launch {
+            val message = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position)
+                ?: return@launch
+            if (message is MessageItem) {
+                if (!message.saved) {
+                    messageInteractor.save(message.message)
+                } else {
+                    messageInteractor.remove(message.message)
+                }
             }
         }
     }
 
-    fun saveReplyClicked(position: Int) = vmScope.launch {
-        val reply = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position) ?: return@launch
-        if (reply is ReplyItem) {
-            if (!reply.saved) {
-                messageInteractor.save(reply.reply)
-            } else {
-                messageInteractor.remove(reply.reply)
+    fun saveReplyClicked(position: Int) {
+        vmScope.launch {
+            val reply = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position) ?: return@launch
+            if (reply is ReplyItem) {
+                if (!reply.saved) {
+                    messageInteractor.save(reply.reply)
+                } else {
+                    messageInteractor.remove(reply.reply)
+                }
             }
         }
     }
 
-    fun quoteClicked(position: Int) = vmScope.launch {
-        val reply = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position) ?: return@launch
-        if (reply !is ReplyItem) {
-            return@launch
+    fun quoteClicked(position: Int) {
+        vmScope.launch {
+            val reply = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position) ?: return@launch
+            if (reply !is ReplyItem) {
+                return@launch
+            }
+            val replyId = reply.reply.replyTo
+            val quotedReplyIndex = state.nullOr<MessageDetailsState.Idle>()?.items?.indexOfFirst { it.id == replyId }
+                ?: return@launch
+            postEvent(ScrollTo(quotedReplyIndex))
         }
-        val replyId = reply.reply.replyTo
-        val quotedReplyIndex = state.nullOr<MessageDetailsState.Idle>()?.items?.indexOfFirst { it.id == replyId }
-            ?: return@launch
-        postEvent(ScrollTo(quotedReplyIndex))
     }
 
     private fun subscribeSavedMessage() = vmScope.launch {

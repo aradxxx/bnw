@@ -21,6 +21,7 @@ import im.bnw.android.presentation.util.DialogCode
 import im.bnw.android.presentation.util.REG_DATE
 import im.bnw.android.presentation.util.networkFailureMessage
 import im.bnw.android.presentation.util.format
+import im.bnw.android.presentation.util.loadCircleAvatar
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.viewBinding
 
@@ -142,10 +143,7 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(R.layout.fragment_us
                 state.savedDetails.repliesCount,
             )
             about.donate.text = getString(R.string.donate)
-            Glide.with(requireContext())
-                .load(String.format(BuildConfig.USER_AVA_URL, state.user.name))
-                .transform(CircleCrop())
-                .into(details.avatar)
+            details.avatar.loadCircleAvatar(requireContext(), state.user.name)
         }
     }
 

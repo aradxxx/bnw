@@ -61,20 +61,22 @@ class SavedRepliesViewModel @Inject constructor(
         }
     }
 
-    fun saveReplyClicked(position: Int) = vmScope.launch {
-        val reply = state.nullOr<SavedRepliesState.Idle>()?.replies?.getOrNull(position) ?: return@launch
-        if (reply.saved) {
-            updateState {
-                if (it is SavedRepliesState.Idle) {
-                    it.copy(
-                        candidateToRemove = reply
-                    )
-                } else {
-                    it
+    fun saveReplyClicked(position: Int) {
+        vmScope.launch {
+            val reply = state.nullOr<SavedRepliesState.Idle>()?.replies?.getOrNull(position) ?: return@launch
+            if (reply.saved) {
+                updateState {
+                    if (it is SavedRepliesState.Idle) {
+                        it.copy(
+                            candidateToRemove = reply
+                        )
+                    } else {
+                        it
+                    }
                 }
             }
+            postEvent(RemoveReplyFromLocalStorage)
         }
-        postEvent(RemoveReplyFromLocalStorage)
     }
 
     fun emptyButtonClicked() {
