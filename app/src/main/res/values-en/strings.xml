@@ -52,6 +52,7 @@
     <string name="scroll_to_replies">Scroll to replies</string>
     <string name="transition_animations">Screen transition animations</string>
     <string name="default_tab">Open on start</string>
+    <string name="save_post_draft">Save post draft</string>
 
     <!--saved messages-->
     <string name="saved_empty_messages">Saved messages will be here</string>

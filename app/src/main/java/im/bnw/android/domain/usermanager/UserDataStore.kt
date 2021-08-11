@@ -7,4 +7,6 @@ interface UserDataStore {
     fun subscribeUserToken(): Flow<String>
     suspend fun updateUserName(userName: String)
     fun subscribeUserName(): Flow<String>
+    suspend fun updatePostDraft(text: String)
+    fun subscribePostDraft(): Flow<String>
 }

@@ -17,35 +17,38 @@ import javax.inject.Inject
 class SettingsRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
 ) : SettingsRepository {
-    private object PreferencesKeys {
-        val INCOGNITO = booleanPreferencesKey("incognito")
-        val THEME = stringPreferencesKey("theme")
-        val LANGUAGE = stringPreferencesKey("language")
-        val SCROLL_TO_REPLIES = booleanPreferencesKey("scrollToReplies")
-        val TRANSITION_ANIMATIONS = booleanPreferencesKey("transitionAnimations")
-        val TAB = stringPreferencesKey("tab")
+    companion object {
+        private val INCOGNITO = booleanPreferencesKey("incognito")
+        private val THEME = stringPreferencesKey("theme")
+        private val LANGUAGE = stringPreferencesKey("language")
+        private val SCROLL_TO_REPLIES = booleanPreferencesKey("scrollToReplies")
+        private val SAVE_POST_DRAFT = booleanPreferencesKey("savePostDraft")
+        private val TRANSITION_ANIMATIONS = booleanPreferencesKey("transitionAnimations")
+        private val DEFAULT_TAB = stringPreferencesKey("defaultTab")
     }
 
     override suspend fun updateSettings(settings: Settings) {
         dataStore.edit {
-            it[PreferencesKeys.INCOGNITO] = settings.incognito
-            it[PreferencesKeys.THEME] = settings.theme.value
-            it[PreferencesKeys.LANGUAGE] = settings.language.value
-            it[PreferencesKeys.SCROLL_TO_REPLIES] = settings.scrollToReplies
-            it[PreferencesKeys.TRANSITION_ANIMATIONS] = settings.transitionAnimations
-            it[PreferencesKeys.TAB] = settings.defaultTab.value
+            it[INCOGNITO] = settings.incognito
+            it[THEME] = settings.theme.value
+            it[LANGUAGE] = settings.language.value
+            it[SCROLL_TO_REPLIES] = settings.scrollToReplies
+            it[SAVE_POST_DRAFT] = settings.savePostDraft
+            it[TRANSITION_ANIMATIONS] = settings.transitionAnimations
+            it[DEFAULT_TAB] = settings.defaultTab.value
         }
     }
 
     override fun subscribeSettings(): Flow<Settings> {
         return dataStore.data.map {
             Settings(
-                it[PreferencesKeys.INCOGNITO] ?: false,
-                it[PreferencesKeys.SCROLL_TO_REPLIES] ?: true,
-                it[PreferencesKeys.TRANSITION_ANIMATIONS] ?: true,
-                themeMap(it[PreferencesKeys.THEME].orEmpty()),
-                languageMap(it[PreferencesKeys.LANGUAGE].orEmpty()),
-                tabMap(it[PreferencesKeys.TAB].orEmpty())
+                it[INCOGNITO] ?: false,
+                it[SCROLL_TO_REPLIES] ?: true,
+                it[SAVE_POST_DRAFT] ?: true,
+                it[TRANSITION_ANIMATIONS] ?: true,
+                themeMap(it[THEME].orEmpty()),
+                languageMap(it[LANGUAGE].orEmpty()),
+                defaultTabMap(it[DEFAULT_TAB].orEmpty())
             )
         }
     }
@@ -62,7 +65,7 @@ class SettingsRepositoryImpl @Inject constructor(
         else -> LanguageSettings.Default
     }
 
-    private fun tabMap(value: String): TabSettings = when (value) {
+    private fun defaultTabMap(value: String): TabSettings = when (value) {
         "user" -> TabSettings.User
         "hot" -> TabSettings.Hot
         else -> TabSettings.Messages

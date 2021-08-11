@@ -19,7 +19,7 @@ import im.bnw.android.presentation.core.ScrollTo
 import im.bnw.android.presentation.core.recyclerview.LinearLayoutManagerSmoothScroll
 import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
 import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
-import im.bnw.android.presentation.util.PostNotFound
+import im.bnw.android.presentation.util.PostNotFoundException
 import im.bnw.android.presentation.util.UI
 import im.bnw.android.presentation.util.disableItemChangedAnimation
 import im.bnw.android.presentation.util.dpToPx
@@ -191,7 +191,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         progressBar.isVisible = false
         failure.isVisible = true
         content.isVisible = false
-        if (state.throwable is PostNotFound) {
+        if (state.throwable is PostNotFoundException) {
             failure.setFailure(
                 titleResId = R.string.error,
                 messageString = getString(R.string.message_not_found),

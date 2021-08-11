@@ -1,6 +1,5 @@
 package im.bnw.android.presentation.savedreplies
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -10,7 +9,8 @@ import im.bnw.android.databinding.FragmentSavedRepliesListBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.Event
 import im.bnw.android.presentation.core.RemoveReplyFromLocalStorage
-import im.bnw.android.presentation.core.dialog.NotificationDialog
+import im.bnw.android.presentation.core.dialog.PopupDialogParams
+import im.bnw.android.presentation.core.dialog.PopupDialogFragment
 import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
 import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
 import im.bnw.android.presentation.util.DialogCode
@@ -74,9 +74,11 @@ class SavedRepliesFragment : BaseFragment<SavedRepliesViewModel, SavedRepliesSta
         }
     }
 
-    override fun onAcceptClick(dialog: DialogInterface, which: Int, requestCode: Int) {
-        if (requestCode == DialogCode.CONFIRM_REPLY_REMOVE_FROM_SAVED) {
-            viewModel.removeReplyConfirmed()
+    override fun onPopupDialogResult(requestCode: Int, button: Int) {
+        when (requestCode) {
+            DialogCode.CONFIRM_REPLY_REMOVE_FROM_SAVED -> {
+                viewModel.removeReplyConfirmed()
+            }
         }
     }
 
@@ -94,11 +96,13 @@ class SavedRepliesFragment : BaseFragment<SavedRepliesViewModel, SavedRepliesSta
     }
 
     private fun showReplyRemoveConfirmDialog() = showDialog {
-        NotificationDialog.newInstance(
-            message = getString(R.string.remove_saved_reply_confirm),
-            requestCode = DialogCode.CONFIRM_REPLY_REMOVE_FROM_SAVED,
-            positiveTitle = getString(R.string.ok),
-            negativeTitle = getString(R.string.cancel)
-        )
+        PopupDialogFragment {
+            PopupDialogParams(
+                requestCode = DialogCode.CONFIRM_REPLY_REMOVE_FROM_SAVED,
+                message = getString(R.string.remove_saved_reply_confirm),
+                positiveText = getString(R.string.ok),
+                negativeText = getString(R.string.cancel),
+            )
+        }
     }
 }

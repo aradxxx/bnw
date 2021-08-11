@@ -21,6 +21,7 @@ import im.bnw.android.domain.message.MessageRepository
 import im.bnw.android.domain.settings.SettingsRepository
 import im.bnw.android.domain.usermanager.UserDataStore
 import im.bnw.android.presentation.util.dataStore
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
 @Module
@@ -28,6 +29,10 @@ class DataModule {
     @Provides
     @Singleton
     fun provideDispatchers(): DispatchersProvider = DispatchersProviderImpl
+
+    @Provides
+    @Singleton
+    fun provideMainScope(): CoroutineScope = MainScope.scope
 
     @Provides
     @Singleton

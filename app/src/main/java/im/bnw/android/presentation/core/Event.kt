@@ -5,6 +5,10 @@ import im.bnw.android.presentation.settings.adapter.SettingsItem
 
 interface Event
 
+object RemoveMessageFromLocalStorage : Event
+object RemoveReplyFromLocalStorage : Event
+object LogoutEvent : Event
+
 data class DialogEvent(
     @StringRes
     val title: Int,
@@ -21,9 +25,9 @@ data class OpenMediaEvent(
     val selectedItem: String = urls.first()
 ) : Event
 
-object RemoveMessageFromLocalStorage : Event
-object RemoveReplyFromLocalStorage : Event
-data class ScrollTo(val position: Int = 0) : Event
+data class ScrollTo(
+    val position: Int = 0
+) : Event
 
 data class SettingsDialogEvent(
     val title: Int,
@@ -31,4 +35,6 @@ data class SettingsDialogEvent(
     val items: List<SettingsItem>,
 ) : Event
 
-object LogoutEvent : Event
+data class CursorToEnd(
+    val text: String
+) : Event

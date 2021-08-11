@@ -59,6 +59,18 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun savePostDraftChanged(enabled: Boolean) {
+        vmScope.launch(dispatchersProvider.default) {
+            val currentState = state.nullOr<SettingsState.Idle>() ?: return@launch
+            if (enabled == currentState.settings.savePostDraft) {
+                return@launch
+            }
+            settingsInteractor.updateSettings(
+                currentState.settings.copy(savePostDraft = enabled)
+            )
+        }
+    }
+
     fun transitionAnimationsChanged(enabled: Boolean) {
         vmScope.launch(dispatchersProvider.default) {
             val currentState = state.nullOr<SettingsState.Idle>() ?: return@launch
@@ -111,7 +123,7 @@ class SettingsViewModel @Inject constructor(
         vmScope.launch(dispatchersProvider.default) {
             settingsInteractor.subscribeSettings()
                 .first {
-                    val themeDialogEvent = SettingsDialogEvent(
+                    SettingsDialogEvent(
                         R.string.choose_theme,
                         it.theme.toItem(),
                         arrayListOf(
@@ -119,8 +131,9 @@ class SettingsViewModel @Inject constructor(
                             ThemeItem.Light,
                             ThemeItem.Dark,
                         ),
-                    )
-                    postEvent(themeDialogEvent)
+                    ).also { dialogEvent ->
+                        postEvent(dialogEvent)
+                    }
                     true
                 }
         }
@@ -130,7 +143,7 @@ class SettingsViewModel @Inject constructor(
         vmScope.launch(dispatchersProvider.default) {
             settingsInteractor.subscribeSettings()
                 .first {
-                    val languageDialogEvent = SettingsDialogEvent(
+                    SettingsDialogEvent(
                         R.string.choose_language,
                         it.language.toItem(),
                         arrayListOf(
@@ -138,8 +151,9 @@ class SettingsViewModel @Inject constructor(
                             LanguageItem.English,
                             LanguageItem.Russian,
                         ),
-                    )
-                    postEvent(languageDialogEvent)
+                    ).also { dialogEvent ->
+                        postEvent(dialogEvent)
+                    }
                     true
                 }
         }

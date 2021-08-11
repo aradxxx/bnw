@@ -15,7 +15,8 @@ import im.bnw.android.databinding.ItemProfileDetailCardBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.Event
 import im.bnw.android.presentation.core.LogoutEvent
-import im.bnw.android.presentation.core.dialog.NotificationDialog
+import im.bnw.android.presentation.core.dialog.PopupDialogParams
+import im.bnw.android.presentation.core.dialog.PopupDialogFragment
 import im.bnw.android.presentation.util.DialogCode
 import im.bnw.android.presentation.util.REG_DATE
 import im.bnw.android.presentation.util.networkFailureMessage
@@ -65,9 +66,13 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(R.layout.fragment_us
         }
     }
 
-    override fun onNegativeClick(dialog: DialogInterface, which: Int, requestCode: Int) {
-        if (requestCode == DialogCode.LOGOUT_CONFIRM_DIALOG_REQUEST_CODE) {
-            viewModel.logoutConfirmed()
+    override fun onPopupDialogResult(requestCode: Int, button: Int) {
+        when (requestCode) {
+            DialogCode.LOGOUT_CONFIRM_DIALOG_REQUEST_CODE -> {
+                if (button == DialogInterface.BUTTON_NEGATIVE) {
+                    viewModel.logoutConfirmed()
+                }
+            }
         }
     }
 
@@ -169,13 +174,14 @@ class UserFragment : BaseFragment<UserViewModel, UserState>(R.layout.fragment_us
     }
 
     private fun logoutConfirmDialog() = showDialog {
-        NotificationDialog.newInstance(
-            null,
-            getString(R.string.log_out_confirmation),
-            DialogCode.LOGOUT_CONFIRM_DIALOG_REQUEST_CODE,
-            getString(R.string.cancel),
-            getString(R.string.log_out),
-        )
+        PopupDialogFragment {
+            PopupDialogParams(
+                requestCode = DialogCode.LOGOUT_CONFIRM_DIALOG_REQUEST_CODE,
+                message = getString(R.string.log_out_confirmation),
+                positiveText = getString(R.string.cancel),
+                negativeText = getString(R.string.log_out),
+            )
+        }
     }
 
     private fun ItemProfileDetailCardBinding.fillDetail(

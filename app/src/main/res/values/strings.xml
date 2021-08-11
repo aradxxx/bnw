@@ -52,6 +52,7 @@
     <string name="scroll_to_replies">Скроллить к комментариям</string>
     <string name="transition_animations">Анимация переключения экранов</string>
     <string name="default_tab">Открывать при старте</string>
+    <string name="save_post_draft">Сохранять черновик поста</string>
 
     <!--auth-->
     <string name="user_name">Имя</string>

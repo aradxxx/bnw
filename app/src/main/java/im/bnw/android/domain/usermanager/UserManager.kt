@@ -12,4 +12,7 @@ interface UserManager {
     fun isAuthenticated(): Flow<Boolean>
     fun getUserName(): Flow<String>
     fun subscribeToken(): Flow<String>
+    suspend fun saveDraft(text: String)
+    suspend fun deleteDraft()
+    suspend fun draft(): Result<String>
 }

@@ -68,6 +68,14 @@
                     android:paddingEnd="16dp"
                     tools:text="@string/scroll_to_replies" />
 
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/savePostDraft"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    tools:text="@string/save_post_draft" />
+
                 <include
                     android:id="@+id/defaultTab"
                     layout="@layout/include_setting_item" />

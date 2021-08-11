@@ -6,14 +6,16 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.CallSuper
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
 import im.bnw.android.R
 import im.bnw.android.di.core.ViewModelFactory
-import im.bnw.android.presentation.core.dialog.DialogResult
-import im.bnw.android.presentation.core.dialog.NotificationDialog
+import im.bnw.android.presentation.core.dialog.PopupDialogParams
+import im.bnw.android.presentation.core.dialog.PopupDialogFragment
+import im.bnw.android.presentation.core.dialog.PopupDialogFragment.Companion.POPUP_DIALOG_REQUEST_KEY
+import im.bnw.android.presentation.core.dialog.PopupDialogFragment.Companion.POPUP_REQUEST_CODE
+import im.bnw.android.presentation.core.dialog.PopupDialogFragment.Companion.POPUP_BUTTON
 import im.bnw.android.presentation.core.lifecycle.LCHandler
 import im.bnw.android.presentation.util.Const
 import im.bnw.android.presentation.util.openMedia
@@ -25,7 +27,7 @@ private const val BUNDLE_VIEW_STATE = "VIEW_STATE"
 @SuppressWarnings("TooManyFunctions")
 abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     layoutRes: Int
-) : DaggerFragment(layoutRes), DialogResult {
+) : DaggerFragment(layoutRes) {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val backPressedDispatcher: OnBackPressedCallback =
@@ -51,14 +53,26 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
         // for implementing
         when (event) {
             is DialogEvent -> showDialog {
-                if (event.message == null) {
-                    NotificationDialog.newInstance(null, getString(event.title))
+                val message = if (event.message != null) {
+                    getString(event.message)
                 } else {
-                    NotificationDialog.newInstance(getString(event.title), getString(event.message))
+                    ""
+                }
+                PopupDialogFragment {
+                    PopupDialogParams(
+                        title = getString(event.title),
+                        message = message,
+                        positiveText = getString(R.string.ok),
+                    )
                 }
             }
             is BnwApiErrorEvent -> showDialog {
-                NotificationDialog.newInstance(getString(R.string.error), event.description)
+                PopupDialogFragment {
+                    PopupDialogParams(
+                        message = event.description,
+                        positiveText = getString(R.string.error),
+                    )
+                }
             }
             is OpenMediaEvent -> {
                 openMedia(event.urls, event.selectedItem)
@@ -66,9 +80,14 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
         }
     }
 
+    protected open fun onPopupDialogResult(requestCode: Int, button: Int) {
+        // for implementing
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         restoredState = savedInstanceState?.getParcelable(BUNDLE_VIEW_STATE)
         super.onCreate(savedInstanceState)
+        setPopupDialogResultListener()
     }
 
     override fun onResume() {
@@ -84,14 +103,19 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.stateLiveData().observe(
-            viewLifecycleOwner,
-            {
-                Timber.d("new state: %s", it.toString())
-                updateState(it)
-            }
-        )
-        viewModel.eventLiveData().observe(viewLifecycleOwner, { onEvent(it) })
+        with(viewModel) {
+            stateLiveData().observe(
+                viewLifecycleOwner, {
+                    Timber.d("new state: %s", it.toString())
+                    updateState(it)
+                }
+            )
+            eventLiveData().observe(
+                viewLifecycleOwner, {
+                    onEvent(it)
+                }
+            )
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -104,37 +128,39 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
         throw IllegalArgumentException("Fragment doesn't contain initial args")
     }
 
-    private fun getDialogFragment(tag: String): DialogFragment? {
-        val fragment: Fragment? = parentFragmentManager.findFragmentByTag(tag)
-        if (fragment is DialogFragment) {
-            val dialogFragment: DialogFragment = fragment
-            return if (dialogFragment.dialog != null && dialogFragment.dialog?.isShowing == true) {
-                dialogFragment
-            } else {
-                null
-            }
+    private fun setPopupDialogResultListener() {
+        setFragmentResultListener(POPUP_DIALOG_REQUEST_KEY) { _, bundle ->
+            onPopupDialogResult(
+                bundle.getInt(POPUP_REQUEST_CODE),
+                bundle.getInt(POPUP_BUTTON),
+            )
         }
-        return null
     }
 
-    protected fun dismissDialog(tag: String) {
-        val dialogFragment: DialogFragment? = getDialogFragment(tag)
-        dialogFragment?.dismiss()
+    private fun getDialogFragment(tag: String): DialogFragment? {
+        val fragment = parentFragmentManager.findFragmentByTag(tag)
+        if (fragment !is DialogFragment) {
+            return null
+        }
+        if (fragment.dialog == null || fragment.dialog?.isShowing == false) {
+            return null
+        }
+        return fragment
     }
 
     protected fun showDialog(dialogFragment: () -> DialogFragment) {
-        showDialog(NotificationDialog.NOTIFICATION_DIALOG_TAG, dialogFragment)
+        showDialog(PopupDialogFragment.POPUP_DIALOG_TAG, dialogFragment)
     }
 
     protected fun showDialog(tag: String, dialogFragment: () -> DialogFragment) {
-        dismissDialog(tag)
-        val fragmentManager: FragmentManager = parentFragmentManager
-        val df = dialogFragment()
+        getDialogFragment(tag)?.dismiss()
         try {
-            df.show(fragmentManager, tag)
+            dialogFragment().show(parentFragmentManager, tag)
         } catch (e: IllegalStateException) {
             Timber.e(e)
-            handler.post { showDialog(tag, dialogFragment) }
+            handler.post {
+                showDialog(tag, dialogFragment)
+            }
         }
     }
 }

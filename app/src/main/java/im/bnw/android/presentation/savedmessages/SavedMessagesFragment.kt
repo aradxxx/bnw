@@ -12,7 +12,8 @@ import im.bnw.android.databinding.FragmentSavedMessagesListBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.Event
 import im.bnw.android.presentation.core.RemoveMessageFromLocalStorage
-import im.bnw.android.presentation.core.dialog.NotificationDialog
+import im.bnw.android.presentation.core.dialog.PopupDialogParams
+import im.bnw.android.presentation.core.dialog.PopupDialogFragment
 import im.bnw.android.presentation.messages.adapter.MessageAdapter
 import im.bnw.android.presentation.messages.adapter.messageItemDecorator
 import im.bnw.android.presentation.util.DialogCode
@@ -75,20 +76,13 @@ class SavedMessagesFragment : BaseFragment<SavedMessagesViewModel, SavedMessages
         }
     }
 
-    private fun showMessageRemoveConfirmDialog() {
-        showDialog {
-            NotificationDialog.newInstance(
-                message = getString(R.string.remove_saved_message_confirm),
-                requestCode = DialogCode.CONFIRM_MESSAGE_REMOVE_FROM_SAVED,
-                positiveTitle = getString(R.string.ok),
-                negativeTitle = getString(R.string.cancel)
-            )
-        }
-    }
-
-    override fun onAcceptClick(dialog: DialogInterface, which: Int, requestCode: Int) {
-        if (requestCode == DialogCode.CONFIRM_MESSAGE_REMOVE_FROM_SAVED) {
-            viewModel.removeMessageConfirmed()
+    override fun onPopupDialogResult(requestCode: Int, button: Int) {
+        when (requestCode) {
+            DialogCode.CONFIRM_MESSAGE_REMOVE_FROM_SAVED -> {
+                if (button == DialogInterface.BUTTON_POSITIVE) {
+                    viewModel.removeMessageConfirmed()
+                }
+            }
         }
     }
 
@@ -106,6 +100,17 @@ class SavedMessagesFragment : BaseFragment<SavedMessagesViewModel, SavedMessages
             messagesList.isVisible = true
             loadingBar.root.isVisible = false
             failure.isVisible = state.messages.isEmpty()
+        }
+    }
+
+    private fun showMessageRemoveConfirmDialog() = showDialog {
+        PopupDialogFragment {
+            PopupDialogParams(
+                requestCode = DialogCode.CONFIRM_MESSAGE_REMOVE_FROM_SAVED,
+                message = getString(R.string.remove_saved_message_confirm),
+                positiveText = getString(R.string.ok),
+                negativeText = getString(R.string.cancel),
+            )
         }
     }
 }
