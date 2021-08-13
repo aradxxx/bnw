@@ -1,5 +1,3 @@
-@file:Suppress("MagicNumber")
-
 package im.bnw.android.presentation.messages
 
 import android.os.Bundle
@@ -29,80 +27,83 @@ class MessagesFragment : BaseFragment<MessagesViewModel, MessagesState>(
     private val binding by viewBinding(FragmentMessagesListBinding::bind)
     override val vmClass = MessagesViewModel::class.java
 
-    private lateinit var messageAdapter: MessageAdapter
+    private val messageAdapter by lazy {
+        MessageAdapter(
+            viewModel,
+            UI.MESSAGE_CARD_RADIUS.dpToPxF,
+            UI.MESSAGE_MEDIA_HEIGHT.dpToPx,
+        )
+    }
+    private val messageScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            if (linearLayoutManager.findLastVisibleItemPosition() + AHEAD_VISIBLE_ITEMS_COUNT ==
+                messageAdapter.itemCount
+            ) {
+                viewModel.bottomNear()
+            }
+        }
+    }
     private lateinit var linearLayoutManager: LinearLayoutManager
 
     companion object {
-        fun newInstance(params: MessagesScreenParams) = MessagesFragment().withInitialArguments(params)
+        private const val AHEAD_VISIBLE_ITEMS_COUNT = 10
+        private const val SCROLL_TO_POSITION_DELAY = 200L
+
+        fun newInstance(params: MessagesScreenParams) =
+            MessagesFragment().withInitialArguments(params)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        messageAdapter = MessageAdapter(
-            UI.MESSAGE_CARD_RADIUS.dpToPxF,
-            UI.MESSAGE_MEDIA_HEIGHT.dpToPx,
-            { position -> viewModel.cardClicked(position) },
-            { position -> viewModel.userClicked(position) },
-            { messagePosition, mediaPosition ->
-                viewModel.mediaClicked(messagePosition, mediaPosition)
-            },
-            { position -> viewModel.saveMessageClicked(position) }
-        )
         linearLayoutManager = LinearLayoutManager(requireContext())
         with(binding.messagesList) {
             layoutManager = linearLayoutManager
             adapter = messageAdapter
             addItemDecoration(messageItemDecorator)
+            addOnScrollListener(messageScrollListener)
+            addOnScrollListener(FabVisibilityScrollListener(binding.createMessage))
             disableItemChangedAnimation()
-            addOnScrollListener(
-                object : RecyclerView.OnScrollListener() {
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                        if (linearLayoutManager.findLastVisibleItemPosition() + 10 == adapter?.itemCount) {
-                            viewModel.bottomNear()
-                        }
-                    }
-                }
-            )
-            with(binding.createMessage) {
-                addOnScrollListener(FabVisibilityScrollListener(this))
-                setOnClickListener { viewModel.createPostClicked() }
-            }
         }
         with(binding.swipeToRefresh) {
-            setColorSchemeResources(
-                R.color.colorPrimary
-            )
+            setColorSchemeResources(R.color.colorPrimary)
             setOnRefreshListener {
                 viewModel.swipeRefresh()
             }
         }
-        binding.failure.setActionListener {
-            viewModel.swipeRefresh()
+        with(binding) {
+            createMessage.setOnClickListener {
+                viewModel.createPostClicked()
+            }
+            failure.setActionListener {
+                viewModel.swipeRefresh()
+            }
         }
     }
 
     override fun onEvent(event: Event) {
         when (event) {
-            is ScrollTo -> handler.postDelayed(200) {
-                linearLayoutManager.smoothScrollToPosition(binding.messagesList, null, event.position)
+            is ScrollTo -> handler.postDelayed(SCROLL_TO_POSITION_DELAY) {
+                linearLayoutManager.smoothScrollToPosition(
+                    binding.messagesList,
+                    null,
+                    event.position,
+                )
             }
             else -> super.onEvent(event)
         }
     }
 
-    override fun updateState(state: MessagesState) {
+    override fun updateState(state: MessagesState) = with(binding) {
         messageAdapter.items = state.messages
-        with(binding) {
-            progressBarLine.isVisible = state.beforeLoading && state.messages.isNotEmpty()
-            swipeToRefresh.isRefreshing = state.showSwipeToRefresh
-            val createMessageEnabled = state.createMessageVisible && state.messages.isNotEmpty()
-            createMessage.isEnabled = createMessageEnabled
-            createMessage.isVisible = createMessageEnabled
-            failureScroll.isVisible = state.messages.isEmpty() && state.error != null
-            failure.setFailure(
-                titleResId = R.string.no_connection,
-                messageString = requireContext().networkFailureMessage(state.error),
-            )
-        }
+        progressBarLine.isVisible = state.beforeLoading && state.messages.isNotEmpty()
+        swipeToRefresh.isRefreshing = state.showSwipeToRefresh
+        val createMessageEnabled = state.createMessageVisible && state.messages.isNotEmpty()
+        createMessage.isEnabled = createMessageEnabled
+        createMessage.isVisible = createMessageEnabled
+        failureScroll.isVisible = state.messages.isEmpty() && state.error != null
+        failure.setFailure(
+            titleResId = R.string.no_connection,
+            messageString = requireContext().networkFailureMessage(state.error),
+        )
     }
 }

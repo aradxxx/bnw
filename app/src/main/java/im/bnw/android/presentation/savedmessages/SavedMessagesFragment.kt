@@ -12,8 +12,8 @@ import im.bnw.android.databinding.FragmentSavedMessagesListBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.Event
 import im.bnw.android.presentation.core.RemoveMessageFromLocalStorage
-import im.bnw.android.presentation.core.dialog.PopupDialogParams
 import im.bnw.android.presentation.core.dialog.PopupDialogFragment
+import im.bnw.android.presentation.core.dialog.PopupDialogParams
 import im.bnw.android.presentation.messages.adapter.MessageAdapter
 import im.bnw.android.presentation.messages.adapter.messageItemDecorator
 import im.bnw.android.presentation.util.DialogCode
@@ -29,7 +29,13 @@ class SavedMessagesFragment : BaseFragment<SavedMessagesViewModel, SavedMessages
     private val binding by viewBinding(FragmentSavedMessagesListBinding::bind)
     override val vmClass = SavedMessagesViewModel::class.java
 
-    private lateinit var messageAdapter: MessageAdapter
+    private val messageAdapter by lazy {
+        MessageAdapter(
+            viewModel,
+            UI.MESSAGE_CARD_RADIUS.dpToPxF,
+            UI.MESSAGE_MEDIA_HEIGHT.dpToPx,
+        )
+    }
     private lateinit var linearLayoutManager: LinearLayoutManager
 
     companion object {
@@ -38,16 +44,6 @@ class SavedMessagesFragment : BaseFragment<SavedMessagesViewModel, SavedMessages
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        messageAdapter = MessageAdapter(
-            UI.MESSAGE_CARD_RADIUS.dpToPxF,
-            UI.MESSAGE_MEDIA_HEIGHT.dpToPx,
-            { position -> viewModel.cardClicked(position) },
-            { position -> viewModel.userClicked(position) },
-            { messagePosition, mediaPosition ->
-                viewModel.mediaClicked(messagePosition, mediaPosition)
-            },
-            { position -> viewModel.saveMessageClicked(position) }
-        )
         linearLayoutManager = LinearLayoutManager(requireContext())
         with(binding.messagesList) {
             layoutManager = linearLayoutManager

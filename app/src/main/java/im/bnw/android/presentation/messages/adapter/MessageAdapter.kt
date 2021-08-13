@@ -9,30 +9,27 @@ import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
-import im.bnw.android.BuildConfig
 import im.bnw.android.databinding.ItemMessageCardBinding
 import im.bnw.android.databinding.ItemMessageCardWithMediaBinding
 import im.bnw.android.presentation.core.markwon.BnwLinkifyPlugin
 import im.bnw.android.presentation.medialist.MediaAdapter
 import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
+import im.bnw.android.presentation.messages.MessageClickListener
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.formatDateTime
 import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.itemCallback
+import im.bnw.android.presentation.util.loadCircleAvatar
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.timeAgoString
 import io.noties.markwon.Markwon
 import io.noties.markwon.linkify.LinkifyPlugin
 
 fun messageDelegate(
+    messageClickListener: MessageClickListener,
     cardRadius: Float,
-    cardClickListener: (Int) -> Unit,
-    userClickListener: (Int) -> Unit,
-    saveMessageListener: (Int) -> Unit,
 ) = adapterDelegateViewBinding<MessageItem, MessageListItem, ItemMessageCardBinding>(
     viewBinding = { layoutInflater, root ->
         ItemMessageCardBinding.inflate(layoutInflater, root, false)
@@ -49,7 +46,7 @@ fun messageDelegate(
     fun userClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            userClickListener(position)
+            messageClickListener.userClicked(position)
         }
     }
 
@@ -64,14 +61,14 @@ fun messageDelegate(
     fun cardClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            cardClickListener(position)
+            messageClickListener.cardClicked(position)
         }
     }
 
     fun saveMessageClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            saveMessageListener(position)
+            messageClickListener.saveClicked(position)
         }
     }
 
@@ -84,13 +81,12 @@ fun messageDelegate(
             showTime()
             true
         }
-        root.setOnClickListener {
-            cardClicked()
+        listOf(root, text, footer.id, footer.comments, footer.recommends).forEach {
+            it.setOnClickListener {
+                cardClicked()
+            }
         }
-        text.setOnClickListener {
-            cardClicked()
-        }
-        save.setOnClickListener {
+        footer.save.setOnClickListener {
             saveMessageClicked()
         }
     }
@@ -99,31 +95,24 @@ fun messageDelegate(
         val message = item.message
         with(binding) {
             markwon.setMarkdown(text, message.text)
-
             user.newText = message.user
             date.newText = item.message.timestamp.formatDateTime()
-            id.newText = message.id
-            save.isActivated = item.saved
-
-            comments.newText = message.replyCount.toString()
-            recommends.newText = message.recommendations.size.toString()
-
-            Glide.with(context)
-                .load(String.format(BuildConfig.USER_AVA_THUMB_URL, message.user))
-                .transform(CircleCrop())
-                .into(ava)
+            with(footer) {
+                id.newText = message.id
+                comments.newText = message.replyCount.toString()
+                recommends.newText = message.recommendations.count().toString()
+                save.isChecked = item.saved
+            }
+            avatar.loadCircleAvatar(context, message.user)
         }
     }
 }
 
-@Suppress("LongMethod", "ComplexMethod", "LongParameterList")
+@Suppress("LongMethod", "ComplexMethod")
 fun messageWithMediaDelegate(
+    messageClickListener: MessageClickListener,
     cardRadius: Float,
     mediaHeight: Int,
-    cardClickListener: (Int) -> Unit,
-    userClickListener: (Int) -> Unit,
-    mediaListener: (Int, Int) -> Unit,
-    saveMessageListener: (Int) -> Unit,
     savedInstanceStates: MutableMap<String, Parcelable?>,
 ) = adapterDelegateViewBinding<MessageItem, MessageListItem, ItemMessageCardWithMediaBinding>(
     viewBinding = { layoutInflater, root ->
@@ -137,7 +126,7 @@ fun messageWithMediaDelegate(
     val mediaAdapter = MediaAdapter { mediaPosition ->
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            mediaListener(position, mediaPosition)
+            messageClickListener.mediaClicked(position, mediaPosition)
         }
     }
     val markwon = Markwon.builder(context)
@@ -148,7 +137,7 @@ fun messageWithMediaDelegate(
     fun userClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            userClickListener(position)
+            messageClickListener.userClicked(position)
         }
     }
 
@@ -163,14 +152,14 @@ fun messageWithMediaDelegate(
     fun cardClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            cardClickListener(position)
+            messageClickListener.cardClicked(position)
         }
     }
 
     fun saveMessageClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
-            saveMessageListener(position)
+            messageClickListener.saveClicked(position)
         }
     }
 
@@ -188,6 +177,7 @@ fun messageWithMediaDelegate(
     }
 
     with(binding) {
+        root.radius = cardRadius
         userProfile.setOnClickListener {
             userClicked()
         }
@@ -195,16 +185,12 @@ fun messageWithMediaDelegate(
             showTime()
             true
         }
-        root.apply {
-            radius = cardRadius
-            setOnClickListener {
+        listOf(root, text, footer.id, footer.comments, footer.recommends).forEach {
+            it.setOnClickListener {
                 cardClicked()
             }
         }
-        text.setOnClickListener {
-            cardClicked()
-        }
-        save.setOnClickListener {
+        footer.save.setOnClickListener {
             saveMessageClicked()
         }
         with(mediaList) {
@@ -222,19 +208,15 @@ fun messageWithMediaDelegate(
 
         with(binding) {
             markwon.setMarkdown(text, message.text)
-
             user.newText = message.user
             date.newText = item.message.timestamp.formatDateTime()
-            id.newText = message.id
-            save.isActivated = item.saved
-
-            comments.newText = message.replyCount.toString()
-            recommends.newText = message.recommendations.size.toString()
-
-            Glide.with(context)
-                .load(String.format(BuildConfig.USER_AVA_THUMB_URL, message.user))
-                .transform(CircleCrop())
-                .into(ava)
+            with(footer) {
+                id.newText = message.id
+                comments.newText = message.replyCount.toString()
+                recommends.newText = message.recommendations.count().toString()
+                save.isChecked = item.saved
+            }
+            avatar.loadCircleAvatar(context, message.user)
         }
         restoreInstanceState(item.message.id)
     }
@@ -328,12 +310,9 @@ fun ReplyItem.areContentsTheSame(other: ReplyItem): Boolean {
 }
 
 class MessageAdapter(
+    messageClickListener: MessageClickListener,
     cardRadius: Float,
     mediaHeight: Int,
-    cardClickListener: (Int) -> Unit,
-    userClickListener: (Int) -> Unit,
-    mediaListener: (Int, Int) -> Unit,
-    saveMessageListener: (Int) -> Unit
 ) : AsyncListDifferDelegationAdapter<MessageListItem>(messageListItemDiffCallback) {
     private val savedInstanceStates: MutableMap<String, Parcelable?> = mutableMapOf()
 
@@ -341,20 +320,15 @@ class MessageAdapter(
         delegatesManager.apply {
             addDelegate(
                 messageDelegate(
+                    messageClickListener,
                     cardRadius,
-                    cardClickListener,
-                    userClickListener,
-                    saveMessageListener
                 )
             )
             addDelegate(
                 messageWithMediaDelegate(
+                    messageClickListener,
                     cardRadius,
                     mediaHeight,
-                    cardClickListener,
-                    userClickListener,
-                    mediaListener,
-                    saveMessageListener,
                     savedInstanceStates,
                 )
             )

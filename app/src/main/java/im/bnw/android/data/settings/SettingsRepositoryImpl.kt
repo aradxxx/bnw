@@ -10,6 +10,7 @@ import im.bnw.android.domain.settings.Settings
 import im.bnw.android.domain.settings.SettingsRepository
 import im.bnw.android.domain.settings.TabSettings
 import im.bnw.android.domain.settings.ThemeSettings
+import im.bnw.android.presentation.util.exhaustive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -57,17 +58,17 @@ class SettingsRepositoryImpl @Inject constructor(
         "light" -> ThemeSettings.Light
         "dark" -> ThemeSettings.Dark
         else -> ThemeSettings.Default
-    }
+    }.exhaustive
 
     private fun languageMap(value: String): LanguageSettings = when (value) {
         "en" -> LanguageSettings.English
         "ru" -> LanguageSettings.Russian
         else -> LanguageSettings.Default
-    }
+    }.exhaustive
 
     private fun defaultTabMap(value: String): TabSettings = when (value) {
         "user" -> TabSettings.User
         "hot" -> TabSettings.Hot
         else -> TabSettings.Messages
-    }
+    }.exhaustive
 }

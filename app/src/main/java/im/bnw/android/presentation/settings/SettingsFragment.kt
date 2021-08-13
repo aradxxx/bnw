@@ -11,14 +11,16 @@ import im.bnw.android.databinding.FragmentSettingsBinding
 import im.bnw.android.databinding.IncludeSettingItemBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.Event
+import im.bnw.android.presentation.core.LanguageChangedEvent
 import im.bnw.android.presentation.core.SettingsDialogEvent
-import im.bnw.android.presentation.settings.adapter.SettingsDialog
-import im.bnw.android.presentation.settings.adapter.SettingsItem
-import im.bnw.android.presentation.util.Const
+import im.bnw.android.presentation.settings.adapter.SettingsDialogFragment
+import im.bnw.android.presentation.settings.adapter.SettingsDialogFragment.Companion.SETTINGS_DIALOG_REQUEST_KEY
+import im.bnw.android.presentation.settings.adapter.SettingsDialogFragment.Companion.SETTINGS_DIALOG_TAG
+import im.bnw.android.presentation.settings.adapter.SettingsDialogFragment.Companion.SETTINGS_SETTING
+import im.bnw.android.presentation.settings.adapter.SettingsDialogParams
 import im.bnw.android.presentation.util.newText
 import im.bnw.android.presentation.util.setLocale
 import im.bnw.android.presentation.util.toItem
-import im.bnw.android.presentation.util.toSetting
 import im.bnw.android.presentation.util.viewBinding
 
 class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
@@ -34,7 +36,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
-            toolbar.setNavigationOnClickListener { viewModel.backPressed() }
+            toolbar.setNavigationOnClickListener {
+                viewModel.backPressed()
+            }
             anonymity.setOnCheckedChangeListener { _, enabled ->
                 viewModel.anonymityClicked(enabled)
             }
@@ -47,18 +51,29 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
             transitionAnimations.setOnCheckedChangeListener { _, enabled ->
                 viewModel.transitionAnimationsChanged(enabled)
             }
-            theme.root.setOnClickListener { viewModel.chooseTheme() }
-            language.root.setOnClickListener { viewModel.chooseLanguage() }
-            defaultTab.root.setOnClickListener { viewModel.chooseDefaultTab() }
+            theme.root.setOnClickListener {
+                viewModel.chooseTheme()
+            }
+            language.root.setOnClickListener {
+                viewModel.chooseLanguage()
+            }
+            defaultTab.root.setOnClickListener {
+                viewModel.chooseDefaultTab()
+            }
         }
-        setFragmentResultListener(Const.SETTINGS_REQUEST_KEY) { _, bundle ->
-            settingsChanged(bundle.getParcelable(Const.ARGUMENT_SETTING))
+        setFragmentResultListener(SETTINGS_DIALOG_REQUEST_KEY) { _, bundle ->
+            viewModel.choiceSettingsChanged(bundle.getParcelable(SETTINGS_SETTING))
         }
     }
 
     override fun onEvent(event: Event) {
         when (event) {
-            is SettingsDialogEvent -> showSettingsDialog(event)
+            is SettingsDialogEvent -> {
+                showSettingsDialog(event)
+            }
+            is LanguageChangedEvent -> {
+                event.language.setLocale(requireContext())
+            }
             else -> super.onEvent(event)
         }
     }
@@ -98,7 +113,10 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
             savePostDraft.isVisible = false
         }
         scrollToReplies.drawSwitcher(state.settings.scrollToReplies, R.string.scroll_to_replies)
-        transitionAnimations.drawSwitcher(state.settings.transitionAnimations, R.string.transition_animations)
+        transitionAnimations.drawSwitcher(
+            state.settings.transitionAnimations,
+            R.string.transition_animations
+        )
         appearance.newText = getString(R.string.appearance)
         appearance.isVisible = true
         theme.fillSetting(R.string.theme, state.settings.theme.toItem().nameResId)
@@ -126,25 +144,13 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsState>(
         root.isVisible = true
     }
 
-    private fun settingsChanged(setting: SettingsItem?) = when (setting) {
-        is ThemeItem -> viewModel.themeChanged(setting.toSetting())
-        is LanguageItem -> {
-            val language = setting.toSetting()
-            viewModel.languageChanged(language)
-            language.setLocale(requireContext())
-        }
-        is TabSettingsItem -> {
-            viewModel.defaultTabChanged(setting.toSetting())
-        }
-        else -> throw IllegalArgumentException("Unknown setting class")
-    }
-
-    private fun showSettingsDialog(event: SettingsDialogEvent) =
-        showDialog(SettingsDialog.SETTINGS_DIALOG_TAG) {
-            SettingsDialog.newInstance(
-                getString(event.title),
-                event.currentItem,
-                event.items,
+    private fun showSettingsDialog(event: SettingsDialogEvent) = showDialog(SETTINGS_DIALOG_TAG) {
+        SettingsDialogFragment {
+            SettingsDialogParams(
+                title = getString(event.title),
+                currentItem = event.currentItem,
+                items = event.items,
             )
         }
+    }
 }

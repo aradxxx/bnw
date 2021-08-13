@@ -1,4 +1,4 @@
-@file:Suppress("TooManyFunctions")
+@file:Suppress("TooManyFunctions", "MagicNumber")
 
 package im.bnw.android.presentation.util
 
@@ -8,11 +8,14 @@ import android.os.Parcelable
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
@@ -20,9 +23,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.stfalcon.imageviewer.StfalconImageViewer
 import com.stfalcon.imageviewer.loader.ImageLoader
 import com.yariksoffice.lingver.Lingver
+import im.bnw.android.BuildConfig
 import im.bnw.android.R
 import im.bnw.android.domain.settings.LanguageSettings
 import im.bnw.android.domain.settings.TabSettings
@@ -33,6 +38,9 @@ import im.bnw.android.presentation.settings.LanguageItem
 import im.bnw.android.presentation.settings.TabSettingsItem
 import im.bnw.android.presentation.settings.ThemeItem
 import java.util.Locale
+
+val <T> T.exhaustive: T
+    get() = this
 
 val Context.dataStore by preferencesDataStore("user")
 
@@ -55,7 +63,7 @@ fun LanguageSettings.setLocale(context: Context) {
             LanguageSettings.Default -> it.setFollowSystemLocale(context)
             LanguageSettings.English -> it.setLocale(context, Locale.ENGLISH)
             LanguageSettings.Russian -> it.setLocale(context, Locales.RUSSIAN)
-        }
+        }.exhaustive
     }
 }
 
@@ -63,37 +71,37 @@ fun ThemeSettings.toItem(): ThemeItem = when (this) {
     ThemeSettings.Default -> ThemeItem.Default
     ThemeSettings.Light -> ThemeItem.Light
     ThemeSettings.Dark -> ThemeItem.Dark
-}
+}.exhaustive
 
 fun LanguageSettings.toItem(): LanguageItem = when (this) {
     LanguageSettings.Default -> LanguageItem.Default
     LanguageSettings.English -> LanguageItem.English
     LanguageSettings.Russian -> LanguageItem.Russian
-}
+}.exhaustive
 
 fun ThemeItem.toSetting(): ThemeSettings = when (this) {
     ThemeItem.Default -> ThemeSettings.Default
     ThemeItem.Light -> ThemeSettings.Light
     ThemeItem.Dark -> ThemeSettings.Dark
-}
+}.exhaustive
 
 fun LanguageItem.toSetting(): LanguageSettings = when (this) {
     LanguageItem.Default -> LanguageSettings.Default
     LanguageItem.English -> LanguageSettings.English
     LanguageItem.Russian -> LanguageSettings.Russian
-}
+}.exhaustive
 
 fun TabSettings.toItem(): TabSettingsItem = when (this) {
     TabSettings.Hot -> TabSettingsItem.Hot
     TabSettings.Messages -> TabSettingsItem.Messages
     TabSettings.User -> TabSettingsItem.User
-}
+}.exhaustive
 
 fun TabSettingsItem.toSetting(): TabSettings = when (this) {
     TabSettingsItem.Hot -> TabSettings.Hot
     TabSettingsItem.Messages -> TabSettings.Messages
     TabSettingsItem.User -> TabSettings.User
-}
+}.exhaustive
 
 val Int.dpToPx: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
@@ -118,6 +126,31 @@ var TextView.newText: String
             text = newText
         }
     }
+
+fun ImageView.loadCircleAvatar(context: Context, otherUrlPart: String) {
+    Glide.with(context)
+        .load(String.format(BuildConfig.USER_AVA_THUMB_URL, otherUrlPart))
+        .transform(CircleCrop())
+        .into(this)
+}
+
+/**
+ * Show system keyboard. if [view] not null, then keyboard will focused on this,
+ * otherwise default keyboard behaviour.
+ *
+ * @param view the view to focus when keyboard shown.
+ */
+fun Fragment.showKeyboard(view: View? = null) {
+    if (view != null) {
+        ViewCompat.getWindowInsetsController(view)?.show(WindowInsetsCompat.Type.ime())
+    } else {
+        showSystemUI(WindowInsetsCompat.Type.ime())
+    }
+}
+
+fun Fragment.hideKeyboard() {
+    hideSystemUI(WindowInsetsCompat.Type.ime())
+}
 
 fun Fragment.showSystemUI(windowInsetsTypes: Int) =
     view?.let {

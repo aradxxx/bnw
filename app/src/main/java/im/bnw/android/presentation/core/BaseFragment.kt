@@ -137,23 +137,15 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
         }
     }
 
-    private fun getDialogFragment(tag: String): DialogFragment? {
-        val fragment = parentFragmentManager.findFragmentByTag(tag)
-        if (fragment !is DialogFragment) {
-            return null
+    protected fun showDialog(
+        tag: String = PopupDialogFragment.POPUP_DIALOG_TAG,
+        dialogFragment: () -> DialogFragment,
+    ) {
+        parentFragmentManager.findFragmentByTag(tag).let {
+            if (it is DialogFragment && it.dialog?.isShowing == true) {
+                it.dismiss()
+            }
         }
-        if (fragment.dialog == null || fragment.dialog?.isShowing == false) {
-            return null
-        }
-        return fragment
-    }
-
-    protected fun showDialog(dialogFragment: () -> DialogFragment) {
-        showDialog(PopupDialogFragment.POPUP_DIALOG_TAG, dialogFragment)
-    }
-
-    protected fun showDialog(tag: String, dialogFragment: () -> DialogFragment) {
-        getDialogFragment(tag)?.dismiss()
         try {
             dialogFragment().show(parentFragmentManager, tag)
         } catch (e: IllegalStateException) {

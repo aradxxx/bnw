@@ -11,6 +11,8 @@
     <color name="dark_background">#2B2B2B</color>
     <color name="dark_light">#3C3F41</color>
     <color name="alpha_transparent">#66000000</color>
+    <color name="dark_lighter_background">#545454</color>
+    <color name="light_darker_background">#F5F5F5</color>
     <!--<color name="dark_background">#121212</color>
     <color name="dark_light">#222222</color>-->
 

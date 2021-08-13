@@ -16,13 +16,14 @@ import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageDetails
 import im.bnw.android.domain.message.MessageRepository
-import im.bnw.android.presentation.util.PostNotFoundException
 import im.bnw.android.domain.message.Reply
+import im.bnw.android.presentation.util.PostNotFoundException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class MessageRepositoryImpl @Inject constructor(
     private val api: Api,
     private val appDb: AppDb,

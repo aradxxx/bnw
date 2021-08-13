@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import im.bnw.android.presentation.util.Const.BUNDLE_INITIAL_ARGS
 import im.bnw.android.presentation.util.withInitialArguments
 
@@ -25,7 +26,7 @@ class PopupDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) =
-        AlertDialog.Builder(requireContext()).run {
+        MaterialAlertDialogBuilder(requireContext()).run {
             val params = arguments?.getParcelable<PopupDialogParams>(BUNDLE_INITIAL_ARGS)
                 ?: throw IllegalArgumentException("Popup dialog params is null")
             with(params) {

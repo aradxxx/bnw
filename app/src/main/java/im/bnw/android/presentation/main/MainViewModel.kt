@@ -94,14 +94,14 @@ class MainViewModel @Inject constructor(
         if (currentScreen is MultiScreen) {
             val selected = currentScreen.selectedStack
             val needSwitchTo = when {
-                defaultTab == TabSettings.Messages && selected != 0 -> {
-                    0
+                defaultTab == TabSettings.Messages && selected != Tab.GENERAL.ordinal -> {
+                    Tab.GENERAL.ordinal
                 }
-                defaultTab == TabSettings.Hot && selected != 1 -> {
-                    1
+                defaultTab == TabSettings.Hot && selected != Tab.TODAY.ordinal -> {
+                    Tab.TODAY.ordinal
                 }
-                defaultTab == TabSettings.User && selected != 2 -> {
-                    2
+                defaultTab == TabSettings.User && selected != Tab.PROFILE.ordinal -> {
+                    Tab.PROFILE.ordinal
                 }
                 else -> null
             }

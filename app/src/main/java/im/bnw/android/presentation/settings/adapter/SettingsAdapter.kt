@@ -9,7 +9,7 @@ import im.bnw.android.presentation.util.newText
 
 fun settingsDelegate(
     currentItem: SettingsItem,
-    listener: (SettingsItem) -> Unit,
+    chosenItemListener: (SettingsItem) -> Unit,
 ) = adapterDelegateViewBinding<SettingsItem, SettingsItem, ItemSettingsDialogCardBinding>(
     { layoutInflater, root ->
         ItemSettingsDialogCardBinding.inflate(layoutInflater, root, false)
@@ -19,7 +19,7 @@ fun settingsDelegate(
         if (adapterPosition == RecyclerView.NO_POSITION) {
             return
         }
-        listener(item)
+        chosenItemListener(item)
     }
 
     binding.value.setOnClickListener {
@@ -45,13 +45,13 @@ val settingsItemCallback = itemCallback<SettingsItem>(
 
 class SettingsAdapter(
     currentItem: SettingsItem,
-    listener: (SettingsItem) -> Unit,
+    chosenItemListener: (SettingsItem) -> Unit,
 ) : AsyncListDifferDelegationAdapter<SettingsItem>(settingsItemCallback) {
     init {
         delegatesManager.addDelegate(
             settingsDelegate(
                 currentItem,
-                listener,
+                chosenItemListener,
             )
         )
     }

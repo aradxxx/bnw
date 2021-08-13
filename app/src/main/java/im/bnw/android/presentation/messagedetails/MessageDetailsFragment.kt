@@ -39,15 +39,12 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
 ) {
     private val binding by viewBinding(FragmentMessageDetailsBinding::bind)
     override val vmClass = MessageDetailsViewModel::class.java
-    private val replyAdapter: ReplyAdapter by lazy {
+
+    private val replyAdapter by lazy {
         ReplyAdapter(
+            viewModel,
             0F,
             UI.MESSAGE_DETAILS_MEDIA_HEIGHT.dpToPx,
-            { position -> viewModel.userClicked(position) },
-            { position, mediaPosition -> viewModel.mediaClicked(position, mediaPosition) },
-            { position -> viewModel.replyClicked(position) },
-            { position -> viewModel.saveMessageClicked(position) },
-            { position -> viewModel.saveReplyClicked(position) },
             { position -> viewModel.quoteClicked(position) },
         )
     }
@@ -62,7 +59,8 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
     private var fromFlash: Animator? = null
 
     companion object {
-        fun newInstance(params: MessageDetailsScreenParams) = MessageDetailsFragment().withInitialArguments(params)
+        fun newInstance(params: MessageDetailsScreenParams) =
+            MessageDetailsFragment().withInitialArguments(params)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,7 +94,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
                 viewModel.sendReplyClicked()
             }
             replyToClose.setOnClickListener {
-                viewModel.replyClicked()
+                viewModel.closeReplyClicked()
             }
             replyText.doAfterTextChanged {
                 viewModel.replyTextChanged(it.toString())
@@ -211,11 +209,9 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         content.isVisible = false
     }
 
+    @Suppress("MagicNumber")
     private fun animateView(it: View) {
-        if (it !is ViewGroup) {
-            return
-        }
-        if (toFlash != null || fromFlash != null) {
+        if (it !is ViewGroup || toFlash != null || fromFlash != null) {
             return
         }
         val view = it.getChildAt(0) ?: return
