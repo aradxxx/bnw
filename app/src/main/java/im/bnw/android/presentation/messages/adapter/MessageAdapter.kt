@@ -86,7 +86,7 @@ fun messageDelegate(
                 cardClicked()
             }
         }
-        footer.save.setOnClickListener {
+        save.setOnClickListener {
             saveMessageClicked()
         }
     }
@@ -101,8 +101,8 @@ fun messageDelegate(
                 id.newText = message.id
                 comments.newText = message.replyCount.toString()
                 recommends.newText = message.recommendations.count().toString()
-                save.isChecked = item.saved
             }
+            save.isActivated = item.saved
             avatar.loadCircleAvatar(context, message.user)
         }
     }
@@ -190,7 +190,7 @@ fun messageWithMediaDelegate(
                 cardClicked()
             }
         }
-        footer.save.setOnClickListener {
+        save.setOnClickListener {
             saveMessageClicked()
         }
         with(mediaList) {
@@ -214,8 +214,8 @@ fun messageWithMediaDelegate(
                 id.newText = message.id
                 comments.newText = message.replyCount.toString()
                 recommends.newText = message.recommendations.count().toString()
-                save.isChecked = item.saved
             }
+            save.isActivated = item.saved
             avatar.loadCircleAvatar(context, message.user)
         }
         restoreInstanceState(item.message.id)

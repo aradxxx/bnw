@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="48dp"
     android:gravity="center_vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -53,23 +53,4 @@
         android:singleLine="true"
         android:textAppearance="@style/Text.Body1.Secondary"
         tools:text="2" />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <com.google.android.material.chip.Chip
-        style="@style/Widget.MaterialComponents.Chip.Choice"
-        android:id="@+id/save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:chipBackgroundColor="@color/chip_background_color"
-        app:chipIcon="@drawable/ic_save"
-        app:chipIconSize="20dp"
-        app:chipIconTint="?android:textColorSecondary"
-        app:chipIconVisible="true"
-        app:iconStartPadding="8dp"
-        app:textEndPadding="-2dp"
-        app:tint="@color/primary_icon_color" />
 </LinearLayout>
