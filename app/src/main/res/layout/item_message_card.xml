@@ -85,7 +85,16 @@
             android:id="@+id/footer"
             layout="@layout/include_message_footer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp" />
+            android:layout_height="48dp" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/save"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom|end"
+        android:background="?selectableItemBackgroundBorderless"
+        android:padding="16dp"
+        android:src="@drawable/ic_save"
+        app:tint="@color/primary_icon_color" />
 </androidx.cardview.widget.CardView>
