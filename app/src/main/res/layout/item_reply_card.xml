@@ -85,6 +85,7 @@
             android:layout_marginTop="8dp"
             android:textAppearance="@style/Text.Body2.Primary"
             android:textColorLink="@color/colorPrimary"
+            android:textIsSelectable="true"
             tools:text="Хочу сделать новостной сайт с нормальными, не шуточными новостями, но чтобы заголовок к любой новости можно было сделать какой хочешь, и давать на неё ссылку со своим заголовком. Может хоть это бы научило народ читать дальше заголовка?" />
 
         <LinearLayout
