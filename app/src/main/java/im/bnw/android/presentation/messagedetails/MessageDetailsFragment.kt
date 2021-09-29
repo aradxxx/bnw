@@ -10,6 +10,7 @@ import androidx.core.os.postDelayed
 import androidx.core.view.doOnDetach
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import im.bnw.android.R
 import im.bnw.android.databinding.FragmentMessageDetailsBinding
@@ -18,6 +19,7 @@ import im.bnw.android.presentation.core.Event
 import im.bnw.android.presentation.core.ScrollTo
 import im.bnw.android.presentation.core.recyclerview.LinearLayoutManagerSmoothScroll
 import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
+import im.bnw.android.presentation.messagedetails.adapter.buildTouchHelper
 import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
 import im.bnw.android.presentation.util.PostNotFoundException
 import im.bnw.android.presentation.util.UI
@@ -55,6 +57,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
         requireContext().getColor(android.R.color.transparent)
     }
     private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var touchHelper: ItemTouchHelper
     private var toFlash: Animator? = null
     private var fromFlash: Animator? = null
 
@@ -69,6 +72,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             context = requireContext(),
             smoothScrollSpeedMillisecondsPerInch = LinearLayoutManagerSmoothScroll.SCROLL_SPEED_FAST
         )
+        touchHelper = buildTouchHelper { viewModel.swiped(it) }
         with(binding.replies) {
             layoutManager = linearLayoutManager
             adapter = replyAdapter
@@ -114,21 +118,19 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
     override fun onEvent(event: Event) {
         when (event) {
             is ScrollTo -> {
-                handler.post {
-                    val needScroll = event.position < linearLayoutManager.findFirstCompletelyVisibleItemPosition() ||
-                        event.position > linearLayoutManager.findLastCompletelyVisibleItemPosition()
-                    if (needScroll) {
-                        binding.replies.smoothScrollToPosition(event.position)
-                    }
-                    val delay = if (needScroll) {
-                        FLASH_DELAY
-                    } else {
-                        0
-                    }
-                    handler.postDelayed(delay) {
-                        linearLayoutManager.findViewByPosition(event.position)?.let {
-                            animateView(it)
-                        }
+                val needScroll = event.position < linearLayoutManager.findFirstCompletelyVisibleItemPosition() ||
+                    event.position > linearLayoutManager.findLastCompletelyVisibleItemPosition()
+                if (needScroll) {
+                    binding.replies.smoothScrollToPosition(event.position)
+                }
+                val delay = if (needScroll) {
+                    FLASH_DELAY
+                } else {
+                    0
+                }
+                handler.postDelayed(delay) {
+                    linearLayoutManager.findViewByPosition(event.position)?.let {
+                        animateView(it)
                     }
                 }
             }
@@ -137,6 +139,7 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
     }
 
     override fun onDestroyView() {
+        touchHelper.attachToRecyclerView(null)
         toFlash?.cancel()
         fromFlash?.cancel()
         super.onDestroyView()
@@ -174,6 +177,11 @@ class MessageDetailsFragment : BaseFragment<MessageDetailsViewModel, MessageDeta
             sendProgress.isVisible = state.sendProgress
             replyText.newText = state.replyText
             send.isVisible = state.replyText.trim().isNotEmpty()
+        }
+        if (state.allowReply) {
+            touchHelper.attachToRecyclerView(replies)
+        } else {
+            touchHelper.attachToRecyclerView(null)
         }
     }
 

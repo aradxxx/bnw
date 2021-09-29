@@ -20,7 +20,7 @@ android {
         buildConfigField("String", "DB_NAME", "\"bnwDb\"")
         buildConfigField("int", "DB_VERSION", "1")
 
-        buildConfigField("String", "BASE_URL", "\"https://www.bnw.im/api/\"")
+        buildConfigField("String", "BASE_URL", "\"https://bnw.im/api/\"")
         buildConfigField("String", "LOCAL_LINK", "\"app://im.bnw.android/\"")
         buildConfigField("String", "POST_PATH_SEGMENT", "\"p\"")
         buildConfigField("String", "USER_PATH_SEGMENT", "\"u\"")
@@ -124,6 +124,8 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
 
     implementation("com.github.stfalcon:stfalcon-imageviewer:1.0.1")
+
+    implementation("com.github.xabaras:RecyclerViewSwipeDecorator:1.3")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test:runner:1.4.0")

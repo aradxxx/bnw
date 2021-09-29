@@ -4,7 +4,10 @@ package im.bnw.android.presentation.util
 
 import android.content.Context
 import android.content.res.Resources
+import android.os.Build
 import android.os.Parcelable
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -214,3 +217,14 @@ fun RecyclerView.disableItemChangedAnimation() {
         animator.supportsChangeAnimations = false
     }
 }
+
+@Suppress("DEPRECATION")
+fun Context.vibrate(amplitude: Int = 100) {
+    val vibrationService = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        vibrationService.vibrate(VibrationEffect.createOneShot(30L, amplitude))
+    } else {
+        vibrationService.vibrate(30L)
+    }
+}
+
