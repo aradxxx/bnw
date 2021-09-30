@@ -1,4 +1,5 @@
 <resources>
+
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/colorPrimary</item>
@@ -19,7 +20,7 @@
 
         <item name="cardColor">@color/dark_light</item>
         <item name="barColor">@color/dark_light</item>
-        <item name="secondaryIconColor">?attr/colorSecondary</item>
+        <item name="secondaryIconColor">@color/light_darker_background</item>
         <item name="primaryIconColor">@color/white</item>
         <item name="chipBackgroundColor">@color/dark_lighter_background</item>
 

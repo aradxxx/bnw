@@ -65,14 +65,7 @@ class MessageDetailsViewModel @Inject constructor(
     }
 
     override fun cardClicked(position: Int) {
-        vmScope.launch {
-            val current = state.nullOr<MessageDetailsState.Idle>() ?: return@launch
-            val reply = current.items.getOrNull(position)
-            if (reply !is ReplyItem) {
-                return@launch
-            }
-            updateState { current.copy(replyTo = reply.reply) }
-        }
+        // no op
     }
 
     override fun userClicked(position: Int) {
@@ -107,6 +100,17 @@ class MessageDetailsViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun swiped(position: Int) {
+        vmScope.launch {
+            val current = state.nullOr<MessageDetailsState.Idle>() ?: return@launch
+            val reply = current.items.getOrNull(position)
+            if (reply !is ReplyItem) {
+                return@launch
+            }
+            updateState { current.copy(replyTo = reply.reply) }
         }
     }
 

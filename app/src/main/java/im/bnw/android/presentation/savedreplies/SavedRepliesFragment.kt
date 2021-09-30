@@ -1,5 +1,6 @@
 package im.bnw.android.presentation.savedreplies
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -12,7 +13,7 @@ import im.bnw.android.presentation.core.RemoveReplyFromLocalStorage
 import im.bnw.android.presentation.core.dialog.PopupDialogFragment
 import im.bnw.android.presentation.core.dialog.PopupDialogParams
 import im.bnw.android.presentation.messagedetails.adapter.ReplyAdapter
-import im.bnw.android.presentation.messagedetails.adapter.replyItemDecorator
+import im.bnw.android.presentation.messages.adapter.messageItemDecorator
 import im.bnw.android.presentation.util.DialogCode
 import im.bnw.android.presentation.util.UI
 import im.bnw.android.presentation.util.disableItemChangedAnimation
@@ -45,7 +46,7 @@ class SavedRepliesFragment : BaseFragment<SavedRepliesViewModel, SavedRepliesSta
         with(binding.repliesList) {
             layoutManager = linearLayoutManager
             adapter = repliesAdapter
-            addItemDecoration(replyItemDecorator)
+            addItemDecoration(messageItemDecorator)
             disableItemChangedAnimation()
         }
         binding.failure.setActionListener {
@@ -72,7 +73,9 @@ class SavedRepliesFragment : BaseFragment<SavedRepliesViewModel, SavedRepliesSta
     override fun onPopupDialogResult(requestCode: Int, button: Int) {
         when (requestCode) {
             DialogCode.CONFIRM_REPLY_REMOVE_FROM_SAVED -> {
-                viewModel.removeReplyConfirmed()
+                if (button == DialogInterface.BUTTON_POSITIVE) {
+                    viewModel.removeReplyConfirmed()
+                }
             }
         }
     }

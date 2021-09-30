@@ -59,13 +59,6 @@ fun replyDelegate(
         ).show()
     }
 
-    fun cardClicked() {
-        val position = adapterPosition
-        if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.cardClicked(position)
-        }
-    }
-
     fun saveReplyClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
@@ -87,12 +80,6 @@ fun replyDelegate(
         userProfile.setOnLongClickListener {
             showTime()
             true
-        }
-        root.setOnClickListener {
-            cardClicked()
-        }
-        text.setOnClickListener {
-            cardClicked()
         }
         save.setOnClickListener {
             saveReplyClicked()
@@ -163,13 +150,6 @@ fun replyWithMediaDelegate(
         ).show()
     }
 
-    fun cardClicked() {
-        val position = adapterPosition
-        if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.cardClicked(position)
-        }
-    }
-
     fun saveReplyClicked() {
         val position = adapterPosition
         if (position != RecyclerView.NO_POSITION) {
@@ -191,12 +171,6 @@ fun replyWithMediaDelegate(
         userProfile.setOnLongClickListener {
             showTime()
             true
-        }
-        root.setOnClickListener {
-            cardClicked()
-        }
-        text.setOnClickListener {
-            cardClicked()
         }
         save.setOnClickListener {
             saveReplyClicked()
