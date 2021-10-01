@@ -228,3 +228,9 @@ fun Context.vibrate(amplitude: Int = 100) {
     }
 }
 
+fun RecyclerView.ViewHolder.doIfPositionValid(block: (Int) -> Unit) {
+    val position = bindingAdapterPosition
+    if (position != RecyclerView.NO_POSITION) {
+        block(position)
+    }
+}

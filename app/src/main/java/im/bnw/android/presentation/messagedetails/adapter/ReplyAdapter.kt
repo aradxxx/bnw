@@ -19,6 +19,7 @@ import im.bnw.android.presentation.messages.adapter.MessageListItem
 import im.bnw.android.presentation.messages.adapter.messageDelegate
 import im.bnw.android.presentation.messages.adapter.messageListItemDiffCallback
 import im.bnw.android.presentation.messages.adapter.messageWithMediaDelegate
+import im.bnw.android.presentation.util.doIfPositionValid
 import im.bnw.android.presentation.util.dpToPx
 import im.bnw.android.presentation.util.formatDateTime
 import im.bnw.android.presentation.util.loadCircleAvatar
@@ -45,9 +46,8 @@ fun replyDelegate(
         .build()
 
     fun userClicked() {
-        val position = adapterPosition
-        if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.userClicked(position)
+        doIfPositionValid {
+            messageClickListener.userClicked(it)
         }
     }
 
@@ -59,17 +59,21 @@ fun replyDelegate(
         ).show()
     }
 
+    fun cardClicked() {
+        doIfPositionValid {
+            messageClickListener.cardClicked(it)
+        }
+    }
+
     fun saveReplyClicked() {
-        val position = adapterPosition
-        if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.saveClicked(position)
+        doIfPositionValid {
+            messageClickListener.saveClicked(it)
         }
     }
 
     fun quoteClicked() {
-        val position = adapterPosition
-        if (position != RecyclerView.NO_POSITION) {
-            quoteClickListener(position)
+        doIfPositionValid {
+            quoteClickListener(it)
         }
     }
 
@@ -80,6 +84,12 @@ fun replyDelegate(
         userProfile.setOnLongClickListener {
             showTime()
             true
+        }
+        root.setOnClickListener {
+            cardClicked()
+        }
+        text.setOnClickListener {
+            cardClicked()
         }
         save.setOnClickListener {
             saveReplyClicked()
@@ -125,9 +135,8 @@ fun replyWithMediaDelegate(
 ) {
     val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
     val mediaAdapter = MediaAdapter { mediaPosition ->
-        val position = adapterPosition
-        if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.mediaClicked(position, mediaPosition)
+        doIfPositionValid {
+            messageClickListener.mediaClicked(it, mediaPosition)
         }
     }
     val markwon = Markwon.builder(context)
@@ -136,9 +145,8 @@ fun replyWithMediaDelegate(
         .build()
 
     fun userClicked() {
-        val position = adapterPosition
-        if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.userClicked(position)
+        doIfPositionValid {
+            messageClickListener.userClicked(it)
         }
     }
 
@@ -150,17 +158,21 @@ fun replyWithMediaDelegate(
         ).show()
     }
 
+    fun cardClicked() {
+        doIfPositionValid {
+            messageClickListener.cardClicked(it)
+        }
+    }
+
     fun saveReplyClicked() {
-        val position = adapterPosition
-        if (position != RecyclerView.NO_POSITION) {
-            messageClickListener.saveClicked(position)
+        doIfPositionValid {
+            messageClickListener.saveClicked(it)
         }
     }
 
     fun quoteClicked() {
-        val position = adapterPosition
-        if (position != RecyclerView.NO_POSITION) {
-            quoteClickListener(position)
+        doIfPositionValid {
+            quoteClickListener(it)
         }
     }
 
@@ -171,6 +183,12 @@ fun replyWithMediaDelegate(
         userProfile.setOnLongClickListener {
             showTime()
             true
+        }
+        root.setOnClickListener {
+            cardClicked()
+        }
+        text.setOnClickListener {
+            cardClicked()
         }
         save.setOnClickListener {
             saveReplyClicked()
