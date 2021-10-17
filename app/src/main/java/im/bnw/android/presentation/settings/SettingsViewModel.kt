@@ -151,6 +151,7 @@ class SettingsViewModel @Inject constructor(
                         it.defaultTab.toItem(),
                         arrayListOf(
                             TabSettingsItem.Messages,
+                            TabSettingsItem.Feed,
                             TabSettingsItem.Hot,
                             TabSettingsItem.User
                         ),

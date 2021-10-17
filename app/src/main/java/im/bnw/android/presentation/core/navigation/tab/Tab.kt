@@ -11,6 +11,7 @@ enum class Tab(
     val title: Int
 ) {
     GENERAL(R.drawable.ic_list, R.string.general),
+    FEED(R.drawable.ic_list_star, R.string.feed),
     TODAY(R.drawable.ic_hot, R.string.today),
     PROFILE(R.drawable.ic_profile, R.string.profile);
 }

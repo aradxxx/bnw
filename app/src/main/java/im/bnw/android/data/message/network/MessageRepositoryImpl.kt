@@ -15,6 +15,7 @@ import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageDetails
+import im.bnw.android.domain.message.MessageMode
 import im.bnw.android.domain.message.MessageRepository
 import im.bnw.android.domain.message.Reply
 import im.bnw.android.presentation.util.PostNotFoundException
@@ -29,16 +30,16 @@ class MessageRepositoryImpl @Inject constructor(
     private val appDb: AppDb,
     private val dispatchersProvider: DispatchersProvider
 ) : MessageRepository {
-    override suspend fun messages(before: String, user: String, today: Boolean): Result<List<Message>> {
-        return when {
-            !today -> {
+    override suspend fun messages(before: String, user: String, mode: MessageMode): Result<List<Message>> {
+        return when (mode) {
+            MessageMode.All -> {
                 messages(before, user)
             }
-            today && before.isEmpty() -> {
-                todayMessages()
+            MessageMode.Today -> {
+                todayMessages(before)
             }
-            else -> {
-                Result.Success(emptyList())
+            MessageMode.Feed -> {
+                feedMessages(before)
             }
         }
     }
@@ -116,9 +117,22 @@ class MessageRepositoryImpl @Inject constructor(
             }
         }
 
-    private suspend fun todayMessages(): Result<List<Message>> =
+    private suspend fun todayMessages(before: String): Result<List<Message>> =
         withContext(dispatchersProvider.io) {
+            if (before.isNotEmpty()) {
+                return@withContext Result.Success(emptyList())
+            }
             return@withContext api.today().toResult { response ->
+                response.messages.map { it.toMessage() }
+            }
+        }
+
+    private suspend fun feedMessages(before: String): Result<List<Message>> =
+        withContext(dispatchersProvider.io) {
+            if (before.isNotEmpty()) {
+                return@withContext Result.Success(emptyList())
+            }
+            return@withContext api.feed().toResult { response ->
                 response.messages.map { it.toMessage() }
             }
         }

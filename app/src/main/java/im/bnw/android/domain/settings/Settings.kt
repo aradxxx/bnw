@@ -44,6 +44,9 @@ sealed class TabSettings(val value: String) : Setting() {
     object Messages : TabSettings("messages")
 
     @Parcelize
+    object Feed : TabSettings("feed")
+
+    @Parcelize
     object Hot : TabSettings("hot")
 
     @Parcelize

@@ -96,12 +96,14 @@ fun LanguageItem.toSetting(): LanguageSettings = when (this) {
 
 fun TabSettings.toItem(): TabSettingsItem = when (this) {
     TabSettings.Hot -> TabSettingsItem.Hot
+    TabSettings.Feed -> TabSettingsItem.Feed
     TabSettings.Messages -> TabSettingsItem.Messages
     TabSettings.User -> TabSettingsItem.User
 }.exhaustive
 
 fun TabSettingsItem.toSetting(): TabSettings = when (this) {
     TabSettingsItem.Hot -> TabSettings.Hot
+    TabSettingsItem.Feed -> TabSettings.Feed
     TabSettingsItem.Messages -> TabSettings.Messages
     TabSettingsItem.User -> TabSettings.User
 }.exhaustive

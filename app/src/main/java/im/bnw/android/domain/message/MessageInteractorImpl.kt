@@ -11,9 +11,9 @@ class MessageInteractorImpl @Inject constructor(
     private val messageRepository: MessageRepository,
     private val dispatchersProvider: DispatchersProvider
 ) : MessageInteractor {
-    override suspend fun messages(before: String, user: String, today: Boolean): Result<List<Message>> =
+    override suspend fun messages(before: String, user: String, mode: MessageMode): Result<List<Message>> =
         withContext(dispatchersProvider.default) {
-            return@withContext messageRepository.messages(before, user, today).map { messages ->
+            return@withContext messageRepository.messages(before, user, mode).map { messages ->
                 messages.sortedByDescending { message -> message.timestamp }
             }
         }

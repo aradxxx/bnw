@@ -103,6 +103,9 @@ class MainViewModel @Inject constructor(
                 defaultTab == TabSettings.User && selected != Tab.PROFILE.ordinal -> {
                     Tab.PROFILE.ordinal
                 }
+                defaultTab == TabSettings.Feed && selected != Tab.FEED.ordinal -> {
+                    Tab.FEED.ordinal
+                }
                 else -> null
             }
             needSwitchTo ?: return

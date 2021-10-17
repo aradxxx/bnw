@@ -5,6 +5,7 @@ import com.github.terrakok.modo.externalForward
 import im.bnw.android.BuildConfig
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
+import im.bnw.android.domain.message.MessageMode
 import im.bnw.android.domain.user.ProfileInteractor
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.OpenMediaEvent
@@ -29,7 +30,7 @@ class ProfileViewModel @Inject constructor(
 
     fun messagesClicked() {
         val currentState = state.nullOr<ProfileState.ProfileInfo>() ?: return
-        modo.externalForward(Screens.Messages(currentState.user.name))
+        modo.externalForward(Screens.Messages(currentState.user.name, MessageMode.All))
     }
 
     fun retryClicked() {

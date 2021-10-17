@@ -19,6 +19,9 @@ interface Api {
         @Query("user") user: String?
     ): HttpResult<MessagesResponse>
 
+    @GET("feed")
+    suspend fun feed(): HttpResult<MessagesResponse>
+
     @GET("today")
     suspend fun today(): HttpResult<MessagesResponse>
 
@@ -27,13 +30,6 @@ interface Api {
         @Query("user") user: String,
         @Query("password") password: String,
     ): AuthResponse
-
-    /*
-    @GET("whoami")
-    suspend fun whoAmI(
-        @Query("login") token: String,
-    ): ProfileResponse
-    */
 
     @GET("userinfo")
     suspend fun userInfo(

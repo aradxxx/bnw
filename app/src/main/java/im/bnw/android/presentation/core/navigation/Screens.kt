@@ -5,6 +5,7 @@ import android.net.Uri
 import com.github.terrakok.modo.android.AppScreen
 import com.github.terrakok.modo.android.ExternalScreen
 import com.github.terrakok.modo.android.MultiAppScreen
+import im.bnw.android.domain.message.MessageMode
 import im.bnw.android.presentation.auth.AuthFragment
 import im.bnw.android.presentation.messagedetails.MessageDetailsFragment
 import im.bnw.android.presentation.messagedetails.MessageDetailsScreenParams
@@ -34,10 +35,10 @@ object Screens {
     @Parcelize
     class Messages(
         val user: String = "",
-        val today: Boolean = false
-    ) : AppScreen("Messages_${user}_$today") {
+        private val mode: MessageMode
+    ) : AppScreen("Messages_${user}_$mode") {
         override fun create() = MessagesFragment.newInstance(
-            MessagesScreenParams(user, today)
+            MessagesScreenParams(user, mode)
         )
     }
 
@@ -88,7 +89,12 @@ object Screens {
 
     fun tabs() = MultiAppScreen(
         "Tabs",
-        listOf(Messages(), Messages(today = true), User),
+        listOf(
+            Messages(mode = MessageMode.All),
+            Messages(mode = MessageMode.Feed),
+            Messages(mode = MessageMode.Today),
+            User
+        ),
         0
     )
 }

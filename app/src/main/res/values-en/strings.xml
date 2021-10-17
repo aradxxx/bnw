@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="general">General</string>
+    <string name="feed">Feed</string>
     <string name="today">Today</string>
     <string name="profile">Profile</string>
 

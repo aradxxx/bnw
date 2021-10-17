@@ -32,6 +32,9 @@ sealed class TabSettingsItem(@StringRes nameResId: Int) : SettingsItem(nameResId
     object Messages : TabSettingsItem(R.string.general)
 
     @Parcelize
+    object Feed : TabSettingsItem(R.string.feed)
+
+    @Parcelize
     object Hot : TabSettingsItem(R.string.today)
 
     @Parcelize

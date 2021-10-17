@@ -116,7 +116,7 @@ class MessagesViewModel @Inject constructor(
             } else {
                 ""
             }
-            when (val newPageResult = messageInteractor.messages(last, state.user, screenParams.today)) {
+            when (val newPageResult = messageInteractor.messages(last, state.user, screenParams.mode)) {
                 is Result.Success -> {
                     val newPage = newPageResult.value.toListItems()
                     updateState {
@@ -153,7 +153,7 @@ class MessagesViewModel @Inject constructor(
         }
         vmScope.launch(dispatchersProvider.default) {
             updateState { it.copy(afterLoading = true, showSwipeToRefresh = !silent, error = null) }
-            when (val newPageResult = messageInteractor.messages("", state.user, screenParams.today)) {
+            when (val newPageResult = messageInteractor.messages("", state.user, screenParams.mode)) {
                 is Result.Success -> {
                     val newPage = newPageResult.value.toListItems()
                     updateState {

@@ -55,20 +55,21 @@ class SettingsRepositoryImpl @Inject constructor(
     }
 
     private fun themeMap(value: String): ThemeSettings = when (value) {
-        "light" -> ThemeSettings.Light
-        "dark" -> ThemeSettings.Dark
+        ThemeSettings.Light.value -> ThemeSettings.Light
+        ThemeSettings.Dark.value -> ThemeSettings.Dark
         else -> ThemeSettings.Default
     }.exhaustive
 
     private fun languageMap(value: String): LanguageSettings = when (value) {
-        "en" -> LanguageSettings.English
-        "ru" -> LanguageSettings.Russian
+        LanguageSettings.English.value -> LanguageSettings.English
+        LanguageSettings.Russian.value -> LanguageSettings.Russian
         else -> LanguageSettings.Default
     }.exhaustive
 
     private fun defaultTabMap(value: String): TabSettings = when (value) {
-        "user" -> TabSettings.User
-        "hot" -> TabSettings.Hot
+        TabSettings.User.value -> TabSettings.User
+        TabSettings.Hot.value -> TabSettings.Hot
+        TabSettings.Feed.value -> TabSettings.Feed
         else -> TabSettings.Messages
     }.exhaustive
 }
