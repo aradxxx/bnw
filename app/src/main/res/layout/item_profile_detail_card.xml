@@ -44,5 +44,6 @@
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:alpha="0.1"
-        android:background="?android:textColorSecondary" />
+        android:background="@color/text_secondary_dark"
+        android:backgroundTint="?android:textColorSecondary" />
 </RelativeLayout>
