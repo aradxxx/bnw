@@ -9,5 +9,9 @@ sealed class MainState : State {
     object Init : MainState()
 
     @Parcelize
-    data class Main(val theme: ThemeSettings, val transitionAnimations: Boolean) : MainState()
+    data class Main(
+        val theme: ThemeSettings,
+        val transitionAnimations: Boolean,
+        val userAuthenticated: Boolean
+    ) : MainState()
 }

@@ -2,6 +2,7 @@ package im.bnw.android.presentation.core.navigation.tab
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,13 +22,26 @@ import dagger.android.support.AndroidSupportInjection
 import im.bnw.android.R
 import im.bnw.android.presentation.util.attrColor
 import im.bnw.android.presentation.util.dpToPxF
+import im.bnw.android.presentation.util.initialArguments
+import im.bnw.android.presentation.util.withInitialArguments
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 private const val BOTTOM_NAVIGATION_ELEVATION = 8
 
+@Parcelize
+private data class BnwMultiStackParams(
+    val userAuthenticated: Boolean
+) : Parcelable
+
 class BnwMultiStackFragment : MultiStackFragment() {
     @Inject
     lateinit var modo: Modo
+    private fun tabs() = if (initialArguments<BnwMultiStackParams>().userAuthenticated) {
+        Tab.values().toList()
+    } else {
+        Tab.values().toList().filter { it != Tab.FEED }
+    }
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -42,7 +56,7 @@ class BnwMultiStackFragment : MultiStackFragment() {
     private fun createTabView(index: Int, parent: LinearLayout): View {
         return LayoutInflater.from(context).inflate(R.layout.view_tab, parent, false).apply {
             parent.setBackgroundColor(context.attrColor(R.attr.barColor))
-            val tab: Tab = Tab.values()[index]
+            val tab: Tab = tabs()[index]
             val image = findViewById<ImageView>(R.id.icon)
             image.apply {
                 setImageResource(tab.icon)
@@ -193,5 +207,7 @@ class BnwMultiStackFragment : MultiStackFragment() {
     companion object {
         private const val CONTAINER_ID = 9283
         private const val TAB_CONTAINER_ID = 9284
+        fun newInstance(authorized: Boolean) =
+            BnwMultiStackFragment().withInitialArguments(BnwMultiStackParams(authorized))
     }
 }

@@ -87,11 +87,27 @@ object Screens {
         override fun create() = SavedRepliesFragment.newInstance()
     }
 
-    fun tabs() = MultiAppScreen(
-        "Tabs",
+    fun tabs(authenticated: Boolean) = if (authenticated) {
+        authTabs()
+    } else {
+        unAuthTabs()
+    }
+
+    private fun authTabs() = MultiAppScreen(
+        "Tabs_auth",
         listOf(
             Messages(mode = MessageMode.All),
             Messages(mode = MessageMode.Feed),
+            Messages(mode = MessageMode.Today),
+            User
+        ),
+        0
+    )
+
+    private fun unAuthTabs() = MultiAppScreen(
+        "Tabs_unAuth",
+        listOf(
+            Messages(mode = MessageMode.All),
             Messages(mode = MessageMode.Today),
             User
         ),

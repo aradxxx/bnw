@@ -51,6 +51,11 @@ fun <F : Fragment> F.withInitialArguments(params: Parcelable) = apply {
     arguments = bundleOf(Const.BUNDLE_INITIAL_ARGS to params)
 }
 
+fun <T : Parcelable> Fragment.initialArguments(): T {
+    return requireArguments().getParcelable<T>(Const.BUNDLE_INITIAL_ARGS)
+        ?: throw IllegalArgumentException("Fragment doesn't contain initial args")
+}
+
 inline fun <T : ViewBinding> AppCompatActivity.viewBinding(
     crossinline bindingInflater: (LayoutInflater) -> T
 ) = lazy(LazyThreadSafetyMode.NONE) {

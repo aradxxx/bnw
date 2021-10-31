@@ -18,6 +18,7 @@ import im.bnw.android.presentation.core.navigation.tab.Tab
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
@@ -48,10 +49,13 @@ class MainViewModel @Inject constructor(
 
     private fun subscribeSettings() = vmScope.launch {
         settingsInteractor.subscribeSettings()
+            .combine(userManager.isAuthenticated(), ::Pair)
             .flowOn(dispatchersProvider.io)
-            .collectIndexed { index, settings ->
+            .collectIndexed { index, pair ->
+                val settings = pair.first
+                val isAuthenticated = pair.second
                 updateState {
-                    MainState.Main(settings.theme, settings.transitionAnimations)
+                    MainState.Main(settings.theme, settings.transitionAnimations, isAuthenticated)
                 }
                 if (index == 0) {
                     checkCurrentTab(settings.defaultTab)
