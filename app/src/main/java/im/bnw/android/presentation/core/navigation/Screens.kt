@@ -36,7 +36,7 @@ object Screens {
     class Messages(
         val user: String = "",
         private val mode: MessageMode
-    ) : AppScreen("Messages_${user}_$mode") {
+    ) : AppScreen("Messages_${user}") {
         override fun create() = MessagesFragment.newInstance(
             MessagesScreenParams(user, mode)
         )

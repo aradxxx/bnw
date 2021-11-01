@@ -19,7 +19,6 @@ import com.github.terrakok.modo.android.AppScreen
 import com.github.terrakok.modo.android.ModoRender
 import com.github.terrakok.modo.android.init
 import com.github.terrakok.modo.android.saveState
-import com.github.terrakok.modo.newStack
 import im.bnw.android.R
 import im.bnw.android.databinding.ActivityMainBinding
 import im.bnw.android.domain.settings.ThemeSettings
@@ -34,10 +33,13 @@ class MainActivity : BaseActivity<MainViewModel, MainState>(
 ) {
     @Inject
     lateinit var modo: Modo
-    private var authenticated = false
+    private var auth: Boolean = false
     private val modoRender by lazy {
         object : ModoRender(this@MainActivity, R.id.container) {
-            override fun createMultiStackFragment() = BnwMultiStackFragment.newInstance(authenticated)
+            override fun createMultiStackFragment(): BnwMultiStackFragment {
+                return BnwMultiStackFragment.newInstance(auth)
+            }
+
             override fun setupTransaction(
                 fragmentManager: FragmentManager,
                 transaction: FragmentTransaction,
@@ -94,7 +96,7 @@ class MainActivity : BaseActivity<MainViewModel, MainState>(
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        modo.init(savedInstanceState, Screens.tabs(authenticated))
+        modo.init(savedInstanceState, Screens.tabs(auth))
         checkDeepLink(intent)
         ViewCompat.setOnApplyWindowInsetsListener(binding.container, insetListener)
         ViewCompat.setWindowInsetsAnimationCallback(binding.container, insetAnimationCallback)
@@ -125,10 +127,7 @@ class MainActivity : BaseActivity<MainViewModel, MainState>(
             // no op
         }
         is MainState.Main -> {
-            if (authenticated != state.userAuthenticated) {
-                authenticated = state.userAuthenticated
-                modo.newStack(Screens.tabs(authenticated))
-            }
+            auth = state.userAuthenticated
             transitionAnimations = state.transitionAnimations
             renderMain(state)
         }

@@ -6,6 +6,7 @@ import android.os.Looper
 import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.MultiScreen
 import com.github.terrakok.modo.externalForward
+import com.github.terrakok.modo.newStack
 import com.github.terrakok.modo.selectStack
 import im.bnw.android.BuildConfig
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
@@ -15,6 +16,7 @@ import im.bnw.android.domain.usermanager.UserManager
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
+import im.bnw.android.presentation.main.MainState.Main
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectIndexed
@@ -54,13 +56,28 @@ class MainViewModel @Inject constructor(
             .collectIndexed { index, pair ->
                 val settings = pair.first
                 val isAuthenticated = pair.second
+                val oldAuth = (state as? Main)?.userAuthenticated
                 updateState {
-                    MainState.Main(settings.theme, settings.transitionAnimations, isAuthenticated)
+                    Main(settings.theme, settings.transitionAnimations, isAuthenticated)
+                }
+                handler.post {
+                    checkNavigation(oldAuth, isAuthenticated)
                 }
                 if (index == 0) {
                     checkCurrentTab(settings.defaultTab)
                 }
             }
+    }
+
+    private fun checkNavigation(oldAuth: Boolean?, auth: Boolean) {
+        if (oldAuth == null && auth) {
+            modo.newStack(Screens.tabs(auth))
+            return
+        }
+        if (oldAuth != auth) {
+            modo.newStack(Screens.tabs(auth))
+            return
+        }
     }
 
     private fun navigateToUser(user: String) {
