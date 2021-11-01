@@ -24,6 +24,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -197,11 +198,17 @@ fun Fragment.openMedia(urls: List<String>, selected: String) {
     requireContext().apply {
         val startPosition = urls.indexOf(selected)
         val overlay = MediaOverlayView(this)
+        val circularProgressDrawable = CircularProgressDrawable(this).apply {
+            strokeWidth = 3.dpToPxF
+            centerRadius = 16.dpToPxF
+            setColorSchemeColors(getColor(R.color.colorPrimary))
+            start()
+        }
         val imageLoader = ImageLoader<String> { view, image ->
             Glide.with(this)
                 .load(image)
                 .error(R.drawable.ic_media_load_error)
-                .placeholder(R.drawable.ic_media_placeholder)
+                .placeholder(circularProgressDrawable)
                 .into(view)
         }
         val viewer = StfalconImageViewer.Builder(this, urls, imageLoader)
