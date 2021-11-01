@@ -7,8 +7,8 @@ import im.bnw.android.domain.core.Result
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.DialogEvent
 import im.bnw.android.presentation.util.AuthFailedException
-import javax.inject.Inject
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(
     restoredState: AuthState?,
@@ -45,7 +45,7 @@ class AuthViewModel @Inject constructor(
             updateState { it.copy(loading = true) }
             when (val result = authInteractor.login(state.userName, state.password)) {
                 is Result.Success -> {
-                    backPressed()
+                    // no op
                 }
                 is Result.Failure -> {
                     handleException(result.throwable)

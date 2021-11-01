@@ -16,7 +16,7 @@ fun settingsDelegate(
     }
 ) {
     fun itemClicked() {
-        if (adapterPosition == RecyclerView.NO_POSITION) {
+        if (bindingAdapterPosition == RecyclerView.NO_POSITION) {
             return
         }
         chosenItemListener(item)

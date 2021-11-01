@@ -1,13 +1,13 @@
 package im.bnw.android.presentation.medialist
 
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
 import im.bnw.android.R
 import im.bnw.android.databinding.ItemMediaBinding
 import im.bnw.android.domain.message.Media
+import im.bnw.android.presentation.util.doIfPositionValid
 import im.bnw.android.presentation.util.itemCallback
 
 fun mediaDelegate(listener: (Int) -> Unit) =
@@ -15,10 +15,7 @@ fun mediaDelegate(listener: (Int) -> Unit) =
         { layoutInflater, root -> ItemMediaBinding.inflate(layoutInflater, root, false) }
     ) {
         binding.media.setOnClickListener {
-            val position = adapterPosition
-            if (position != RecyclerView.NO_POSITION) {
-                listener(position)
-            }
+            doIfPositionValid(listener)
         }
 
         bind {
