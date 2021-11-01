@@ -12,8 +12,8 @@ import im.bnw.android.databinding.FragmentNewPostBinding
 import im.bnw.android.presentation.core.BaseFragment
 import im.bnw.android.presentation.core.CursorToEnd
 import im.bnw.android.presentation.core.Event
-import im.bnw.android.presentation.core.dialog.PopupDialogParams
 import im.bnw.android.presentation.core.dialog.PopupDialogFragment
+import im.bnw.android.presentation.core.dialog.PopupDialogParams
 import im.bnw.android.presentation.util.DialogCode
 import im.bnw.android.presentation.util.attrColor
 import im.bnw.android.presentation.util.hideKeyboard
@@ -53,6 +53,11 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
             }
             showKeyboard(postText)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.saveDraft()
     }
 
     override fun onDestroyView() {

@@ -30,13 +30,6 @@ class NewPostViewModel @Inject constructor(
         subscribeSettings()
     }
 
-    override fun onCleared() {
-        mainScope.launch {
-            userManager.saveDraft(state.text)
-        }
-        super.onCleared()
-    }
-
     fun textChanged(text: String) {
         updateState {
             it.copy(
@@ -65,6 +58,10 @@ class NewPostViewModel @Inject constructor(
                 handleException(result.throwable)
             }
         }
+    }
+
+    fun saveDraft() = mainScope.launch {
+        userManager.saveDraft(state.text)
     }
 
     private fun getDraft() = vmScope.launch {
