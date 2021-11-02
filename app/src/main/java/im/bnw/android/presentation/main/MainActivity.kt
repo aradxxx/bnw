@@ -64,8 +64,10 @@ class MainActivity : BaseActivity<MainViewModel, MainState>(
             val statusBars = WindowInsetsCompat.Type.statusBars()
             val navigationBars = WindowInsetsCompat.Type.navigationBars()
             updateMargins(
-                top = insets.getInsets(statusBars).top,
-                bottom = insets.getInsets(navigationBars).bottom
+                top = insets.getInsets(statusBars).top + insets.getInsets(navigationBars).top,
+                bottom = insets.getInsets(statusBars).bottom + insets.getInsets(navigationBars).bottom,
+                left = insets.getInsets(statusBars).left + insets.getInsets(navigationBars).left,
+                right = insets.getInsets(statusBars).right + insets.getInsets(navigationBars).right
             )
         }
         insets
