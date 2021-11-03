@@ -51,6 +51,12 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
             postText.doAfterTextChanged {
                 viewModel.textChanged(it.toString())
             }
+            clubs.doAfterTextChanged {
+                viewModel.clubsChanged(it.toString())
+            }
+            tags.doAfterTextChanged {
+                viewModel.tagsChanged(it.toString())
+            }
             showKeyboard(postText)
         }
     }
@@ -94,6 +100,8 @@ class NewPostFragment : BaseFragment<NewPostViewModel, NewPostState>(
 
     private fun renderIdleState(state: NewPostState) = with(binding) {
         postText.newText = state.text
+        clubs.newText = state.clubs
+        tags.newText = state.tags
         send.isEnabled = state.sendEnabled
         anonEnabled(state.asAnon)
     }

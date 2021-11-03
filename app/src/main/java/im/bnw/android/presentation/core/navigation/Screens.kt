@@ -35,10 +35,12 @@ object Screens {
     @Parcelize
     class Messages(
         val user: String = "",
+        val tag: String = "",
+        val club: String = "",
         private val mode: MessageMode
-    ) : AppScreen("Messages_${user}") {
+    ) : AppScreen("Messages_${user}_${tag}") {
         override fun create() = MessagesFragment.newInstance(
-            MessagesScreenParams(user, mode)
+            MessagesScreenParams(user, tag, club, mode)
         )
     }
 

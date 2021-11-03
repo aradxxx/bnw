@@ -8,6 +8,7 @@ import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Message
 import im.bnw.android.domain.message.MessageInteractor
+import im.bnw.android.domain.message.MessageMode
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.navigation.Screens
@@ -93,6 +94,14 @@ class MessagesViewModel @Inject constructor(
         }
     }
 
+    override fun tagClicked(tag: String) {
+        modo.externalForward(Screens.Messages(tag = tag, mode = MessageMode.All))
+    }
+
+    override fun clubClicked(club: String) {
+        modo.externalForward(Screens.Messages(club = club, mode = MessageMode.All))
+    }
+
     fun swipeRefresh() {
         loadAfter()
     }
@@ -116,7 +125,8 @@ class MessagesViewModel @Inject constructor(
             } else {
                 ""
             }
-            when (val newPageResult = messageInteractor.messages(last, state.user, screenParams.mode)) {
+            when (val newPageResult =
+                messageInteractor.messages(last, state.user, screenParams.tag, screenParams.club, screenParams.mode)) {
                 is Result.Success -> {
                     val newPage = newPageResult.value.toListItems()
                     updateState {
@@ -153,7 +163,9 @@ class MessagesViewModel @Inject constructor(
         }
         vmScope.launch(dispatchersProvider.default) {
             updateState { it.copy(afterLoading = true, showSwipeToRefresh = !silent, error = null) }
-            when (val newPageResult = messageInteractor.messages("", state.user, screenParams.mode)) {
+            when (val newPageResult = messageInteractor.messages(
+                "", state.user, screenParams.tag, screenParams.club, screenParams.mode
+            )) {
                 is Result.Success -> {
                     val newPage = newPageResult.value.toListItems()
                     updateState {

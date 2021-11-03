@@ -5,4 +5,6 @@ interface MessageClickListener {
     fun userClicked(position: Int)
     fun mediaClicked(position: Int, mediaPosition: Int)
     fun saveClicked(position: Int)
+    fun tagClicked(tag: String)
+    fun clubClicked(club: String)
 }

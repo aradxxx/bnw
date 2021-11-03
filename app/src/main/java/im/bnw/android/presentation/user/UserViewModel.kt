@@ -56,7 +56,7 @@ class UserViewModel @Inject constructor(
 
     fun messagesClicked() {
         val currentState = state.nullOr<UserState.Authorized>() ?: return
-        modo.externalForward(Screens.Messages(currentState.user.name, MessageMode.All))
+        modo.externalForward(Screens.Messages(user = currentState.user.name, mode = MessageMode.All))
     }
 
     fun retryClicked() {

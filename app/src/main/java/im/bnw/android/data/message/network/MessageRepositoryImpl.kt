@@ -30,10 +30,16 @@ class MessageRepositoryImpl @Inject constructor(
     private val appDb: AppDb,
     private val dispatchersProvider: DispatchersProvider
 ) : MessageRepository {
-    override suspend fun messages(before: String, user: String, mode: MessageMode): Result<List<Message>> {
+    override suspend fun messages(
+        before: String,
+        user: String,
+        tag: String,
+        club: String,
+        mode: MessageMode
+    ): Result<List<Message>> {
         return when (mode) {
             MessageMode.All -> {
-                messages(before, user)
+                messages(before, user, tag, club)
             }
             MessageMode.Today -> {
                 todayMessages(before)
@@ -44,9 +50,10 @@ class MessageRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun post(text: String, anonymous: Boolean): Result<Unit> = withContext(dispatchersProvider.io) {
-        return@withContext api.post(text, anonymous.asApiParam()).toResult { }
-    }
+    override suspend fun post(text: String, clubs: String, tags: String, anonymous: Boolean): Result<Unit> =
+        withContext(dispatchersProvider.io) {
+            return@withContext api.post(text, clubs, tags, anonymous.asApiParam()).toResult { }
+        }
 
     override suspend fun messageDetails(messageId: String): Result<MessageDetails> =
         withContext(dispatchersProvider.io) {
@@ -110,9 +117,9 @@ class MessageRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun messages(before: String, user: String): Result<List<Message>> =
+    private suspend fun messages(before: String, user: String, tag: String, club: String): Result<List<Message>> =
         withContext(dispatchersProvider.io) {
-            return@withContext api.messages(before, user).toResult { response ->
+            return@withContext api.messages(before, user, tag, club).toResult { response ->
                 response.messages.map { it.toMessage() }
             }
         }

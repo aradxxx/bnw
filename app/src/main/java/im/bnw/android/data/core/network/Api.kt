@@ -16,7 +16,9 @@ interface Api {
     @GET("show")
     suspend fun messages(
         @Query("before") before: String,
-        @Query("user") user: String?
+        @Query("user") user: String?,
+        @Query("tag") tag: String,
+        @Query("club") club: String
     ): HttpResult<MessagesResponse>
 
     @GET("feed")
@@ -39,6 +41,8 @@ interface Api {
     @POST("post")
     suspend fun post(
         @Query("text") text: String,
+        @Query("clubs") clubs: String,
+        @Query("tags") tags: String,
         @Query("anonymous") anonymous: String
     ): HttpResult<PostResponse>
 

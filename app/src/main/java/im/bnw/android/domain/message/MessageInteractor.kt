@@ -4,8 +4,15 @@ import im.bnw.android.domain.core.Result
 import kotlinx.coroutines.flow.Flow
 
 interface MessageInteractor {
-    suspend fun messages(before: String, user: String, mode: MessageMode): Result<List<Message>>
-    suspend fun post(text: String, anonymous: Boolean): Result<Unit>
+    suspend fun messages(
+        before: String,
+        user: String,
+        tag: String,
+        club: String,
+        mode: MessageMode
+    ): Result<List<Message>>
+
+    suspend fun post(text: String, clubs: String, tags: String, anonymous: Boolean): Result<Unit>
     suspend fun messageDetails(messageId: String): Result<MessageDetails>
     suspend fun reply(text: String, messageId: String, replyTo: String, anonymous: Boolean): Result<Unit>
     fun observeSavedMessages(filter: List<String>? = null): Flow<List<Message>>

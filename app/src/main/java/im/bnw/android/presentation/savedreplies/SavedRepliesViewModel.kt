@@ -6,6 +6,7 @@ import com.github.terrakok.modo.back
 import com.github.terrakok.modo.externalForward
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.MessageInteractor
+import im.bnw.android.domain.message.MessageMode
 import im.bnw.android.domain.message.Reply
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.OpenMediaEvent
@@ -78,6 +79,14 @@ class SavedRepliesViewModel @Inject constructor(
             }
             postEvent(RemoveReplyFromLocalStorage)
         }
+    }
+
+    override fun tagClicked(tag: String) {
+        modo.externalForward(Screens.Messages(tag = tag, mode = MessageMode.All))
+    }
+
+    override fun clubClicked(club: String) {
+        modo.externalForward(Screens.Messages(club = club, mode = MessageMode.All))
     }
 
     fun emptyButtonClicked() {

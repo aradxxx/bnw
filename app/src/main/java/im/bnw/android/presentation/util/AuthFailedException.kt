@@ -38,6 +38,7 @@ fun Throwable.toEvent(): Event? {
                 R.string.possibly_domain_blocked
             )
         }
+        is HttpException,
         is IOException -> {
             DialogEvent(
                 R.string.no_connection,

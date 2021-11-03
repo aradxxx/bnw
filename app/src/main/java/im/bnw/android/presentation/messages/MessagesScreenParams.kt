@@ -7,5 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class MessagesScreenParams(
     val user: String,
+    val tag: String,
+    val club: String,
     val mode: MessageMode,
 ) : Parcelable

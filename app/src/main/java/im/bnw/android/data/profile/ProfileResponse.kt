@@ -29,7 +29,7 @@ class ProfileResponse(
     @SerializedName("characters_count")
     val charactersCount: Int,*/
     @Json(name = "regdate")
-    val regDate: Long,
+    val regDate: Double,
     @Json(name = "comments_count")
     val commentsCount: Int,
     /*@SerializedName("subscribers_all")

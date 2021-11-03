@@ -6,6 +6,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class NewPostState(
     val text: String = "",
+    val clubs: String = "",
+    val tags: String = "",
     val asAnon: Boolean = false,
     val sendEnabled: Boolean = false
 ) : State

@@ -8,6 +8,7 @@ import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Media
 import im.bnw.android.domain.message.MessageDetails
 import im.bnw.android.domain.message.MessageInteractor
+import im.bnw.android.domain.message.MessageMode
 import im.bnw.android.domain.message.Reply
 import im.bnw.android.domain.settings.Settings
 import im.bnw.android.domain.settings.SettingsInteractor
@@ -101,6 +102,14 @@ class MessageDetailsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun tagClicked(tag: String) {
+        modo.externalForward(Screens.Messages(mode = MessageMode.All))
+    }
+
+    override fun clubClicked(club: String) {
+        modo.externalForward(Screens.Messages(club = club, mode = MessageMode.All))
     }
 
     fun swiped(position: Int) {

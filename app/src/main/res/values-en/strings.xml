@@ -23,6 +23,8 @@
     <string name="create_post">Write post</string>
     <string name="whats_new">What\'s new?</string>
     <string name="sending_confirmation">Are you sure you want to sent?</string>
+    <string name="tags_hint">Tags, separated by comma</string>
+    <string name="clubs_hint">Clubs, separated by comma</string>
 
     <!--profile-->
     <string name="registered">Registered %1$s</string>

@@ -2,15 +2,22 @@
 
 package im.bnw.android.presentation.messages.adapter
 
+import android.content.Context
 import android.graphics.Rect
 import android.os.Parcelable
+import android.view.View
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegateViewBinding
+import im.bnw.android.R
 import im.bnw.android.databinding.ItemMessageCardBinding
 import im.bnw.android.databinding.ItemMessageCardWithMediaBinding
 import im.bnw.android.presentation.core.markwon.BnwLinkifyPlugin
@@ -19,6 +26,7 @@ import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
 import im.bnw.android.presentation.messages.MessageClickListener
 import im.bnw.android.presentation.util.doIfPositionValid
 import im.bnw.android.presentation.util.dpToPx
+import im.bnw.android.presentation.util.dpToPxF
 import im.bnw.android.presentation.util.formatDateTime
 import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.itemCallback
@@ -102,6 +110,13 @@ fun messageDelegate(
             }
             save.isActivated = item.saved
             avatar.loadCircleAvatar(context, message.user)
+            context.updateTags(
+                chipGroup,
+                item.message.tags,
+                item.message.clubs,
+                { messageClickListener.tagClicked(it) },
+                { messageClickListener.clubClicked(it) }
+            )
         }
     }
 }
@@ -211,6 +226,13 @@ fun messageWithMediaDelegate(
             }
             save.isActivated = item.saved
             avatar.loadCircleAvatar(context, message.user)
+            context.updateTags(
+                chipGroup,
+                item.message.tags,
+                item.message.clubs,
+                { messageClickListener.tagClicked(it) },
+                { messageClickListener.clubClicked(it) }
+            )
         }
         restoreInstanceState(item.message.id)
     }
@@ -329,3 +351,33 @@ class MessageAdapter(
         }
     }
 }
+
+private fun Context.updateTags(
+    chipGroup: ChipGroup,
+    tags: List<String>,
+    clubs: List<String>,
+    tagListener: (String) -> Unit,
+    clubListener: (String) -> Unit
+) {
+    chipGroup.removeAllViews()
+    for (club in clubs) {
+        chipGroup.addView(createChip(this, club, R.color.club, clubListener))
+    }
+    for (tag in tags) {
+        chipGroup.addView(createChip(this, tag, R.color.tag, tagListener))
+    }
+}
+
+private fun createChip(context: Context, chipText: String, @ColorRes color: Int, listener: (String) -> Unit): View =
+    Chip(context).apply {
+        text = chipText
+        textAlignment = View.TEXT_ALIGNMENT_CENTER
+        textSize = 11F
+        shapeAppearanceModel = ShapeAppearanceModel().withCornerSize(8.dpToPxF)
+        setEnsureMinTouchTargetSize(false)
+        setTextColor(context.getColor(R.color.white))
+        setChipBackgroundColorResource(color)
+        setOnClickListener {
+            listener(chipText)
+        }
+    }

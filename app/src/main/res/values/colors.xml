@@ -17,4 +17,6 @@
     <color name="dark_light">#222222</color>-->
 
     <color name="text_secondary_dark">#8A000000</color>
+    <color name="tag">#296DA9</color>
+    <color name="club">#f79355</color>
 </resources>

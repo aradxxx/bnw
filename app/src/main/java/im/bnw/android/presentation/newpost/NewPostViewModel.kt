@@ -39,6 +39,22 @@ class NewPostViewModel @Inject constructor(
         }
     }
 
+    fun clubsChanged(text: String) {
+        updateState {
+            it.copy(
+                clubs = text
+            )
+        }
+    }
+
+    fun tagsChanged(text: String) {
+        updateState {
+            it.copy(
+                tags = text
+            )
+        }
+    }
+
     fun anonChanged() {
         updateState {
             it.copy(asAnon = !it.asAnon)
@@ -48,9 +64,9 @@ class NewPostViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     fun sendConfirmed() = vmScope.launch {
         updateState { it.copy(sendEnabled = false) }
-        when (val result = messageInteractor.post(state.text.trim(), state.asAnon)) {
+        when (val result = messageInteractor.post(state.text.trim(), state.clubs, state.tags, state.asAnon)) {
             is Result.Success -> {
-                userManager.deleteDraft()
+                deleteDraft()
                 modo.back()
             }
             is Result.Failure -> {
@@ -62,6 +78,10 @@ class NewPostViewModel @Inject constructor(
 
     fun saveDraft() = mainScope.launch {
         userManager.saveDraft(state.text)
+    }
+
+    private fun deleteDraft() = mainScope.launch {
+        userManager.deleteDraft()
     }
 
     private fun getDraft() = vmScope.launch {

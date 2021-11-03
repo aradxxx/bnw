@@ -23,6 +23,8 @@
     <string name="create_post">Написать сообщение</string>
     <string name="whats_new">Что нового?</string>
     <string name="sending_confirmation">Вы действительно хотите отправить?</string>
+    <string name="tags_hint">Теги, через запятую</string>
+    <string name="clubs_hint">Клубы, через запятую</string>
 
     <!--profile-->
     <string name="registered">Зарегистрировался %1$s</string>

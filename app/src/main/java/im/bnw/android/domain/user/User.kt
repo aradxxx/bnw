@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit
 data class User(
     val name: String,
     val messagesCount: Int,
-    val regDate: Long,
+    val regDate: Double,
     val commentsCount: Int,
 ) : Parcelable {
-    fun timestamp() = TimeUnit.SECONDS.toMillis(regDate)
+    fun timestamp() = TimeUnit.SECONDS.toMillis(regDate.toLong())
 }
