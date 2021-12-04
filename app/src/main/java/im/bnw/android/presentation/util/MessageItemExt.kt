@@ -43,3 +43,16 @@ val MessageListItem.id: String
             throw IllegalArgumentException("What the messageListItem is this")
         }
     }
+
+val MessageListItem.text: String
+    get() = when (this) {
+        is MessageItem -> {
+            message.text
+        }
+        is ReplyItem -> {
+            reply.text
+        }
+        else -> {
+            throw IllegalArgumentException("What the messageListItem is this")
+        }
+    }

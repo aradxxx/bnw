@@ -7,4 +7,6 @@ interface MessageClickListener {
     fun saveClicked(position: Int)
     fun tagClicked(tag: String)
     fun clubClicked(club: String)
+    fun idLongClicked(position: Int)
+    fun textLongClicked(position: Int)
 }

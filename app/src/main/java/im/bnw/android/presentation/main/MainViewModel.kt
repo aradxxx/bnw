@@ -3,6 +3,7 @@ package im.bnw.android.presentation.main
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import androidx.core.os.postDelayed
 import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.MultiScreen
 import com.github.terrakok.modo.externalForward
@@ -17,6 +18,7 @@ import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.core.navigation.tab.Tab
 import im.bnw.android.presentation.main.MainState.Main
+import im.bnw.android.presentation.util.UI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectIndexed
@@ -99,7 +101,10 @@ class MainViewModel @Inject constructor(
         val id = intent.data?.pathSegments?.getOrNull(1) ?: return
         when (segment) {
             BuildConfig.POST_PATH_SEGMENT -> {
-                modo.externalForward(Screens.MessageDetails(id))
+                handler.postDelayed(UI.DEFAULT_HANDLER_DELAY) {
+                    modo.externalForward(Screens.MessageDetails(id))
+                }
+
             }
             BuildConfig.USER_PATH_SEGMENT -> {
                 navigateToUser(id)

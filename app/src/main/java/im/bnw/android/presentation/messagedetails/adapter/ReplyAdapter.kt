@@ -97,6 +97,18 @@ fun replyDelegate(
         replyText.root.setOnClickListener {
             quoteClicked()
         }
+        id.setOnLongClickListener {
+            doIfPositionValid {
+                messageClickListener.idLongClicked(it)
+            }
+            true
+        }
+        text.setOnLongClickListener {
+            doIfPositionValid {
+                messageClickListener.textLongClicked(it)
+            }
+            true
+        }
     }
     bind {
         val reply = item.reply

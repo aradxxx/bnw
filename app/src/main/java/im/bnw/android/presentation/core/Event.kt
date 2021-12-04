@@ -43,3 +43,8 @@ data class CursorToEnd(
 data class LanguageChangedEvent(
     val language: LanguageSettings,
 ) : Event
+
+data class ShowToast(
+    @StringRes
+    val text: Int
+) : Event

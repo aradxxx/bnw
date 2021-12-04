@@ -3,6 +3,7 @@ package im.bnw.android.presentation.messagedetails
 import com.github.terrakok.modo.Modo
 import com.github.terrakok.modo.android.launch
 import com.github.terrakok.modo.externalForward
+import im.bnw.android.R
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.message.Media
@@ -16,6 +17,7 @@ import im.bnw.android.domain.usermanager.UserManager
 import im.bnw.android.presentation.core.BaseViewModel
 import im.bnw.android.presentation.core.OpenMediaEvent
 import im.bnw.android.presentation.core.ScrollTo
+import im.bnw.android.presentation.core.ShowToast
 import im.bnw.android.presentation.core.navigation.Screens
 import im.bnw.android.presentation.messagedetails.adapter.ReplyItem
 import im.bnw.android.presentation.messages.MessageClickListener
@@ -23,6 +25,7 @@ import im.bnw.android.presentation.messages.adapter.MessageItem
 import im.bnw.android.presentation.util.id
 import im.bnw.android.presentation.util.media
 import im.bnw.android.presentation.util.nullOr
+import im.bnw.android.presentation.util.text
 import im.bnw.android.presentation.util.user
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
@@ -110,6 +113,18 @@ class MessageDetailsViewModel @Inject constructor(
 
     override fun clubClicked(club: String) {
         modo.externalForward(Screens.Messages(club = club, mode = MessageMode.All))
+    }
+
+    override fun idLongClicked(position: Int) {
+        val id = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position)?.id ?: return
+        messageInteractor.copyIdToClipBoard(id)
+        postEvent(ShowToast(R.string.copied_to_clipboard))
+    }
+
+    override fun textLongClicked(position: Int) {
+        val text = state.nullOr<MessageDetailsState.Idle>()?.items?.getOrNull(position)?.text ?: return
+        messageInteractor.copyTextToClipBoard(text)
+        postEvent(ShowToast(R.string.copied_to_clipboard))
     }
 
     fun swiped(position: Int) {

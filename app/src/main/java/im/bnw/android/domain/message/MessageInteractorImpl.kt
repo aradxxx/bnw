@@ -1,5 +1,7 @@
 package im.bnw.android.domain.message
 
+import im.bnw.android.BuildConfig
+import im.bnw.android.data.clipboard.ClipBoardManager
 import im.bnw.android.domain.core.Result
 import im.bnw.android.domain.core.dispatcher.DispatchersProvider
 import im.bnw.android.domain.core.map
@@ -9,6 +11,7 @@ import javax.inject.Inject
 
 class MessageInteractorImpl @Inject constructor(
     private val messageRepository: MessageRepository,
+    private val clipBoardManager: ClipBoardManager,
     private val dispatchersProvider: DispatchersProvider
 ) : MessageInteractor {
     override suspend fun messages(
@@ -64,6 +67,15 @@ class MessageInteractorImpl @Inject constructor(
 
     override fun observeSavedReplies(filter: List<String>?): Flow<List<Reply>> {
         return messageRepository.observeSavedReplies(filter)
+    }
+
+    override fun copyIdToClipBoard(id: String) {
+        val url = BuildConfig.POST_LINK + id.replace("/", "#")
+        clipBoardManager.copyToClipBoard(url)
+    }
+
+    override fun copyTextToClipBoard(text: String) {
+        clipBoardManager.copyToClipBoard(text)
     }
 
     override suspend fun save(reply: Reply) {

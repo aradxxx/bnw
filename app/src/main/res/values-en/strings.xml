@@ -18,6 +18,7 @@
     <string name="user_not_found">User not found</string>
     <string name="message_not_found">Post not found</string>
     <string name="saved_empty_title">Such empty</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
 
     <!--new post-->
     <string name="create_post">Write post</string>

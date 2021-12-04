@@ -18,6 +18,7 @@
     <string name="user_not_found">Пользователь не найден</string>
     <string name="message_not_found">Пост не найден</string>
     <string name="saved_empty_title">Пока пусто</string>
+    <string name="copied_to_clipboard">Скопировано в буфер обмена</string>
 
     <!--new post-->
     <string name="create_post">Написать сообщение</string>

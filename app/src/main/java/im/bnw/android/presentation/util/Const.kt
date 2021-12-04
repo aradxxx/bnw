@@ -17,6 +17,7 @@ object UI {
     const val MESSAGE_CARD_RADIUS = 16
     const val MESSAGE_MEDIA_HEIGHT = 120
     const val MESSAGE_DETAILS_MEDIA_HEIGHT = 220
+    const val DEFAULT_HANDLER_DELAY = 200L //ms
 }
 
 object Locales {

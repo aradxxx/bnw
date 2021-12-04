@@ -21,4 +21,6 @@ interface MessageInteractor {
     fun observeSavedReplies(filter: List<String>? = null): Flow<List<Reply>>
     suspend fun save(reply: Reply)
     suspend fun remove(reply: Reply)
+    fun copyIdToClipBoard(id: String)
+    fun copyTextToClipBoard(text: String)
 }

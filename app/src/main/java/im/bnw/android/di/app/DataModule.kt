@@ -10,6 +10,8 @@ import com.yariksoffice.lingver.store.PreferenceLocaleStore
 import dagger.Module
 import dagger.Provides
 import im.bnw.android.BuildConfig
+import im.bnw.android.data.clipboard.ClipBoardManager
+import im.bnw.android.data.clipboard.ClipBoardManagerImpl
 import im.bnw.android.data.core.db.AppDb
 import im.bnw.android.data.core.network.Api
 import im.bnw.android.data.message.network.MessageRepositoryImpl
@@ -71,8 +73,12 @@ class DataModule {
     @Provides
     @Singleton
     fun provideAppDb(context: Context) = Room.databaseBuilder(
-            context,
-            AppDb::class.java,
-            BuildConfig.DB_NAME
-        ).build()
+        context,
+        AppDb::class.java,
+        BuildConfig.DB_NAME
+    ).build()
+
+    @Provides
+    @Singleton
+    fun provideClipBoardManager(context: Context): ClipBoardManager = ClipBoardManagerImpl(context)
 }

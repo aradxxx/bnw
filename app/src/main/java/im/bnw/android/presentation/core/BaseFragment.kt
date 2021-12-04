@@ -3,6 +3,7 @@ package im.bnw.android.presentation.core
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.CallSuper
 import androidx.fragment.app.DialogFragment
@@ -11,11 +12,11 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
 import im.bnw.android.R
 import im.bnw.android.di.core.ViewModelFactory
-import im.bnw.android.presentation.core.dialog.PopupDialogParams
 import im.bnw.android.presentation.core.dialog.PopupDialogFragment
+import im.bnw.android.presentation.core.dialog.PopupDialogFragment.Companion.POPUP_BUTTON
 import im.bnw.android.presentation.core.dialog.PopupDialogFragment.Companion.POPUP_DIALOG_REQUEST_KEY
 import im.bnw.android.presentation.core.dialog.PopupDialogFragment.Companion.POPUP_REQUEST_CODE
-import im.bnw.android.presentation.core.dialog.PopupDialogFragment.Companion.POPUP_BUTTON
+import im.bnw.android.presentation.core.dialog.PopupDialogParams
 import im.bnw.android.presentation.core.lifecycle.LCHandler
 import im.bnw.android.presentation.util.Const
 import im.bnw.android.presentation.util.openMedia
@@ -76,6 +77,9 @@ abstract class BaseFragment<VM : BaseViewModel<S>, S : State>(
             }
             is OpenMediaEvent -> {
                 openMedia(event.urls, event.selectedItem)
+            }
+            is ShowToast -> {
+                Toast.makeText(requireContext(), event.text, Toast.LENGTH_SHORT).show()
             }
         }
     }

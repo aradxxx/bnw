@@ -95,6 +95,18 @@ fun messageDelegate(
         save.setOnClickListener {
             saveMessageClicked()
         }
+        footer.id.setOnLongClickListener {
+            doIfPositionValid {
+                messageClickListener.idLongClicked(it)
+            }
+            true
+        }
+        text.setOnLongClickListener {
+            doIfPositionValid {
+                messageClickListener.textLongClicked(it)
+            }
+            true
+        }
     }
 
     bind {
@@ -201,6 +213,18 @@ fun messageWithMediaDelegate(
         }
         save.setOnClickListener {
             saveMessageClicked()
+        }
+        footer.id.setOnLongClickListener {
+            doIfPositionValid {
+                messageClickListener.idLongClicked(it)
+            }
+            true
+        }
+        text.setOnLongClickListener {
+            doIfPositionValid {
+                messageClickListener.textLongClicked(it)
+            }
+            true
         }
         with(mediaList) {
             updateLayoutParams {

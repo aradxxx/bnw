@@ -27,6 +27,7 @@ android {
         buildConfigField("String", "USER_AVA_URL", "\"https://cn.bnw.im/u/%s/avatar\"")
         buildConfigField("String", "USER_AVA_THUMB_URL", "\"https://cn.bnw.im/u/%s/avatar/thumb\"")
         buildConfigField("String", "DONATE_URL", "\"https://yoomoney.ru/to/41001208815080\"")
+        buildConfigField("String", "POST_LINK", "\"https://bnw.im/p/\"")
     }
 
     lintOptions {
