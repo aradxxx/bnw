@@ -13,8 +13,8 @@ android {
         applicationId = "im.bnw.android"
         minSdk = 24
         targetSdk = 30
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "DB_NAME", "\"bnwDb\"")
